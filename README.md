@@ -7,6 +7,8 @@ __________________________________
 
 Task List:
 
+	1) Starting with the BPDU Messages
+	
 	- Form Spanning Tree to Prevent Packet Loops [ ]
 	- Handle the failure of bridges, the failure of bridge ports,
 	 and the introduction of new bridges and LANs over time [ ]
