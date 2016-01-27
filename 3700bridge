@@ -3,7 +3,8 @@
 import sys
 import socket
 import select
- 
+
+
 # pads the name with null bytes at the end
 def pad(name):
         result = '\0' + name
@@ -21,8 +22,7 @@ if __name__ == "__main__":
                 s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
                 s.connect(pad(LAN[x]))
                 sockets.append(s)
-        
-        
+
         print "Bridge " + id + " starting up\n"
  
         # Main loop
