@@ -6,6 +6,7 @@ Austin Colcord and Nick Scheuring
 __________________________________
 
 Task List:
+
 	- Form Spanning Tree to Prevent Packet Loops [ ]
 	- Handle the failure of bridges, the failure of bridge ports,
 	 and the introduction of new bridges and LANs over time [ ]
