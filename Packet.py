@@ -2,6 +2,14 @@ import socket
 import time
 
 
+class Packet:
+    def __init__(self, source, type, dest='ffff', message={}):
+        self.source = source
+        self.type = type
+        self.dest = dest
+        self.message = message
+
+
 def broadcast_bpdu():
 
     host = ''
