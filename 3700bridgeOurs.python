@@ -1,0 +1,64 @@
+#!/usr/bin/python -u
+# The -u makes output unbuffered, so it will show up immediately
+import sys
+import socket
+import select
+import json
+import Packet
+
+
+def create_default_config(file_name):
+    fil = open(file_name, 'w')
+    json_string = '{"lifetime": 30, "bridges": [], "hosts": 1, "traffic": 100}'
+    fil.write(json_string)
+    fil.close()
+
+
+def parse_config_file():
+    with open('config-file') as data_file:
+        data = json.load(data_file)
+    print data
+    return data
+
+
+# pads the name with null bytes at the end
+def pad(name):
+        result = '\0' + name
+        while len(result) < 108:
+                result += '\0'
+        return result
+
+
+def connect_bridge(id_num, lan, socket_list):
+
+    # creates sockets and connects to them
+    for x in range(len(LAN)):
+        s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        s.connect(pad(LAN[x]))
+        socket_list.append(s)
+
+    print "Bridge " + id + " starting up\n"
+
+    # Main loop
+    while True:
+        # start broadcasting BPDUs
+        Packet.broadcast_bpdu()
+        print "broadcasting...\n"
+
+        # Calls select with all the sockets; change the timeout value (1)
+        ready, ignore, ignore2 = select.select(sockets, [], [], 1)
+
+        # Reads from each fo the ready sockets
+        for x in ready:
+                data = x.recv(1500)
+                print(data)
+
+if __name__ == "__main__":
+        create_default_config('config-file')
+        config_data = parse_config_file()
+
+        id = sys.argv[1]
+        LAN = sys.argv[2:]
+        sockets = []
+
+        connect_bridge(id, LAN, sockets)
