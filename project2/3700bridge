@@ -36,8 +36,7 @@ def pad(name):
                 result += '\0'
         return result
 
-def port():
-
+# def port():
 
 
 if __name__ == "__main__":
