@@ -55,7 +55,10 @@ class Bridge:
                     #packet = Packet(message)
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
+                        self._assign_new_root()
                         port.add_BPDU(bpdu_in)
+
+
                         # call set root
                         # if incoming bpdu better than this
                     #else:
@@ -83,19 +86,13 @@ class Bridge:
         cost_2 = BPDU_in.cost
         bridgeID_2 = BPDU_in.id
 
-    """
-    def _create_new_BPDU(self, source, BPDU_id, root, cost):
-        BPDU_message = {}
-        BPDU_message['source'] = source
-        BPDU_message['dest'] = 'ffff'
-        BPDU_message['type'] = 'bpdu'
-        BPDU_message['message'] = {}
-        BPDU_message['message']['id'] = self.id
-        BPDU_message['message']['root'] = root
-        BPDU_message['message']['cost'] = cost
+    def _assign_new_root(bpdu_in):
+        for port in self.ports:
+            if self.root == port.BPDU_list[0].root:
+                if port.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+                    self.root = bpdu_in.root
+                    print "New root: " + self.id + "/" + self.rootID
 
-        return json.dumps(BPDU_message)
-    """
 
     # bridge logic:
     # all bridges first assume they are the root
