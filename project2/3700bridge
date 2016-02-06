@@ -17,13 +17,13 @@ class Bridge:
         self._create_sockets_for_lans()
         self._start_receiving()
 
-    def _create_sockets_for_lans():
+    def _create_sockets_for_lans(self):
         for x in range(len(self.LAN_list)):
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
             s.connect(self._pad(LAN[x]))
             self.sockets.append(s)
 
-    def _start_receiving():
+    def _start_receiving(self):
         # Main loop
         while True:
             # Calls select with all the sockets; change the timeout value (1)
@@ -35,7 +35,7 @@ class Bridge:
                 print "DATA: ", message
                 packet = Packet(message)
 
-    def _pad(name):
+    def _pad(self, name):
         # pads the name with null bytes at the end
         def pad(name):
             result = '\0' + name
