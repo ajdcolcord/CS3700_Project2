@@ -42,11 +42,10 @@ class Bridge:
 
     def _pad(self, name):
         # pads the name with null bytes at the end
-        def pad(name):
-            result = '\0' + name
-            while len(result) < 108:
-                    result += '\0'
-            return result
+        result = '\0' + name
+        while len(result) < 108:
+                result += '\0'
+        return result
 
 
 def main():
