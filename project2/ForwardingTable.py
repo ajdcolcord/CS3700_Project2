@@ -7,4 +7,9 @@ class ForwardingTable():
         self.ports = {}
 
     def add_address(address, port, age):
-        self.address_ports[address] = port
+        self.ports[address] = port
+
+    # def new_message_arrived
+    # if destination in ports: send message on port
+    # if destination not in ports: broadcast to all ports except incoming port
+    
