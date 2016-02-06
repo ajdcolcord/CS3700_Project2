@@ -11,7 +11,6 @@ RECEIVE_SIZE = 1500
 class Bridge:
     def __init__(self, bridgeID, LAN_list=[]):
         self.id = bridgeID
-        #self.LAN_list = LAN
         self.sockets = []
         self.rootID = self.id
 
@@ -38,16 +37,36 @@ class Bridge:
                     self._choose_rootID_from_BPDU(packet)
 
     def _pad(self, name):
-        # pads the name with null bytes at the end
+        """
+        Pads the name with null bytes at the end
+        @param name : the name to pad
+        """
         result = '\0' + name
         while len(result) < 108:
                 result += '\0'
         return result
 
     def _choose_rootID_from_BPDU(self, BPDU_in):
+        """
+        Determines the best BPDU .....
+
+        """
+        # TODO : NEEDS TO BE FINISHED
         rootID_2 = BPDU_in.rootID
         cost_2 = BPDU_in.cost
         bridgeID_2 = BPDU_in.id
+
+    def _create_new_BPDU(self, source, BPDU_id, root, cost):
+        BPDU_message = {}
+        BPDU_message['source'] = source
+        BPDU_message['dest'] = 'ffff'
+        BPDU_message['type'] = 'bpdu'
+        BPDU_message['message'] = {}
+        BPDU_message['message']['id'] = self.id
+        BPDU_message['message']['root'] = root
+        BPDU_message['message']['cost'] = cost
+
+        return json.dumps(BPDU_message)
 
     # bridge logic:
     # all bridges first assume they are the root
