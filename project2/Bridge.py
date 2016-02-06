@@ -63,7 +63,7 @@ class Bridge:
                         self._assign_new_root(bpdu_in, port.port_id)
                         port.add_BPDU(bpdu_in)
                         # add bpdu to buffer
-                        BPDU_buffer.add(bpdu_in)
+                        BPDU_buffer.append(bpdu_in)
 
 
 
