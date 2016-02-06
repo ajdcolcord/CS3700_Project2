@@ -13,13 +13,14 @@ class Packet():
         self.dest = json_message['dest']
         self.type = json_message['type']
         self.message = json_message['message']
+        self.messageID = self.message['id']
         # if self.message:
         #    self._parse_packet_message(json_message)
-        print "Source: ", json_message['source']
-        print "Dest: ", json_message['dest']
-        print "Type: ", json_message['type']
-        print "Message: ", json_message['message']
-        print "MessageID: ", json_message['message']['id']
+        print "Source: ", self.source
+        print "Dest: ", self.dest
+        print "Type: ", self.type
+        print "Message: ", self.message
+        print "MessageID: ", self.messageID
 
     '''
     def _parse_packet_message(self, message):
