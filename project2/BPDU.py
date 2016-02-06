@@ -29,3 +29,19 @@ class BPDU:
         json_BPDU_object['message'] = BPDU_message_object
 
         return json.dumps(json_BPDU_object)
+
+
+def create_BPDU_from_json(json_message):
+    json_obj = json.loads(json_message)
+    if json_obj['type'] == 'bpdu':
+        src = json_obj['source']
+        dest = json_obj['dest']
+
+        message_obj = json_obj['message']
+        bpdu_id = message_obj['id']
+        root_id = message_obj['root']
+        cost = message_obj['cost']
+
+        return BPDU(src, dest, bpdu_id, root_id, cost)
+    else:
+        return False

@@ -4,6 +4,7 @@ import sys
 import socket
 import select
 from Packet import Packet
+from BPDU import BPDU
 
 RECEIVE_SIZE = 1500
 
