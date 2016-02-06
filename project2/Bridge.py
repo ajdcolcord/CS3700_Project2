@@ -111,8 +111,8 @@ class Bridge:
                 self.root = bpdu_in.root
                 self.rootPort = port_in
                 self.cost = bpdu_in.cost
-                print "New root: " + self.id + "/" + self.rootID
-                print "Root port: " + self.id + "/" + self.rootPort
+                print "New root: " + str(self.id) + "/" + str(self.rootID)
+                print "Root port: " + str(self.id) + "/" + str(self.rootPort)
 
 
         else:
@@ -120,8 +120,8 @@ class Bridge:
                 self.rootID = bpdu_in.root
                 self.rootPort = port_in
                 self.cost = bpdu_in.cost
-                print "New root: " + self.id + "/" + self.rootID
-                print "Root port: " + self.id + "/" + self.rootPort
+                print "New root: " + str(self.id) + "/" + str(self.rootID)
+                print "Root port: " + str(self.id) + "/" + str(self.rootPort)
 
     def _broadcast_BPDU(self):
         newBPDU = BPDU(self.id, 'ffff', 99, self.rootID, self.cost)
