@@ -1,5 +1,6 @@
 #!/usr/bin/python -u
 from BPDU import BPDU
+import socket
 
 
 class Port:

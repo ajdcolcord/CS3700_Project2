@@ -32,6 +32,7 @@ class Bridge:
         # Main loop
         while True:
             # Calls select with all the ports; change the timeout value (1)
+
             ready, ignore, ignore2 = select.select(self.ports, [], [], 1)
             # Reads from each fo the ready ports
             for x in ready:
