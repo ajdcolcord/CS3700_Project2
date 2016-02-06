@@ -16,6 +16,7 @@ class Bridge:
         self.ports = []
         self.sockets = []
         self.rootID = self.id
+        self.rootPort = None
 
         self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
@@ -59,13 +60,6 @@ class Bridge:
                         port.add_BPDU(bpdu_in)
 
 
-                        # call set root
-                        # if incoming bpdu better than this
-                    #else:
-                        #create normal data message
-                    #if packet.isBPDU:
-                        #self._choose_rootID_from_BPDU(packet)
-
     def _pad(self, name):
         """
         Pads the name with null bytes at the end
@@ -86,12 +80,21 @@ class Bridge:
         cost_2 = BPDU_in.cost
         bridgeID_2 = BPDU_in.id
 
-    def _assign_new_root(bpdu_in):
-        for port in self.ports:
-            if self.root == port.BPDU_list[0].root:
-                if port.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
-                    self.root = bpdu_in.root
-                    print "New root: " + self.id + "/" + self.rootID
+    def _assign_new_root(bpdu_in, port_in):
+        if self.rootPort:
+            if self.port[self.rootPort].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+                self.root = bpdu_in.root
+                print "New root: " + self.id + "/" + self.rootID
+                self.rootPort = port_in
+                print "Root port: " + self.id + "/" + self.rootPort
+
+        else:
+            if self.rootID > bpdu_in.root:
+                self.rootID = bpdu_in.root
+                self.rootPort = port_in
+                print "New root: " + self.id + "/" + self.rootID
+                print "Root port: " + self.id + "/" + self.rootPort
+
 
 
     # bridge logic:
