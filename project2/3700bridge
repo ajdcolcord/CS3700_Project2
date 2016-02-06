@@ -3,6 +3,7 @@
 import sys
 import socket
 import select
+import json
 
 
 def main():
@@ -27,6 +28,7 @@ def main():
             for x in ready:
                 data = x.recv(1500)
                 print "DATA: ", data
+                parse_packet(data)
 
 
 # pads the name with null bytes at the end
@@ -36,7 +38,10 @@ def pad(name):
                 result += '\0'
         return result
 
-# def port():
+
+def parse_packet(packet):
+    json_message = json.loads(packet)
+    print "Source: ", json_message.source
 
 
 if __name__ == "__main__":
