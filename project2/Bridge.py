@@ -15,7 +15,7 @@ class Bridge:
         self.sockets = []
         self.rootID = self.id
 
-        self._create_sockets_for_lans(LAN)
+        self._create_sockets_for_lans(LAN_list)
         self._start_receiving()
 
     def _create_sockets_for_lans(self, LAN_list):
