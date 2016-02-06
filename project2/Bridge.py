@@ -6,6 +6,8 @@ import select
 import json
 from Packet import Packet
 
+RECEIVE_SIZE = 1500
+
 
 class Bridge:
     def __init__(self, bridgeID, LAN=[]):

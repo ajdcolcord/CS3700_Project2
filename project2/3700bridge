@@ -3,8 +3,6 @@
 import sys
 from Bridge import Bridge
 
-RECEIVE_SIZE = 1500
-
 
 def main():
     id = sys.argv[1]
