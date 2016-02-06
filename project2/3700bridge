@@ -4,6 +4,7 @@ import sys
 import socket
 import select
 
+
 def main():
         id = sys.argv[1]
         LAN = sys.argv[2:]
@@ -25,7 +26,7 @@ def main():
             # Reads from each fo the ready sockets
             for x in ready:
                 data = x.recv(1500)
-                print(data)
+                print "DATA: ", data
 
 
 # pads the name with null bytes at the end
@@ -34,6 +35,9 @@ def pad(name):
         while len(result) < 108:
                 result += '\0'
         return result
+
+def port():
+
 
 
 if __name__ == "__main__":
