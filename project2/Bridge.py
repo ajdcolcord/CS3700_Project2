@@ -56,6 +56,7 @@ class Bridge:
         cost_2 = BPDU_in.cost
         bridgeID_2 = BPDU_in.id
 
+    """
     def _create_new_BPDU(self, source, BPDU_id, root, cost):
         BPDU_message = {}
         BPDU_message['source'] = source
@@ -67,6 +68,7 @@ class Bridge:
         BPDU_message['message']['cost'] = cost
 
         return json.dumps(BPDU_message)
+    """
 
     # bridge logic:
     # all bridges first assume they are the root
