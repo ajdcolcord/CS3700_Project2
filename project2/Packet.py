@@ -19,6 +19,7 @@ class Packet():
         print "Dest: ", json_message['dest']
         print "Type: ", json_message['type']
         print "Message: ", json_message['message']
+        print "MessageID: ", json_message['message']['id']
 
     '''
     def _parse_packet_message(self, message):
