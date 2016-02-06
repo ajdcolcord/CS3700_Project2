@@ -79,7 +79,7 @@ class Bridge:
                     #BEFORE BROADCAST, IF TIMEOUT??? POP and send second
                     # also ----- ADD self.cost to BPDU cost
 
-                    self._broadcast_message(BPDU_buffer[0])
+                    self._broadcast_message(BPDU_buffer[0].create_json_BPDU())
                     BPDU_buffer.pop(0)  # #########
                     print "SENT MESSAGE: ", message
                 start_time = time.time()
