@@ -6,6 +6,7 @@ import select
 from Packet import Packet
 from BPDU import BPDU, create_BPDU_from_json
 from Port import Port
+import time
 
 RECEIVE_SIZE = 1500
 
@@ -34,12 +35,10 @@ class Bridge:
             self.sockets.append(s)
 
     def _start_receiving(self):
+        start_time = time.time()
+
         # Main loop
         while True:
-
-            #sockets =
-            # Calls select with all the ports; change the timeout value (1)
-
 
             #-----ORIGINAL CALLS------#
             # ready, ignore, ignore2 = select.select(self.sockets, [], [], 1)
@@ -58,6 +57,14 @@ class Bridge:
                     if bpdu_in:
                         self._assign_new_root()
                         port.add_BPDU(bpdu_in)
+
+            #is it time to send a BPDU?
+            # compare start time to current time, if > 500ms, send BPDU
+            if int(round(time.time() - start_time * 1000)) > 500:
+                broadcast_BPDU
+                print "BPDU"
+
+
 
 
     def _pad(self, name):
@@ -80,7 +87,7 @@ class Bridge:
         cost_2 = BPDU_in.cost
         bridgeID_2 = BPDU_in.id
 
-    def _assign_new_root(bpdu_in, port_in):
+    def _assign_new_root(self, bpdu_in, port_in):
         if self.rootPort:
             if self.port[self.rootPort].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 self.root = bpdu_in.root
@@ -94,7 +101,6 @@ class Bridge:
                 self.rootPort = port_in
                 print "New root: " + self.id + "/" + self.rootID
                 print "Root port: " + self.id + "/" + self.rootPort
-
 
 
     # bridge logic:
