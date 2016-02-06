@@ -44,7 +44,7 @@ class Bridge:
                 message = x.recv(RECEIVE_SIZE)
                 # create new packet object from the incoming message
                 #packet = Packet(message)
-                bpdu_in = create_BPDU_from_json(packet)
+                bpdu_in = create_BPDU_from_json(message)
                 #if bpdu_in:
                     # call set root
                     # if incoming bpdu better than this
