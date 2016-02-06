@@ -8,11 +8,11 @@ class Port:
         self.port_id = port_id
         self.enabled = enabled
         self.BPDU_list = BPDU_list
-        self._open_socket()
+        # self._open_socket()
 
-    def _open_socket(self):
-        sock = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-        self.socket = sock
+    #def _open_socket(self):
+        #sock = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        #self.socket = sock
 
     def add_BPDU(self, BPDU):
         iterator = 0

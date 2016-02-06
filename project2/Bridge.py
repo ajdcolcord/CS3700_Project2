@@ -14,26 +14,31 @@ class Bridge:
     def __init__(self, bridgeID, LAN_list=[]):
         self.id = bridgeID
         self.ports = []
+        self.sockets = []
         self.rootID = self.id
 
         self._create_ports_for_lans(LAN_list)
         self._start_receiving()
 
     def _create_ports_for_lans(self, LAN_list):
-        iterator = 0
+        # iterator = 0
         for x in range(len(LAN_list)):
-            # s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-            port = Port(iterator)
-            port.socket.connect(self._pad(LAN_list[x]))
-            self.ports.append(port)
-            iterator += 1
+            s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+
+            #port = Port(iterator)
+            s.connect(self._pad(LAN_list[x]))
+            # self.ports.append(port)
+            #iterator += 1
+            self.sockets.append(s)
 
     def _start_receiving(self):
         # Main loop
         while True:
+
+            #sockets =
             # Calls select with all the ports; change the timeout value (1)
 
-            ready, ignore, ignore2 = select.select(self.ports, [], [], 1)
+            ready, ignore, ignore2 = select.select(self.sockets, [], [], 1)
             # Reads from each fo the ready ports
             for x in ready:
                 message = x.recv(RECEIVE_SIZE)
