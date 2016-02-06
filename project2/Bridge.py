@@ -59,6 +59,10 @@ class Bridge:
                         self._assign_new_root(bpdu_in, port.port_id)
                         port.add_BPDU(bpdu_in)
 
+                    self._broadcast_message(message)
+                    print "SENT MESSAGE: ", message
+
+
             #is it time to send a BPDU?
             # compare start time to current time, if > 500ms, send BPDU
             if int(round((time.time() - start_time) * 1000)) > 500:
@@ -112,6 +116,9 @@ class Bridge:
         for sock in self.sockets:
             sock.send(newBPDU.create_json_BPDU())
 
+    def _broadcast_message(self, message):
+        for sock in self.sockets:
+            sock.send(message)
 
     # bridge logic:
     # all bridges first assume they are the root
