@@ -5,7 +5,7 @@ import json
 
 class Packet():
     def __init__(self, message):
-        _parse_to_Packet(message)
+        self._parse_to_Packet(message)
 
     def _parse_to_Packet(message):
         json_message = json.loads(message)
@@ -14,7 +14,7 @@ class Packet():
         self.type = json_message['type']
         self.message = json_message['message']
         if self.message:
-            _parse_packet_message(packet_message)
+            self._parse_packet_message(packet_message)
         print "Source: ", json_message['source']
         print "Dest: ", json_message['dest']
         print "Type: ", json_message['type']
