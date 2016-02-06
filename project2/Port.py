@@ -4,10 +4,11 @@ import socket
 
 
 class Port:
-    def __init__(self, port_id, enabled=True, socket=None, BPDU_list=[]):
+    def __init__(self, port_id, socket=None, enabled=True, BPDU_list=[]):
         self.port_id = port_id
         self.enabled = enabled
         self.BPDU_list = BPDU_list
+        self.socket = socket
         # self._open_socket()
 
     #def _open_socket(self):
