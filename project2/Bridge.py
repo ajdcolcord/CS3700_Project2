@@ -4,7 +4,7 @@ import sys
 import socket
 import select
 from Packet import Packet
-from BPDU import BPDU
+from BPDU import BPDU, create_BPDU_from_json
 from Port import Port
 
 RECEIVE_SIZE = 1500
