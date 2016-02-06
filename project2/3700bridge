@@ -18,10 +18,15 @@ class Bridge:
         self._start_receiving()
 
     def _create_sockets_for_lans(self):
+        print "STARTING LOOP"
         for x in range(len(self.LAN_list)):
+            print "IN LOOP"
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+            print "OPENED SOCKET"
             s.connect(self._pad(self.LAN_list[x]))
+            print "CONNECTED SOCKET TO LAN_list: ", x
             self.sockets.append(s)
+            print "ADDED SOCKET TO SELF.SOCKETS LIST"
 
     def _start_receiving(self):
         # Main loop
