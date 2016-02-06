@@ -9,7 +9,7 @@ class Port:
         self.BPDU_list = BPDU_list
         self._open_socket()
 
-    def _open_socket():
+    def _open_socket(self):
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
         self.socket = sock
 
