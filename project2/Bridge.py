@@ -18,7 +18,7 @@ class Bridge:
         self.rootID = self.id
 
         self._create_ports_for_lans(LAN_list)
-        print "Bridge " + id + " starting up\n"
+        print "Bridge " + self.id + " starting up\n"
         self._start_receiving()
 
     def _create_ports_for_lans(self, LAN_list):
