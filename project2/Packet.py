@@ -13,13 +13,14 @@ class Packet():
         self.dest = json_message['dest']
         self.type = json_message['type']
         self.message = json_message['message']
-        if self.message:
-            self._parse_packet_message(json_message)
+        # if self.message:
+        #    self._parse_packet_message(json_message)
         print "Source: ", json_message['source']
         print "Dest: ", json_message['dest']
         print "Type: ", json_message['type']
         print "Message: ", json_message['message']
 
+    '''
     def _parse_packet_message(self, message):
         json_message = json.loads(message)
         self.message_id = message['id']
@@ -29,3 +30,4 @@ class Packet():
             self.message_root = message['root']
         if json_message['cost']:
             self.message_cost = message['cost']
+            '''
