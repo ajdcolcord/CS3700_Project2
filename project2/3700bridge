@@ -29,9 +29,9 @@ def main():
 
             # Reads from each fo the ready sockets
             for x in ready:
-                data = x.recv(1500)
+                message = x.recv(1500)
                 print "DATA: ", data
-                packet = Packet(data)
+                packet = Packet(message)
 
 
 # pads the name with null bytes at the end
@@ -41,7 +41,7 @@ def pad(name):
                 result += '\0'
         return result
 
-
+'''
 def parse_to_packet(message):
     json_message = json.loads(message)
     message_source = json_message['source']
@@ -52,7 +52,7 @@ def parse_to_packet(message):
     print "Dest: ", json_message['dest']
     print "Type: ", json_message['type']
     print "Message: ", json_message['message']
-    return Packet(message_source, message_dest, message_type message_message)
+    # return Packet(message_source, message_dest, message_type message_message)
 
 
 def parse_packet_message(packet_message):
@@ -65,7 +65,7 @@ def parse_packet_message(packet_message):
     if packet_message['cost']:
         message_cost = packet_message['cost']
 
-
+'''
 
 if __name__ == "__main__":
     main()
