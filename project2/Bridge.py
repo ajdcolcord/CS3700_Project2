@@ -56,7 +56,7 @@ class Bridge:
                     #packet = Packet(message)
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
-                        self._assign_new_root()
+                        self._assign_new_root(bpdu_in, port.port_id)
                         port.add_BPDU(bpdu_in)
 
             #is it time to send a BPDU?
