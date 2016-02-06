@@ -30,7 +30,7 @@ class BPDU:
 
         return json.dumps(json_BPDU_object)
 
-    def is_incoming_BPDU_root(self, BPDU_in):
+    def is_incoming_BPDU_better(self, BPDU_in):
         result = True
         if self.root < BPDU_in.root:
             result = False

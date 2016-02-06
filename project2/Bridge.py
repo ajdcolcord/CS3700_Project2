@@ -5,7 +5,6 @@ import socket
 import select
 from Packet import Packet
 from BPDU import BPDU
-import python-graph
 
 RECEIVE_SIZE = 1500
 
@@ -13,24 +12,27 @@ RECEIVE_SIZE = 1500
 class Bridge:
     def __init__(self, bridgeID, LAN_list=[]):
         self.id = bridgeID
-        self.sockets = []
+        self.ports = []
         self.rootID = self.id
 
-        self._create_sockets_for_lans(LAN_list)
+        self._create_ports_for_lans(LAN_list)
         self._start_receiving()
 
-    def _create_sockets_for_lans(self, LAN_list):
+    def _create_ports_for_lans(self, LAN_list):
+        iterator = 0
         for x in range(len(LAN_list)):
-            s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-            s.connect(self._pad(LAN_list[x]))
-            self.sockets.append(s)
+            # s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+            port = Port(iterator)
+            port.socket.connect(self._pad(LAN_list[x]))
+            self.ports.append(port)
+            iterator += 1
 
     def _start_receiving(self):
         # Main loop
         while True:
-            # Calls select with all the sockets; change the timeout value (1)
-            ready, ignore, ignore2 = select.select(self.sockets, [], [], 1)
-            # Reads from each fo the ready sockets
+            # Calls select with all the ports; change the timeout value (1)
+            ready, ignore, ignore2 = select.select(self.ports, [], [], 1)
+            # Reads from each fo the ready ports
             for x in ready:
                 message = x.recv(RECEIVE_SIZE)
                 # create new packet object from the incoming message
