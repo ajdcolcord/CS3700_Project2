@@ -20,7 +20,7 @@ class Bridge:
     def _create_sockets_for_lans(self):
         for x in range(len(self.LAN_list)):
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-            s.connect(self._pad(LAN[x]))
+            s.connect(self._pad(self.LAN_list[x]))
             self.sockets.append(s)
 
     def _start_receiving(self):
