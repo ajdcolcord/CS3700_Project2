@@ -6,7 +6,7 @@ import select
 import json
 from Packet import Packet
 
-
+RECEIVE_SIZE = 1500
 
 
 def main():
@@ -29,7 +29,7 @@ def main():
 
             # Reads from each fo the ready sockets
             for x in ready:
-                message = x.recv(1500)
+                message = x.recv(RECEIVE_SIZE)
                 print "DATA: ", message
                 packet = Packet(message)
 
@@ -41,31 +41,6 @@ def pad(name):
                 result += '\0'
         return result
 
-'''
-def parse_to_packet(message):
-    json_message = json.loads(message)
-    message_source = json_message['source']
-    message_dest = json_message['dest']
-    message_type = json_message['type']
-    message_message = json_message['message']
-    print "Source: ", json_message['source']
-    print "Dest: ", json_message['dest']
-    print "Type: ", json_message['type']
-    print "Message: ", json_message['message']
-    # return Packet(message_source, message_dest, message_type message_message)
-
-
-def parse_packet_message(packet_message):
-    packet_message = json.loads(packet_message)
-    message_id = packet_message['id']
-    message_root = ""
-    message_cost = ""
-    if packet_message['root']:
-        message_root = packet_message['root']
-    if packet_message['cost']:
-        message_cost = packet_message['cost']
-
-'''
 
 if __name__ == "__main__":
     main()
