@@ -9,6 +9,12 @@ from Packet import Packet
 RECEIVE_SIZE = 1500
 
 
+def main():
+    id = sys.argv[1]
+    LAN = sys.argv[2:]
+    myBridge = Bridge(id, LAN)
+
+
 class Bridge:
     def __init__(self, bridgeID, LAN=[]):
         self.id = bridgeID
@@ -18,15 +24,10 @@ class Bridge:
         self._start_receiving()
 
     def _create_sockets_for_lans(self):
-        print "STARTING LOOP"
         for x in range(len(self.LAN_list)):
-            print "IN LOOP"
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-            print "OPENED SOCKET"
             s.connect(self._pad(self.LAN_list[x]))
-            print "CONNECTED SOCKET TO LAN_list: ", x
             self.sockets.append(s)
-            print "ADDED SOCKET TO SELF.SOCKETS LIST"
 
     def _start_receiving(self):
         # Main loop
@@ -37,7 +38,8 @@ class Bridge:
             # Reads from each fo the ready sockets
             for x in ready:
                 message = x.recv(RECEIVE_SIZE)
-                print "DATA: ", message
+
+                # create new packet object from the incoming message
                 packet = Packet(message)
 
     def _pad(self, name):
@@ -46,45 +48,6 @@ class Bridge:
         while len(result) < 108:
                 result += '\0'
         return result
-
-
-def main():
-    id = sys.argv[1]
-    LAN = sys.argv[2:]
-    myBridge = Bridge(id, LAN)
-
-
-def main2():
-    id = sys.argv[1]
-    LAN = sys.argv[2:]
-    sockets = []
-
-    # creates sockets and connects to them
-    for x in range(len(LAN)):
-        s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-        s.connect(pad(LAN[x]))
-        sockets.append(s)
-
-    print "Bridge " + id + " starting up\n"
-
-    # Main loop
-    while True:
-        # Calls select with all the sockets; change the timeout value (1)
-        ready, ignore, ignore2 = select.select(sockets, [], [], 1)
-
-        # Reads from each fo the ready sockets
-        for x in ready:
-            message = x.recv(RECEIVE_SIZE)
-            print "DATA: ", message
-            packet = Packet(message)
-
-
-# pads the name with null bytes at the end
-def pad(name):
-    result = '\0' + name
-    while len(result) < 108:
-            result += '\0'
-    return result
 
 
 if __name__ == "__main__":
