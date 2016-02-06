@@ -4,6 +4,9 @@ import sys
 import socket
 import select
 import json
+from Packet import Packet
+
+
 
 
 def main():
@@ -28,7 +31,7 @@ def main():
             for x in ready:
                 data = x.recv(1500)
                 print "DATA: ", data
-                parse_packet(data)
+                packet = Packet(data)
 
 
 # pads the name with null bytes at the end
@@ -39,8 +42,8 @@ def pad(name):
         return result
 
 
-def parse_packet(packet):
-    json_message = json.loads(packet)
+def parse_to_packet(message):
+    json_message = json.loads(message)
     message_source = json_message['source']
     message_dest = json_message['dest']
     message_type = json_message['type']
@@ -49,6 +52,19 @@ def parse_packet(packet):
     print "Dest: ", json_message['dest']
     print "Type: ", json_message['type']
     print "Message: ", json_message['message']
+    return Packet(message_source, message_dest, message_type message_message)
+
+
+def parse_packet_message(packet_message):
+    packet_message = json.loads(packet_message)
+    message_id = packet_message['id']
+    message_root = ""
+    message_cost = ""
+    if packet_message['root']:
+        message_root = packet_message['root']
+    if packet_message['cost']:
+        message_cost = packet_message['cost']
+
 
 
 if __name__ == "__main__":
