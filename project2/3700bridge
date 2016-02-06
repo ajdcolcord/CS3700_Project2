@@ -30,7 +30,7 @@ def main():
             # Reads from each fo the ready sockets
             for x in ready:
                 message = x.recv(1500)
-                print "DATA: ", data
+                print "DATA: ", message
                 packet = Packet(message)
 
 
