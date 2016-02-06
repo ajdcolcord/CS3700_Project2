@@ -38,20 +38,30 @@ class Bridge:
             #sockets =
             # Calls select with all the ports; change the timeout value (1)
 
-            ready, ignore, ignore2 = select.select(self.sockets, [], [], 1)
+
+            #-----ORIGINAL CALLS------#
+            # ready, ignore, ignore2 = select.select(self.sockets, [], [], 1)
             # Reads from each fo the ready ports
-            for x in ready:
-                message = x.recv(RECEIVE_SIZE)
-                # create new packet object from the incoming message
-                #packet = Packet(message)
-                bpdu_in = create_BPDU_from_json(message)
-                #if bpdu_in:
-                    # call set root
-                    # if incoming bpdu better than this
-                #else:
-                    #create normal data message
-                #if packet.isBPDU:
-                    #self._choose_rootID_from_BPDU(packet)
+            #for x in ready:
+            #    message = x.recv(RECEIVE_SIZE)
+            #-------------------------#
+
+            for port in self.ports:
+                ready, ignore, ignore2 = select.select([port.socket], [], [], 1)
+                if ready:
+                    message = ready[0].recv(RECEIVE_SIZE)
+                    # create new packet object from the incoming message
+                    #packet = Packet(message)
+                    bpdu_in = create_BPDU_from_json(message)
+                    print "GOT ITTTTTT"
+                    #if bpdu_in:
+                        #port.add_BPDU(bpdu_in)
+                        # call set root
+                        # if incoming bpdu better than this
+                    #else:
+                        #create normal data message
+                    #if packet.isBPDU:
+                        #self._choose_rootID_from_BPDU(packet)
 
     def _pad(self, name):
         """
