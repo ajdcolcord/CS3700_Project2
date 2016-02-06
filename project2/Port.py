@@ -20,4 +20,5 @@ class Port:
         for bpdu in self.BPDU_list:
             if bpdu.is_incoming_BPDU_better(BPDU):
                 self.BPDU_list.insert(iterator, BPDU)
+                print "ADDED BPDU TO PORT: ", self.port_id
             iterator += 1
