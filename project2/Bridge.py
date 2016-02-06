@@ -109,7 +109,7 @@ class Bridge:
 
     def _broadcast_BPDU(self):
         newBPDU = BPDU(self.id, 'ffff', 99, self.rootID, self.cost)
-        for sock in sockets:
+        for sock in self.sockets:
             sock.send(newBPDU.create_json_BPDU())
 
 
