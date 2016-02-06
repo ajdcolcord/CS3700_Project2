@@ -9,19 +9,19 @@ RECEIVE_SIZE = 1500
 
 
 class Bridge:
-    def __init__(self, bridgeID, LAN=[]):
+    def __init__(self, bridgeID, LAN_list=[]):
         self.id = bridgeID
-        self.LAN_list = LAN
+        #self.LAN_list = LAN
         self.sockets = []
         self.rootID = self.id
 
-        self._create_sockets_for_lans()
+        self._create_sockets_for_lans(LAN)
         self._start_receiving()
 
-    def _create_sockets_for_lans(self):
-        for x in range(len(self.LAN_list)):
+    def _create_sockets_for_lans(self, LAN_list):
+        for x in range(len(LAN_list)):
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-            s.connect(self._pad(self.LAN_list[x]))
+            s.connect(self._pad(LAN_list[x]))
             self.sockets.append(s)
 
     def _start_receiving(self):
