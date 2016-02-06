@@ -18,6 +18,7 @@ class Bridge:
         self.sockets = []
         self.rootID = self.id
         self.rootPort = None
+        self.cost = 0
 
         self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
@@ -60,12 +61,8 @@ class Bridge:
 
             #is it time to send a BPDU?
             # compare start time to current time, if > 500ms, send BPDU
-            print "SENDING TIME"
-            print time.time()
-            print start_time
-            print int(round((time.time() - start_time) * 1000)) > 500
             if int(round((time.time() - start_time) * 1000)) > 500:
-                broadcast_BPDU
+                self._broadcast_BPDU()
                 start_time = time.time()
                 print "BPDU"
 
@@ -96,16 +93,24 @@ class Bridge:
         if self.rootPort:
             if self.port[self.rootPort].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 self.root = bpdu_in.root
-                print "New root: " + self.id + "/" + self.rootID
                 self.rootPort = port_in
+                self.cost = bpdu_in.cost
+                print "New root: " + self.id + "/" + self.rootID
                 print "Root port: " + self.id + "/" + self.rootPort
+
 
         else:
             if self.rootID > bpdu_in.root:
                 self.rootID = bpdu_in.root
                 self.rootPort = port_in
+                self.cost = bpdu_in.cost
                 print "New root: " + self.id + "/" + self.rootID
                 print "Root port: " + self.id + "/" + self.rootPort
+
+    def _broadcast_BPDU(self):
+        newBPDU = BPDU(self.id, 'ffff', 99, self.rootID, self.cost)
+        for sock in sockets:
+            sock.send(newBPDU.create_json_BPDU())
 
 
     # bridge logic:
