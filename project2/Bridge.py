@@ -63,8 +63,8 @@ class Bridge:
             print "SENDING TIME"
             print time.time()
             print start_time
-            print int(round(time.time() - start_time * 1000))
-            if int(round(time.time() - start_time * 1000)) > 500:
+            print int(round((time.time() - start_time) * 1000)) > 500
+            if int(round((time.time() - start_time) * 1000)) > 500:
                 broadcast_BPDU
                 start_time = time.time()
                 print "BPDU"
