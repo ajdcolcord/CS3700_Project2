@@ -20,7 +20,7 @@ class Packet():
         print "Dest: ", self.dest
         print "Type: ", self.type
         print "Message: ", self.message
-        print "MessageID: ", self.messageID
+        print "MessageID: ", self.id
 
         if self.type == 'bpdu':
             self._create_BPDU(self.message)
