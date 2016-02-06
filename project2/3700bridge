@@ -46,9 +46,9 @@ def parse_packet(packet):
     message_type = json_message['type']
     message_message = json_message['message']
     print "Source: ", json_message['source']
-    print "Dest: ", json_message['source']
-    print "Type: ", json_message['source']
-    print "Message: ", json_message['source']
+    print "Dest: ", json_message['dest']
+    print "Type: ", json_message['type']
+    print "Message: ", json_message['message']
 
 
 if __name__ == "__main__":
