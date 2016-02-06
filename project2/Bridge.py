@@ -5,6 +5,7 @@ import socket
 import select
 from Packet import Packet
 from BPDU import BPDU
+import python-graph
 
 RECEIVE_SIZE = 1500
 
@@ -33,9 +34,15 @@ class Bridge:
             for x in ready:
                 message = x.recv(RECEIVE_SIZE)
                 # create new packet object from the incoming message
-                packet = Packet(message)
-                if packet.isBPDU:
-                    self._choose_rootID_from_BPDU(packet)
+                #packet = Packet(message)
+                bpdu_in = create_BPDU_from_json(packet)
+                if bpdu_in:
+                    # call set root
+                    # if incoming bpdu better than this
+                else:
+                    #create normal data message
+                #if packet.isBPDU:
+                    #self._choose_rootID_from_BPDU(packet)
 
     def _pad(self, name):
         """
