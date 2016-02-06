@@ -107,7 +107,7 @@ class Bridge:
 
     def _assign_new_root(self, bpdu_in, port_in):
         if self.rootPort:
-            if self.port[self.rootPort].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+            if self.ports[self.rootPort].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 self.root = bpdu_in.root
                 self.rootPort = port_in
                 self.cost = bpdu_in.cost
