@@ -1,6 +1,7 @@
 #!/usr/bin/python -u
 from BPDU import BPDU
 import socket
+import time
 
 
 class Port:
@@ -9,16 +10,26 @@ class Port:
         self.enabled = enabled
         self.BPDU_list = BPDU_list
         self.socket = socket
-        # self._open_socket()
-
-    #def _open_socket(self):
-        #sock = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-        #self.socket = sock
 
     def add_BPDU(self, BPDU):
         iterator = 0
+        bpdu_added = False
+        BPDU.time = time.time()
+        if not self.BPDU_list:
+            self.BPDU_list.insert(0, BPDU)
+            bpdu_added = True
         for bpdu in self.BPDU_list:
-            if bpdu.is_incoming_BPDU_better(BPDU):
+
+            # If the bpdu has timed out, simply remove it
+            if int(round((time.time() - bpdu.time) * 1000)) > 750:
+                self.BPDU_list.remove(bpdu)
+
+            if bpdu.is_incoming_BPDU_better(BPDU) and not bpdu_added:
                 self.BPDU_list.insert(iterator, BPDU)
+                bpdu_added = True
                 print "ADDED BPDU TO PORT: ", self.port_id
+
             iterator += 1
+
+        if not bpdu_added:
+            self.BPDU_list.append(BPDU)

@@ -10,6 +10,7 @@ class BPDU:
         self.id = ID
         self.root = root
         self.cost = cost
+        self.timeout = None
 
     def create_json_BPDU(self):
         """

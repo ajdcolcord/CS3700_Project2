@@ -18,7 +18,7 @@ class Bridge:
         self.sockets = []
         self.rootID = self.id
         self.rootPort = None
-        self.cost = 0
+        self.cost = 1
 
         self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
@@ -37,6 +37,10 @@ class Bridge:
 
     def _start_receiving(self):
         start_time = time.time()
+
+        self._broadcast_BPDU()
+
+        BPDU_buffer = []
 
         # Main loop
         while True:
@@ -58,19 +62,27 @@ class Bridge:
                     if bpdu_in:
                         self._assign_new_root(bpdu_in, port.port_id)
                         port.add_BPDU(bpdu_in)
+                        # add bpdu to buffer
+                        BPDU_buffer.add(bpdu_in)
 
-                    self._broadcast_message(message)
-                    print "SENT MESSAGE: ", message
+
 
 
             #is it time to send a BPDU?
             # compare start time to current time, if > 500ms, send BPDU
             if int(round((time.time() - start_time) * 1000)) > 500:
-                self._broadcast_BPDU()
+                if self.id == self.rootID:
+                    self._broadcast_BPDU()
+                    print "Root BPDU Sent"
+                else:
+                    #_broadcast_message(best bpdu)
+                    #BEFORE BROADCAST, IF TIMEOUT??? POP and send second
+                    # also ----- ADD self.cost to BPDU cost
+
+                    self._broadcast_message(BPDU_buffer[0])
+                    BPDU_buffer.pop(0)  # #########
+                    print "SENT MESSAGE: ", message
                 start_time = time.time()
-                print "BPDU"
-
-
 
 
     def _pad(self, name):
