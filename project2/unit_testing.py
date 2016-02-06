@@ -41,6 +41,21 @@ class TestBPDUMethods(unittest.TestCase):
         self.assertEquals(json_loaded_message['message']['root'], testBPDU.root)
         self.assertEquals(json_loaded_message['message']['cost'], testBPDU.cost)
 
+    def test_is_incoming_BPDU_root(self):
+        testBPDU1 = BPDU('0ab2', 'ffff', '98b2', '0ab2', 4)
+        testBPDU2 = BPDU('91b5', 'ffff', '98b3', '0ab2', 4)
+        testBPDU3 = BPDU('0ab2', 'ffff', '98b2', '0ab5', 4)
+        testBPDU4 = BPDU('0ab2', 'ffff', '98b2', '0ab2', 6)
+
+
+
+        self.assertFalse(testBPDU1.is_incoming_BPDU_root(testBPDU2))
+        self.assertFalse(testBPDU1.is_incoming_BPDU_root(testBPDU3))
+        self.assertFalse(testBPDU1.is_incoming_BPDU_root(testBPDU4))
+        self.assertTrue(testBPDU4.is_incoming_BPDU_root(testBPDU1))
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

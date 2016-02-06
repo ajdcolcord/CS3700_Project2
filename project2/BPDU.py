@@ -30,6 +30,18 @@ class BPDU:
 
         return json.dumps(json_BPDU_object)
 
+    def is_incoming_BPDU_root(self, BPDU_in):
+        result = True
+        if self.root < BPDU_in.root:
+            result = False
+        elif self.root == BPDU_in.root:
+            if self.cost < BPDU_in.cost:
+                result = False
+            elif self.cost == BPDU_in.cost:
+                if self.id < BPDU_in.id:
+                    result = False
+        return result
+
 
 def create_BPDU_from_json(json_message):
     json_obj = json.loads(json_message)
