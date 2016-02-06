@@ -10,7 +10,7 @@ RECEIVE_SIZE = 1500
 
 
 class Bridge:
-    def __init__(self, bridgeID, LAN):
+    def __init__(self, bridgeID, LAN=[]):
         self.id = bridgeID
         self.LAN_list = LAN
         self.sockets = []
