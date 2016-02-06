@@ -41,7 +41,7 @@ def pad(name):
 
 def parse_packet(packet):
     json_message = json.loads(packet)
-    print "Source: ", json_message.source
+    print "Source: ", json_message['source']
 
 
 if __name__ == "__main__":
