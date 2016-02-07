@@ -186,7 +186,7 @@ class Bridge:
         """
         newBPDU = BPDU(self.id, 'ffff', 99, self.rootID, self.cost)
         #for sock in self.sockets:
-        for port in self.ports
+        for port in self.ports:
             port.socket.send(newBPDU.create_json_BPDU())
             #sock.send(newBPDU.create_json_BPDU())
 
