@@ -175,7 +175,7 @@ class Bridge:
                 self.cost += bpdu_in.cost
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
                 print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
-                self.ports[self.rootPort].enabled = True
+                self.ports[self.rootPort_ID].enabled = True
 
     def _broadcast_BPDU(self):
         """
