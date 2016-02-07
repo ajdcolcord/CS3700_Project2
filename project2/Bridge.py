@@ -31,7 +31,7 @@ class Bridge:
         self.ports = []
         self.sockets = []
         self.rootID = self.id
-        self.rootPort = None
+        self.rootPort_ID = None
         self.cost = 1
         self.forwarding_table = ForwardingTable()
 
@@ -77,14 +77,16 @@ class Bridge:
             # -------------------------#
 
             for port in self.ports:
+                #port.remove_timedout_head_BPDU()
                 ready, ignore, ignore2 = select.select([port.socket], [], [], 1)
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
                     # attempt to create BPDU object from incoming message
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
-                        self._assign_new_root(bpdu_in, port.port_id)
                         port.add_BPDU(bpdu_in)
+                        self._assign_new_root(bpdu_in, port.port_id)
+
                         # add bpdu to buffer
                         BPDU_buffer.append(bpdu_in)
 
@@ -149,28 +151,28 @@ class Bridge:
     def _assign_new_root(self, bpdu_in, port_in):
         """
         Determines if the incoming BPDU contains a better root information
-        than the current root than the better
+        than the current root than the current bridge root information
         @param BPDU_in : the BPDU to be checked if better
         @param port_in : the port that the bpdu_in was received
         """
-        oldRootPort = self.rootPort
-        if self.rootPort:
-            if self.ports[self.rootPort].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+        oldRootPort = self.rootPort_ID
+        if self.rootPort_ID:
+            if self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 self.root = bpdu_in.root
-                self.rootPort = port_in
+                self.rootPort_ID = port_in
                 self.cost += bpdu_in.cost
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
-                print "Root port: " + str(self.id) + "/" + str(self.rootPort)
-                self.ports[self.rootPort].enabled = True
+                print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
+                self.ports[self.rootPort_ID].enabled = True
                 self.ports[oldRootPort].enabled = False
 
         else:
             if self.rootID > bpdu_in.root:
                 self.rootID = bpdu_in.root
-                self.rootPort = port_in
+                self.rootPort_ID = port_in
                 self.cost += bpdu_in.cost
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
-                print "Root port: " + str(self.id) + "/" + str(self.rootPort)
+                print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
                 self.ports[self.rootPort].enabled = True
 
     def _broadcast_BPDU(self):
@@ -202,6 +204,8 @@ class Bridge:
         port_id = self.forwarding_table.get_address_port(address)
         # port_id = self.forwarding_table.addresses[address][0]
         self.ports[port_id].socket.send(message)
+
+
 
     # bridge logic:
     # all bridges first assume they are the root

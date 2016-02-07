@@ -33,7 +33,6 @@ class Port:
             self.BPDU_list.insert(0, BPDU)
             bpdu_added = True
         for bpdu in self.BPDU_list:
-
             self._remove_timedout_BPDU(bpdu)
 
             if bpdu.is_incoming_BPDU_better(BPDU) and not bpdu_added:
@@ -49,10 +48,19 @@ class Port:
         Checks if the given BPDU has timed out. If so, remove it
         from this BPDU list
         @param BPDU : the BPDU to check
+        @return boolean : true if removed
         """
         # If the bpdu has timed out, simply remove it
         if int(round((time.time() - BPDU.time) * 1000)) > 750:
             self.BPDU_list.remove(BPDU)
+            return True
+
+        #def remove_timedout_head_BPDU(self):
+        #"""
+        #Removes the head BPDU if it has timed out
+        #"""
+        #self.remove_timedout_head_BPDU(self.BPDU_list[0])
+
 
     def _add_BPDU_at_position(self, BPDU, position):
         """
