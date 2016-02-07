@@ -38,10 +38,6 @@ class Port:
 
             if bpdu.is_incoming_BPDU_better(BPDU) and not bpdu_added:
                 bpdu_added = self._add_BPDU_at_position(BPDU, iterator)
-                #self.BPDU_list.insert(iterator, BPDU)
-                #bpdu_added = True
-                # print "ADDED BPDU TO PORT: ", self.port_id
-
             iterator += 1
 
         # if the BPDU has not been added yet, add it at the end
