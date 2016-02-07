@@ -5,7 +5,7 @@ import socket
 import select
 from Packet import Packet
 from BPDU import BPDU, create_BPDU_from_json
-from DataMessage import DataMessage
+from DataMessage import DataMessage, create_DataMessage_from_json
 from Port import Port
 import time
 
