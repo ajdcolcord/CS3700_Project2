@@ -101,7 +101,7 @@ class Bridge:
                                 # TODO: if the address exists, send to that port_id
                                 # TODO: else... broadcast to all open ports (except received port)
 
-
+                                """
                                 self.forwarding_table.add_address(data_in.source, port.port_id)
 
 
@@ -111,9 +111,10 @@ class Bridge:
                                         str(port.port_id)
                                     self._send_to_address(message, data_in.dest)
                                 else:
-                                    print "Broadcasting message " + \
-                                        str(data_in.id) + " to all ports"
-                                    self._broadcast_message(message, port.port_id)
+                                    """
+                                print "Broadcasting message " + \
+                                    str(data_in.id) + " to all ports"
+                                self._broadcast_message(message, port.port_id)
 
                             else:
                                 print "Not forwarding message " + str(data_in.id)
