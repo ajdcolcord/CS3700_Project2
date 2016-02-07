@@ -200,7 +200,8 @@ class Bridge:
         @param message : message to Sends
         @param address : address to send to
         """
-        port_id = self.forwarding_table.addresses[address][0]
+        port_id = self.forwarding_table.get_address_port(address)
+        # port_id = self.forwarding_table.addresses[address][0]
         self.ports[port_id].socket.send(message)
 
     # bridge logic:
