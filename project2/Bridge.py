@@ -178,7 +178,7 @@ class Bridge:
         """
         for port in self.ports:
             if port != port_in:
-                port.sock.send(message)
+                port.socket.send(message)
 
     # bridge logic:
     # all bridges first assume they are the root
