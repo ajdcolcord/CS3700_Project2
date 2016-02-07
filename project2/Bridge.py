@@ -91,16 +91,17 @@ class Bridge:
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
                             if port.enabled:
+                                print "Received message " + str(data_in.id) + \
+                                    " on port " + str(port.port_id) + " from " + \
+                                    str(data_in.source) + " to " + str(data_in.dest)
 
                                 # TODO: check forwarding table for data message dest add_address
                                 # TODO: if the address exists, send to that port_id
                                 # TODO: else... broadcast to all open ports (except received port)
 
-                                print "Received message " + str(data_in.id) + \
-                                " on port " + str(port.port_id) + " from " + \
-                                str(data_in.source) + " to " + str(data_in.dest)
-
-                                self._broadcast_message(message)
+                                print "Broadcasting message " + \
+                                    str(data_in.id) + " to all ports"
+                                self._broadcast_message(message, port)
                             else:
                                 print "Not forwarding message " + str(data_in.id)
                     ########################################################
@@ -117,7 +118,7 @@ class Bridge:
                     # BEFORE BROADCAST, IF TIMEOUT??? POP and send second
                     # also ----- ADD self.cost to BPDU cost
                     if BPDU_buffer[0]:
-                        self._broadcast_message(BPDU_buffer[0].create_json_BPDU())
+                        self._broadcast_message(BPDU_buffer[0].create_json_BPDU(), -1)
                         BPDU_buffer.pop(0)  # #########
                         print "SENT MESSAGE: ", message
                 start_time = time.time()
@@ -161,7 +162,6 @@ class Bridge:
                 self.ports[self.rootPort].enabled = True
                 self.ports[oldRootPort].enabled = False
 
-
     def _broadcast_BPDU(self):
         """
         Broadcasts a new BPDU from this bridge to all sockets. This
@@ -171,13 +171,14 @@ class Bridge:
         for sock in self.sockets:
             sock.send(newBPDU.create_json_BPDU())
 
-    def _broadcast_message(self, message):
+    def _broadcast_message(self, message, port_in):
         """
         Broadcasts the given message to all socket connections
         @param message : string
         """
-        for sock in self.sockets:
-            sock.send(message)
+        for port in self.ports:
+            if port != port_in:
+                port.sock.send(message)
 
     # bridge logic:
     # all bridges first assume they are the root
