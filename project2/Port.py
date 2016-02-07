@@ -9,7 +9,7 @@ class Port:
     This is the class for a Port, which contains a portID, enabled status,
     list of BPDU's (sorted by 'bestness'), and a socket (referenced)
     """
-    def __init__(self, port_id, socket=None, enabled=False, BPDU_list=[]):
+    def __init__(self, port_id, socket=None, enabled=True, BPDU_list=[]):
         """
         initializes a new port, with the given sock ID. a socket input is
         defaulted to None, enabled is defaulted to True, and the BPDU_list
