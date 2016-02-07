@@ -165,6 +165,9 @@ class Bridge:
         @param BPDU_in : the BPDU to be checked if better
         @param port_in : the port that the bpdu_in was received
         """
+        if self.id > bpdu_in.source:
+            self.ports[self.port_in].enabled = False
+
         oldRootPort = self.rootPort_ID
         if self.rootPort_ID:
             if self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
@@ -176,6 +179,7 @@ class Bridge:
                 self.ports[self.rootPort_ID].enabled = True
                 self.ports[oldRootPort].enabled = False
 
+
         else:
             # is the rootID that we currently have the best?
             if self.rootID > bpdu_in.root:
@@ -185,6 +189,7 @@ class Bridge:
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
                 print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
                 self.ports[self.rootPort_ID].enabled = True
+
 
     def _broadcast_BPDU(self):
         """
