@@ -166,6 +166,9 @@ class Bridge:
         if self.id > bpdu_in.source:
             self.ports[port_in].enabled = False
 
+        elif self.id < bpdu_in.source:
+            self.ports[port_in].enabled = True
+
 
         oldRootPort = self.rootPort_ID
         if self.rootPort_ID:
@@ -205,7 +208,6 @@ class Bridge:
             BPDU_unique_id = hex(random.randrange(0, 65534))
             newBPDU = BPDU(self.id, 'ffff', BPDU_unique_id, self.rootID, self.cost)
             port.socket.send(newBPDU.create_json_BPDU())
-            #sock.send(newBPDU.create_json_BPDU())
 
     def _broadcast_message(self, message, port_in):
         """
@@ -227,23 +229,3 @@ class Bridge:
         port_id = self.forwarding_table.get_address_port(address)
         # port_id = self.forwarding_table.addresses[address][0]
         self.ports[port_id].socket.send(message)
-
-
-
-    # bridge logic:
-    # all bridges first assume they are the root
-    # for each received BPDU, the switch chooses:
-    #     - a new root (smallest known ROOT ID)
-    #     - a new root port (the port that points toward that root)
-    #     - a new designated bridge (who is the next hop to root)
-    # DO THIS BY USING LOGIC:
-    #  - if ROOT ID1 < ROOT ID2: use BPDU-1
-    #  - else if ROOT ID1 == ROOT ID2 && COST1 < COST2: use BPDU-1
-    #  - else if ROOT ID1 == ROOT ID2 && COST1 == COST2 ...
-    #              ......&& BRIDGE-ID1 < BRIDGE-ID2: use BPDU-1
-    #  - else: use BPDU-2
-
-    # BPDU logic:
-    # elect root Bridge
-    # locate next hop closest to root, and it's port
-    # select ports to be included in spanning trees, disable others
