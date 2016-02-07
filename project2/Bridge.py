@@ -91,6 +91,7 @@ class Bridge:
                         BPDU_buffer.append(bpdu_in)
 
                     ########################################################
+                    """
                     elif not bpdu_in:
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
@@ -119,7 +120,7 @@ class Bridge:
                             else:
                                 print "Not forwarding message " + str(data_in.id)
                     ########################################################
-
+                    """
 
             # is it time to send a BPDU?
             # compare start time to current time, if > 500ms, send BPDU
@@ -167,6 +168,7 @@ class Bridge:
                 self.ports[oldRootPort].enabled = False
 
         else:
+            # is the rootID that we currently have the best?
             if self.rootID > bpdu_in.root:
                 self.rootID = bpdu_in.root
                 self.rootPort_ID = port_in
