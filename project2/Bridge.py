@@ -9,6 +9,7 @@ from DataMessage import DataMessage, create_DataMessage_from_json
 from ForwardingTable import ForwardingTable
 from Port import Port
 import time
+import random
 
 RECEIVE_SIZE = 1500
 
@@ -85,9 +86,6 @@ class Bridge:
                     # attempt to create BPDU object from incoming message
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
-
-                        # check if
-
                         port.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
                         if self.id != self.rootID:
@@ -167,6 +165,8 @@ class Bridge:
         """
         if self.id > bpdu_in.source:
             self.ports[port_in].enabled = False
+            self
+
 
         oldRootPort = self.rootPort_ID
         if self.rootPort_ID:
@@ -196,9 +196,11 @@ class Bridge:
         Broadcasts a new BPDU from this bridge to all sockets. This
         will be done if this Bridge is the root
         """
-        newBPDU = BPDU(self.id, 'ffff', 99, self.rootID, self.cost)
         #for sock in self.sockets:
         for port in self.ports:
+             # TODO: check unique id for bpdu - replace ID
+            BPDU_unique_id = hex(rand.randrange(0, 65534))
+            newBPDU = BPDU(self.id, 'ffff', BPDU_unique_id, self.rootID, self.cost)
             port.socket.send(newBPDU.create_json_BPDU())
             #sock.send(newBPDU.create_json_BPDU())
 
