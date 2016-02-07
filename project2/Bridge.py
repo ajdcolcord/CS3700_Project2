@@ -47,6 +47,7 @@ class Bridge:
         """
         iterator = 0
         for x in range(len(LAN_list)):
+            print "CREATING LAN: ", x
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
             port = Port(iterator, s)
             s.connect(self._pad(LAN_list[x]))
@@ -84,6 +85,9 @@ class Bridge:
                     # attempt to create BPDU object from incoming message
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
+
+                        # check if
+
                         port.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
 
@@ -114,7 +118,6 @@ class Bridge:
                                         str(port.port_id)
                                     self._send_to_address(message, data_in.dest)
                                 else:
-
                                     print "Broadcasting message " + \
                                     str(data_in.id) + " to all ports"
                                     self._broadcast_message(message, port.port_id)
