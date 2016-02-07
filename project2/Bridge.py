@@ -165,7 +165,6 @@ class Bridge:
         """
         if self.id > bpdu_in.source:
             self.ports[port_in].enabled = False
-            self
 
 
         oldRootPort = self.rootPort_ID
@@ -178,6 +177,8 @@ class Bridge:
                 print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
                 self.ports[self.rootPort_ID].enabled = True
                 self.ports[oldRootPort].enabled = False
+                if self.id > bpdu_in.source:
+                    self.ports[port_in].enabled = False
 
 
         else:
@@ -189,6 +190,8 @@ class Bridge:
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
                 print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
                 self.ports[self.rootPort_ID].enabled = True
+                if self.id > bpdu_in.source:
+                    self.ports[port_in].enabled = False
 
 
     def _broadcast_BPDU(self):
