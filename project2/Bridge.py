@@ -93,8 +93,8 @@ class Bridge:
                                 # check forwarding table for data message dest add_address
                                 # if the address exists, send to that port_id
                                 # else... broadcast to all open ports (except received port)
-                                print "Received message " + str(data_in.id) +
-                                " on port " + port.port_id + " from " +
+                                print "Received message " + str(data_in.id) + \
+                                " on port " + port.port_id + " from " + \
                                 str(data_in.source) + " to " + str(data_in.dest)
 
                                 ####################################################
