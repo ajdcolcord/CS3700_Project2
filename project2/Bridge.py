@@ -160,7 +160,6 @@ class Bridge:
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
                 print "Root port: " + str(self.id) + "/" + str(self.rootPort)
                 self.ports[self.rootPort].enabled = True
-                self.ports[oldRootPort].enabled = False
 
     def _broadcast_BPDU(self):
         """
