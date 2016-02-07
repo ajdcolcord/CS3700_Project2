@@ -92,7 +92,7 @@ class Bridge:
                         self._assign_new_root(bpdu_in, port.port_id)
                         if self.id != self.rootID:
                             # add bpdu to buffer
-                            self._broadcast_message(message)
+                            self._broadcast_message(message, port.port_id)
                             #BPDU_buffer.append(bpdu_in)
 
                     ########################################################
