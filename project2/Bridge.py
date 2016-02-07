@@ -89,7 +89,7 @@ class Bridge:
                             # check forwarding table for data message dest add_address
                             # if the address exists, send to that port_id
                             # else... broadcast to all open ports (except received port)
-                            self._broadcast_message(message)
+                            self._broadcast_message(create_json_DataMessage(data_in))
 
             # is it time to send a BPDU?
             # compare start time to current time, if > 500ms, send BPDU
