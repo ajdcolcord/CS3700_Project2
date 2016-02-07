@@ -117,7 +117,7 @@ class Bridge:
 
                                     print "Broadcasting message " + \
                                     str(data_in.id) + " to all ports"
-                                    # self._broadcast_message(message, port.port_id)
+                                    self._broadcast_message(message, port.port_id)
 
                             else:
                                 print "Not forwarding message " + str(data_in.id)
