@@ -5,6 +5,7 @@ import socket
 import select
 from Packet import Packet
 from BPDU import BPDU, create_BPDU_from_json
+from DataMessage import DataMessage
 from Port import Port
 import time
 
@@ -82,6 +83,13 @@ class Bridge:
                         port.add_BPDU(bpdu_in)
                         # add bpdu to buffer
                         BPDU_buffer.append(bpdu_in)
+                    elif not bpdu_in:
+                        data_in = create_DataMessage_from_json(message)
+                        if data_in:
+                            # check forwarding table for data message dest add_address
+                            # if the address exists, send to that port_id
+                            # else... broadcast to all open ports (except received port)
+                            self._broadcast_message(message)
 
             # is it time to send a BPDU?
             # compare start time to current time, if > 500ms, send BPDU

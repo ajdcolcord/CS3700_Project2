@@ -22,8 +22,6 @@ class DataMessage:
 
         DataMessage_message_object = {}
         DataMessage_message_object['id'] = self.id
-        DataMessage_message_object['root'] = self.root
-        DataMessage_message_object['cost'] = self.cost
 
         json_DataMessage_object['message'] = DataMessage_message_object
 
