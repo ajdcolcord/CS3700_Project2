@@ -12,6 +12,9 @@ import time
 RECEIVE_SIZE = 1500
 
 
+# check through all top BPDUs of all ports...
+# for those that are the same, close the highest cost ports
+
 class Bridge:
     """
     This is the class for a Bridge, which contains all the information
@@ -75,8 +78,7 @@ class Bridge:
                 ready, ignore, ignore2 = select.select([port.socket], [], [], 1)
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
-                    # create new packet object from the incoming message
-                    # packet = Packet(message)
+                    # attempt to create BPDU object from incoming message
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
                         self._assign_new_root(bpdu_in, port.port_id)
@@ -90,18 +92,15 @@ class Bridge:
                         if data_in:
                             if port.enabled:
 
-                                # check forwarding table for data message dest add_address
-                                # if the address exists, send to that port_id
-                                # else... broadcast to all open ports (except received port)
+                                # TODO: check forwarding table for data message dest add_address
+                                # TODO: if the address exists, send to that port_id
+                                # TODO: else... broadcast to all open ports (except received port)
+
                                 print "Received message " + str(data_in.id) + \
                                 " on port " + str(port.port_id) + " from " + \
                                 str(data_in.source) + " to " + str(data_in.dest)
 
-                                ####################################################
-                                ####################################################
                                 self._broadcast_message(message)
-                                ####################################################
-                                ####################################################
                             else:
                                 print "Not forwarding message " + str(data_in.id)
                     ########################################################
@@ -134,19 +133,6 @@ class Bridge:
                 result += '\0'
         return result
 
-    '''
-    def _choose_rootID_from_BPDU(self, BPDU_in):
-        """
-        Determines if the incoming BPDU contains a better root information
-        than the current root than the better
-        @ param BPDU_in : the BPDU to be checked if better
-        """
-        # TODO : NEEDS TO BE FINISHED
-        rootID_2 = BPDU_in.rootID
-        cost_2 = BPDU_in.cost
-        bridgeID_2 = BPDU_in.id
-    '''
-
     def _assign_new_root(self, bpdu_in, port_in):
         """
         Determines if the incoming BPDU contains a better root information
@@ -154,6 +140,7 @@ class Bridge:
         @param BPDU_in : the BPDU to be checked if better
         @param port_in : the port that the bpdu_in was received
         """
+        oldRootPort = self.rootPort
         if self.rootPort:
             if self.ports[self.rootPort].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 self.root = bpdu_in.root
@@ -161,6 +148,9 @@ class Bridge:
                 self.cost = bpdu_in.cost
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
                 print "Root port: " + str(self.id) + "/" + str(self.rootPort)
+                self.ports[self.rootPort].enabled = True
+                self.ports[oldRootPort].enabled = False
+
         else:
             if self.rootID > bpdu_in.root:
                 self.rootID = bpdu_in.root
@@ -168,6 +158,9 @@ class Bridge:
                 self.cost = bpdu_in.cost
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
                 print "Root port: " + str(self.id) + "/" + str(self.rootPort)
+                self.ports[self.rootPort].enabled = True
+                self.ports[oldRootPort].enabled = False
+
 
     def _broadcast_BPDU(self):
         """
