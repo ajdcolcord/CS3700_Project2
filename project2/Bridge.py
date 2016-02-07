@@ -6,6 +6,7 @@ import select
 from Packet import Packet
 from BPDU import BPDU, create_BPDU_from_json
 from DataMessage import DataMessage, create_DataMessage_from_json
+from ForwardingTable import ForwardingTable
 from Port import Port
 import time
 
@@ -32,6 +33,7 @@ class Bridge:
         self.rootID = self.id
         self.rootPort = None
         self.cost = 1
+        self.forwarding_table = ForwardingTable()
 
         self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
@@ -99,9 +101,20 @@ class Bridge:
                                 # TODO: if the address exists, send to that port_id
                                 # TODO: else... broadcast to all open ports (except received port)
 
-                                print "Broadcasting message " + \
-                                    str(data_in.id) + " to all ports"
-                                self._broadcast_message(message, port)
+
+                                self.forwarding_table.add_address(data_in.source, port_id)
+
+
+                                if data_in.dest in self.forwarding_table:
+                                    print "Forwarding message " + \
+                                        str(data_in.id) + " to port " +
+                                        str(port.port_id)
+                                    self._send_to_address(message, data_in.dest)
+                                else:
+                                    print "Broadcasting message " + \
+                                        str(data_in.id) + " to all ports"
+                                    self._broadcast_message(message, port_id)
+
                             else:
                                 print "Not forwarding message " + str(data_in.id)
                     ########################################################
@@ -172,12 +185,22 @@ class Bridge:
 
     def _broadcast_message(self, message, port_in):
         """
-        Broadcasts the given message to all socket connections
+        Broadcasts the given message to all socket connections, except the
+        inputted port
         @param message : string
         """
         for port in self.ports:
             if port != port_in:
                 port.socket.send(message)
+
+    def _send_to_address(self, message, address):
+        """
+        Sends the message inputted to the input address directly,
+        using the forwarding table entry
+        @param message : message to Sends
+        @param address : address to send to
+        """
+        self.forwarding_table[address][0].socket.send(message)
 
     # bridge logic:
     # all bridges first assume they are the root
