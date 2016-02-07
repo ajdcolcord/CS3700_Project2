@@ -107,7 +107,7 @@ class Bridge:
 
                                 if data_in.dest in self.forwarding_table:
                                     print "Forwarding message " + \
-                                        str(data_in.id) + " to port " +
+                                        str(data_in.id) + " to port " + \
                                         str(port.port_id)
                                     self._send_to_address(message, data_in.dest)
                                 else:
