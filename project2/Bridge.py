@@ -202,7 +202,7 @@ class Bridge:
         #for sock in self.sockets:
         for port in self.ports:
              # TODO: check unique id for bpdu - replace ID
-            BPDU_unique_id = hex(rand.randrange(0, 65534))
+            BPDU_unique_id = hex(random.randrange(0, 65534))
             newBPDU = BPDU(self.id, 'ffff', BPDU_unique_id, self.rootID, self.cost)
             port.socket.send(newBPDU.create_json_BPDU())
             #sock.send(newBPDU.create_json_BPDU())
