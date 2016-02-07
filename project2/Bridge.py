@@ -102,7 +102,7 @@ class Bridge:
                                 # TODO: else... broadcast to all open ports (except received port)
 
 
-                                self.forwarding_table.add_address(data_in.source, port_id)
+                                self.forwarding_table.add_address(data_in.source, port.port_id)
 
 
                                 if data_in.dest in self.forwarding_table:
@@ -113,7 +113,7 @@ class Bridge:
                                 else:
                                     print "Broadcasting message " + \
                                         str(data_in.id) + " to all ports"
-                                    self._broadcast_message(message, port_id)
+                                    self._broadcast_message(message, port.port_id)
 
                             else:
                                 print "Not forwarding message " + str(data_in.id)
