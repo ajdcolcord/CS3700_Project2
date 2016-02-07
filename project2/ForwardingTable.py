@@ -23,7 +23,7 @@ class ForwardingTable():
         """
         self.addresses[address] = (port, time.time())
 
-    def get_address_port(address):
+    def get_address_port(self, address):
         """
         Returns the port number for the given address, if not timed out
         @param address : the address to find the port
