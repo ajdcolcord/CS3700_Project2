@@ -91,7 +91,7 @@ class Bridge:
                         BPDU_buffer.append(bpdu_in)
 
                     ########################################################
-                    """
+
                     elif not bpdu_in:
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
@@ -107,20 +107,22 @@ class Bridge:
 
                                 self.forwarding_table.add_address(data_in.source, port.port_id)
 
+
                                 if data_in.dest in self.forwarding_table.addresses:
                                     print "Forwarding message " + \
                                         str(data_in.id) + " to port " + \
                                         str(port.port_id)
                                     self._send_to_address(message, data_in.dest)
                                 else:
-                                    print "Broadcasting message " + \
-                                        str(data_in.id) + " to all ports"
-                                    self._broadcast_message(message, port.port_id)
+
+                                print "Broadcasting message " + \
+                                    str(data_in.id) + " to all ports"
+                                    # self._broadcast_message(message, port.port_id)
 
                             else:
                                 print "Not forwarding message " + str(data_in.id)
                     ########################################################
-                    """
+
 
             # is it time to send a BPDU?
             # compare start time to current time, if > 500ms, send BPDU
