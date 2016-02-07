@@ -83,13 +83,29 @@ class Bridge:
                         port.add_BPDU(bpdu_in)
                         # add bpdu to buffer
                         BPDU_buffer.append(bpdu_in)
+
+                    ########################################################
                     elif not bpdu_in:
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
-                            # check forwarding table for data message dest add_address
-                            # if the address exists, send to that port_id
-                            # else... broadcast to all open ports (except received port)
-                            self._broadcast_message(create_json_DataMessage(data_in))
+                            if port.enabled:
+
+                                # check forwarding table for data message dest add_address
+                                # if the address exists, send to that port_id
+                                # else... broadcast to all open ports (except received port)
+                                print "Received message " + str(data_in.id) +
+                                " on port " + port.port_id + " from " +
+                                str(data_in.source) + " to " + str(data_in.dest)
+
+                                ####################################################
+                                ####################################################
+                                self._broadcast_message(create_json_DataMessage(data_in))
+                                ####################################################
+                                ####################################################
+                            else:
+                                print "Not forwarding message " + str(data_in.id)
+                    ########################################################
+
 
             # is it time to send a BPDU?
             # compare start time to current time, if > 500ms, send BPDU
