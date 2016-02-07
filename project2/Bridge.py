@@ -94,7 +94,7 @@ class Bridge:
                                 # if the address exists, send to that port_id
                                 # else... broadcast to all open ports (except received port)
                                 print "Received message " + str(data_in.id) + \
-                                " on port " + port.port_id + " from " + \
+                                " on port " + str(port.port_id) + " from " + \
                                 str(data_in.source) + " to " + str(data_in.dest)
 
                                 ####################################################
