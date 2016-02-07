@@ -160,7 +160,7 @@ class Bridge:
             if self.ports[self.rootPort].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 self.root = bpdu_in.root
                 self.rootPort = port_in
-                self.cost = bpdu_in.cost
+                self.cost += bpdu_in.cost
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
                 print "Root port: " + str(self.id) + "/" + str(self.rootPort)
                 self.ports[self.rootPort].enabled = True
@@ -170,7 +170,7 @@ class Bridge:
             if self.rootID > bpdu_in.root:
                 self.rootID = bpdu_in.root
                 self.rootPort = port_in
-                self.cost = bpdu_in.cost
+                self.cost += bpdu_in.cost
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
                 print "Root port: " + str(self.id) + "/" + str(self.rootPort)
                 self.ports[self.rootPort].enabled = True
