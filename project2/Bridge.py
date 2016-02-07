@@ -185,8 +185,10 @@ class Bridge:
         will be done if this Bridge is the root
         """
         newBPDU = BPDU(self.id, 'ffff', 99, self.rootID, self.cost)
-        for sock in self.sockets:
-            sock.send(newBPDU.create_json_BPDU())
+        #for sock in self.sockets:
+        for port in self.ports
+            port.socket.send(newBPDU.create_json_BPDU())
+            #sock.send(newBPDU.create_json_BPDU())
 
     def _broadcast_message(self, message, port_in):
         """
