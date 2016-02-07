@@ -105,7 +105,7 @@ class Bridge:
                                 self.forwarding_table.add_address(data_in.source, port.port_id)
 
 
-                                if data_in.dest in self.forwarding_table:
+                                if data_in.dest in self.forwarding_table.addresses:
                                     print "Forwarding message " + \
                                         str(data_in.id) + " to port " + \
                                         str(port.port_id)
@@ -200,7 +200,7 @@ class Bridge:
         @param message : message to Sends
         @param address : address to send to
         """
-        self.forwarding_table[address][0].socket.send(message)
+        self.forwarding_table.addresses[address][0].socket.send(message)
 
     # bridge logic:
     # all bridges first assume they are the root
