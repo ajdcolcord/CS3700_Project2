@@ -90,9 +90,10 @@ class Bridge:
 
                         port.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
-
-                        # add bpdu to buffer
-                        BPDU_buffer.append(bpdu_in)
+                        if self.id != self.rootID:
+                            # add bpdu to buffer
+                            self._broadcast_message(message)
+                            #BPDU_buffer.append(bpdu_in)
 
                     ########################################################
 
@@ -133,6 +134,7 @@ class Bridge:
                 if self.id == self.rootID:
                     self._broadcast_BPDU()
                     print "Root BPDU Sent"
+                """
                 else:
                     # _broadcast_message(best bpdu)
                     # BEFORE BROADCAST, IF TIMEOUT??? POP and send second
@@ -141,7 +143,9 @@ class Bridge:
                         self._broadcast_message(BPDU_buffer[0].create_json_BPDU(), -1)
                         BPDU_buffer.pop(0)  # #########
                         print "SENT MESSAGE: ", message
+                """
                 start_time = time.time()
+
 
     def _pad(self, name):
         """
