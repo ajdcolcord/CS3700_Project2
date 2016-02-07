@@ -115,7 +115,7 @@ class Bridge:
                                     self._send_to_address(message, data_in.dest)
                                 else:
 
-                                print "Broadcasting message " + \
+                                    print "Broadcasting message " + \
                                     str(data_in.id) + " to all ports"
                                     # self._broadcast_message(message, port.port_id)
 
