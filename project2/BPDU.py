@@ -4,6 +4,14 @@ import json
 
 class BPDU:
     def __init__(self, source, dest, ID, root, cost):
+        """
+        Initializes a new BPDU with the given information
+        @param source : the source of the BPDU
+        @param dest : the destination of the BPDU
+        @param ID : the ID of the BPDU message
+        @param root : the rootID of the BPDU
+        @param cost : the cost to the root
+        """
         self.source = source
         self.dest = dest
         self.type = 'bpdu'
@@ -32,6 +40,12 @@ class BPDU:
         return json.dumps(json_BPDU_object)
 
     def is_incoming_BPDU_better(self, BPDU_in):
+        """
+        Checks if the incoming BPDU contains better information than
+        this BPDU, and returns true or false if so
+        @param BPDU_in : the BPDU to check
+        @return True if the incoming BPDU is better, False otherwise
+        """
         result = True
         if self.root < BPDU_in.root:
             result = False
@@ -45,6 +59,14 @@ class BPDU:
 
 
 def create_BPDU_from_json(json_message):
+    """
+    This function creates a new BPDU object from the information contained
+    in the inputted json_message. It parses the message and places the
+    information into a new BPDU object.
+    @param json_message : the JSON object to parse
+    @return BPDU if the BPDU is created, False if the inputted message is not
+    a BPDU type
+    """
     json_obj = json.loads(json_message)
     if json_obj['type'] == 'bpdu':
         src = json_obj['source']
