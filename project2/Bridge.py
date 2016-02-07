@@ -200,7 +200,8 @@ class Bridge:
         @param message : message to Sends
         @param address : address to send to
         """
-        self.forwarding_table.addresses[address][0].socket.send(message)
+        port_id = self.forwarding_table.addresses[address][0]
+        self.ports[port_id].socket.send(message)
 
     # bridge logic:
     # all bridges first assume they are the root
