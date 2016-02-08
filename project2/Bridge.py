@@ -196,7 +196,8 @@ class Bridge:
         """
         for port in self.ports:
             if port != port_in:
-                port.socket.send(message)
+                if port.enabled:
+                    port.socket.send(message)
 
     def _send_to_address(self, message, address):
         """
@@ -206,7 +207,8 @@ class Bridge:
         @param address : address to send to
         """
         port_id = self.forwarding_table.get_address_port(address)
-        self.ports[port_id].socket.send(message)
+        if self.ports[port_id].enabled:
+            self.ports[port_id].socket.send(message)
 
     def _print_received_message(self, data_in_id, port_port_id, data_in_source, data_in_dest):
         print "Received message " + str(data_in_id) + "on port " + str(port_port_id) + \
