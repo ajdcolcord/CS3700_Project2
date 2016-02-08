@@ -29,6 +29,7 @@ class Bridge:
         @param LAN_list : default to empty list, else, will hold the LANs
         """
         self.id = bridgeID
+        self.lans = []
         self.ports = []
         self.sockets = []
         self.rootID = self.id
@@ -48,13 +49,15 @@ class Bridge:
         """
         iterator = 0
         for x in range(len(LAN_list)):
-            print "CREATING LAN: ", x
-            s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-            port = Port(iterator, s)
-            s.connect(self._pad(LAN_list[x]))
-            self.ports.append(port)
-            self.sockets.append(s)
-            iterator += 1
+            if x not in self.lans:
+                print "CREATING LAN: ", x
+                s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+                port = Port(iterator, s)
+                s.connect(self._pad(LAN_list[x]))
+                self.ports.append(port)
+                self.sockets.append(s)
+                iterator += 1
+                self.lans.append(x)
 
     def _start_receiving(self):
         """
