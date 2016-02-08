@@ -83,13 +83,6 @@ class Bridge:
                         port.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
 
-                        ######
-                        if bpdu_in.cost > self.cost and bpdu_in.source < self.id and bpdu_in.root == self.rootID:
-                            port.designated = True
-                        else:
-                            port.designated = False
-                        ######
-
                         #if self.id != self.rootID:
 
                             ##########
@@ -119,9 +112,9 @@ class Bridge:
 
 
 
-                    #for bpdu in port.BPDU_list:
-                        #if bpdu.cost < self.cost or bpdu.source < self.id:
-                        #    port.designated = False
+                    for bpdu in port.BPDU_list:
+                        if bpdu.cost < self.cost or bpdu.source < self.id:
+                            port.designated = False
 
 
                     if not port.BPDU_list or port.port_id == self.rootID or port.designated:
