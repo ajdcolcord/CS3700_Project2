@@ -32,9 +32,10 @@ class Bridge:
         @LAN_list : List of LANs to create sockets for
         """
         port_id = 0
+        lans = []
         for x in range(len(LAN_list)):
-            if LAN_list[x] not in self.ports:
-                self.lans.append(LAN_list[x])
+            if LAN_list[x] not in lans:
+                lans.append(LAN_list[x])
                 print "CREATING LAN: ", x
                 sock = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
                 sock.connect(self._pad(LAN_list[x]))
