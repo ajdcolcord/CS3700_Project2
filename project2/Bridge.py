@@ -73,16 +73,8 @@ class Bridge:
 
         # Main loop
         while True:
-
-            # -----ORIGINAL CALLS------#
-            # ready, ignore, ignore2 = select.select(self.sockets, [], [], 1)
-            # Reads from each fo the ready ports
-            # for x in ready:
-            #    message = x.recv(RECEIVE_SIZE)
-            # -------------------------#
-
             for port in self.ports:
-                ready, ignore, ignore2 = select.select([port.socket], [], [], 0.1)
+                ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
                     # attempt to create BPDU object from incoming message
@@ -91,26 +83,22 @@ class Bridge:
                         port.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
                         if self.id != self.rootID:
-                            # add bpdu to buffer
                             self._broadcast_message(message, port.port_id)
-                            #BPDU_buffer.append(bpdu_in)
-
-                    ########################################################
+                            # BPDU_buffer.append(bpdu_in)
 
                     elif not bpdu_in:
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
                             if port.enabled:
-                                print "Received message " + str(data_in.id) + \
-                                    " on port " + str(port.port_id) + " from " + \
-                                    str(data_in.source) + " to " + str(data_in.dest)
+                                print "Received message " + \
+                                    str(data_in.id) + \
+                                    " on port " + str(port.port_id) + \
+                                    " from " + \
+                                    str(data_in.source) + \
+                                    " to " + str(data_in.dest)
 
-                                # TODO: check forwarding table for data message dest add_address
-                                # TODO: if the address exists, send to that port_id
-                                # TODO: else... broadcast to all open ports (except received port)
-
-
-                                self.forwarding_table.add_address(data_in.source, port.port_id)
+                                self.forwarding_table.add_address(
+                                    data_in.source, port.port_id)
 
 
                                 if data_in.dest in self.forwarding_table.addresses:
@@ -120,12 +108,10 @@ class Bridge:
                                     self._send_to_address(message, data_in.dest)
                                 else:
                                     print "Broadcasting message " + \
-                                    str(data_in.id) + " to all ports"
+                                        str(data_in.id) + " to all ports"
                                     self._broadcast_message(message, port.port_id)
-
                             else:
                                 print "Not forwarding message " + str(data_in.id)
-                    ########################################################
 
                     for bpdu in port.BPDU_list:
                         if bpdu.cost < self.cost or bpdu.source < self.id:
@@ -136,26 +122,12 @@ class Bridge:
                     else:
                         port.enabled = False
 
-
-            # is it time to send a BPDU?
+            # is it time to send a new BPDU?
             # compare start time to current time, if > 500ms, send BPDU
             if int(round((time.time() - start_time) * 1000)) > 500:
                 if self.id == self.rootID:
                     self._broadcast_BPDU()
-                    #print "Root BPDU Sent"
-                """
-                else:
-                    # _broadcast_message(best bpdu)
-                    # BEFORE BROADCAST, IF TIMEOUT??? POP and send second
-                    # also ----- ADD self.cost to BPDU cost
-                    if BPDU_buffer:
-                        self._broadcast_message(BPDU_buffer[0].create_json_BPDU(), -1)
-                        BPDU_buffer.pop(0)  # #########
-                        print "SENT MESSAGE: ", message
-                """
                 start_time = time.time()
-
-
 
     def _pad(self, name):
         """
@@ -179,9 +151,8 @@ class Bridge:
             self.ports[port_in].enabled = False
             print "Disabled port: " + str(self.id) + "/" + str(port_in)
 
-        #if self.id < bpdu_in.source:
+        # if self.id < bpdu_in.source:
         #    self.ports[port_in].enabled = True
-
 
         oldRootPort = self.rootPort_ID
         if self.rootPort_ID:
@@ -213,17 +184,16 @@ class Bridge:
                     print "Disabled port: " + str(self.id) + "/" + str(port_in)
                 self.forwarding_table = ForwardingTable()
 
-
     def _broadcast_BPDU(self):
         """
         Broadcasts a new BPDU from this bridge to all sockets. This
         will be done if this Bridge is the root
         """
-        #for sock in self.sockets:
+        # for sock in self.sockets:
         for port in self.ports:
-             # TODO: check unique id for bpdu - replace ID
             BPDU_unique_id = hex(random.randrange(0, 65534))
-            newBPDU = BPDU(self.id, 'ffff', BPDU_unique_id, self.rootID, self.cost)
+            newBPDU = \
+                BPDU(self.id, 'ffff', BPDU_unique_id, self.rootID, self.cost)
             port.socket.send(newBPDU.create_json_BPDU())
 
     def _broadcast_message(self, message, port_in):
@@ -244,5 +214,4 @@ class Bridge:
         @param address : address to send to
         """
         port_id = self.forwarding_table.get_address_port(address)
-        # port_id = self.forwarding_table.addresses[address][0]
         self.ports[port_id].socket.send(message)

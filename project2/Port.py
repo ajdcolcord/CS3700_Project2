@@ -59,13 +59,6 @@ class Port:
             self.BPDU_list.remove(BPDU)
             return True
 
-        # def remove_timedout_head_BPDU(self):
-        # """
-        # Removes the head BPDU if it has timed out
-        # """
-        # self.remove_timedout_head_BPDU(self.BPDU_list[0])
-
-
     def _add_BPDU_at_position(self, BPDU, position):
         """
         Adds the given BPDU at the given position in this BPDU list
@@ -76,7 +69,4 @@ class Port:
         """
         self.BPDU_list.insert(position, BPDU)
         bpdu_added = True
-        #print "ADDED BPDU TO PORT: ", self.port_id
         return True
-
-    # def activate_or_deactivate_port(self, BPDU):
