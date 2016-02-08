@@ -53,7 +53,6 @@ class BPDU:
             if self.cost < BPDU_in.cost:
                 result = False
             elif self.cost == BPDU_in.cost:
-                #if self.id < BPDU_in.id:
                 if self.source < BPDU_in.source:
                     result = False
         return result

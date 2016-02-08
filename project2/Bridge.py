@@ -96,28 +96,18 @@ class Bridge:
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
                             if port.enabled:
-                                print "Received message " + \
-                                    str(data_in.id) + \
-                                    " on port " + str(port.port_id) + \
-                                    " from " + \
-                                    str(data_in.source) + \
-                                    " to " + str(data_in.dest)
+                                self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest):
 
-                                self.forwarding_table.add_address(
-                                    data_in.source, port.port_id)
-
+                                self.forwarding_table.add_address(data_in.source, port.port_id)
 
                                 if data_in.dest in self.forwarding_table.addresses:
-                                    print "Forwarding message " + \
-                                        str(data_in.id) + " to port " + \
-                                        str(port.port_id)
+                                    self._print_forwarding_message(data_in.id, port.port_id)
                                     self._send_to_address(message, data_in.dest)
                                 else:
-                                    print "Broadcasting message " + \
-                                        str(data_in.id) + " to all ports"
+                                    self._print_boradcasting_message(data_in.id)
                                     self._broadcast_message(message, port.port_id)
                             else:
-                                print "Not forwarding message " + str(data_in.id)
+                                self._print_not_forwarding_message(data_in.id)
 
                     for bpdu in port.BPDU_list:
                         if bpdu.cost < self.cost or bpdu.source < self.id:
@@ -155,7 +145,7 @@ class Bridge:
         """
         if self.id > bpdu_in.source:
             self.ports[port_in].enabled = False
-            print "Disabled port: " + str(self.id) + "/" + str(port_in)
+            self._print_disabled_port(port_in)
 
         # if self.id < bpdu_in.source:
         #    self.ports[port_in].enabled = True
@@ -172,7 +162,7 @@ class Bridge:
                 # self.ports[oldRootPort].enabled = False
                 if self.id > bpdu_in.source:
                     self.ports[port_in].enabled = False
-                    print "Disabled port: " + str(self.id) + "/" + str(port_in)
+                    self._print_disabled_port(port_in)
                 self.forwarding_table = ForwardingTable()
 
         elif self.rootID > bpdu_in.root:
@@ -184,7 +174,7 @@ class Bridge:
                 self.ports[self.rootPort_ID].enabled = True
                 if self.id > bpdu_in.source:
                     self.ports[port_in].enabled = False
-                    print "Disabled port: " + str(self.id) + "/" + str(port_in)
+                    self._print_disabled_port(port_in)
                 self.forwarding_table = ForwardingTable()
 
     def _broadcast_BPDU(self):
@@ -194,8 +184,7 @@ class Bridge:
         """
         for port in self.ports:
             BPDU_unique_id = hex(random.randrange(0, 65534))
-            newBPDU = \
-                BPDU(self.id, 'ffff', BPDU_unique_id, self.rootID, self.cost)
+            newBPDU = BPDU(self.id, 'ffff', BPDU_unique_id, self.rootID, self.cost)
             port.socket.send(newBPDU.create_json_BPDU())
 
     def _broadcast_message(self, message, port_in):
@@ -218,12 +207,18 @@ class Bridge:
         port_id = self.forwarding_table.get_address_port(address)
         self.ports[port_id].socket.send(message)
 
-    '''
-    def _print_received_message(self, data):
-    print "Received message " + \
-                                    str(data_in.id) + \
-                                    " on port " + str(port.port_id) + \
-                                    " from " + \
-                                    str(data_in.source) + \
-                                    " to " + str(data_in.dest)
-    '''
+    def _print_received_message(self, data_in_id, port_port_id, data_in_source, data_in_dest):
+        print "Received message " + str(data_in_id) + "on port " + str(port_port_id) + \
+            " from " + str(data_in_source) + " to " + str(data_in_dest)
+
+    def _print_forwarding_message(self, data_in_id, port_port_id):
+        print "Forwarding message " + str(data_in_id) + " to port " + str(port_port_id)
+
+    def _print_boradcasting_message(self, data_in_id):
+        print "Broadcasting message " + str(data_in_id) + " to all ports"
+
+    def _print_not_forwarding_message(self, data_in_id):
+        print "Not forwarding message " + str(data_in_id)
+
+    def _print_disabled_port(self, port_in):
+        print "Disabled port: " + str(self.id) + "/" + str(port_in)
