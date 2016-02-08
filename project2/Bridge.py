@@ -169,8 +169,8 @@ class Bridge:
         #if self.id > bpdu_in.source:
         #    self.ports[port_in].enabled = False
 
-        #elif self.id < bpdu_in.source:
-        #    self.ports[port_in].enabled = True
+        if self.id < bpdu_in.source:
+            self.ports[port_in].enabled = True
 
 
         oldRootPort = self.rootPort_ID
