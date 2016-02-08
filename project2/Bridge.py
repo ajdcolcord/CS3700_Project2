@@ -82,6 +82,7 @@ class Bridge:
                     if bpdu_in:
                         port.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
+
                         if self.id != self.rootID:
 
                             ##########
@@ -121,9 +122,11 @@ class Bridge:
             # is it time to send a new BPDU?
             # compare start time to current time, if > 500ms, send BPDU
             if int(round((time.time() - start_time) * 1000)) > 500:
-                if self.id == self.rootID:
-                    self._broadcast_BPDU()
+                #if self.id == self.rootID:
+                self._broadcast_BPDU()
                 start_time = time.time()
+
+
 
     def _pad(self, name):
         """
