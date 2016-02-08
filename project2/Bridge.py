@@ -185,6 +185,7 @@ class Bridge:
                 self.ports[oldRootPort].enabled = False
                 if self.id > bpdu_in.source:
                     self.ports[port_in].enabled = False
+                self.forwarding_table = ForwardingTable()
 
 
         else:
@@ -198,6 +199,7 @@ class Bridge:
                 self.ports[self.rootPort_ID].enabled = True
                 if self.id > bpdu_in.source:
                     self.ports[port_in].enabled = False
+                self.forwarding_table = ForwardingTable()
 
 
     def _broadcast_BPDU(self):
