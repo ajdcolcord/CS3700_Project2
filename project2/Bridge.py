@@ -80,8 +80,9 @@ class Bridge:
                     # attempt to create BPDU object from incoming message
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
+                        self._determine_new_root(bpdu_in, port)
                         port.add_BPDU(bpdu_in)
-                        self._assign_new_root(bpdu_in, port.port_id)
+                        # self._assign_new_root(bpdu_in, port.port_id)
                         if self.id != self.rootID:
                             self._broadcast_message(message, port.port_id)
                             # BPDU_buffer.append(bpdu_in)
@@ -181,12 +182,30 @@ class Bridge:
                     print "Disabled port: " + str(self.id) + "/" + str(port_in)
                 self.forwarding_table = ForwardingTable()
 
+
+    def _determine_new_root(self, BPDU, port):
+        if self.rootID < BPDU.root:
+            port.designated = True
+            return
+        elif self.rootID == BPDU.rootID and self.cost < BPDU.cost:
+            port.designated = True
+            return
+        elif self.rootID == BPDU.rootID and self.cost == BPDU.cost and self.id < BPDU.source:
+            port.designated = True
+            return
+        else:
+            # BPDU is better
+            self.rootID = BPDU.root
+            self.rootPort_ID = port.port_id
+            port.designated = False
+            return
+
+
     def _broadcast_BPDU(self):
         """
         Broadcasts a new BPDU from this bridge to all sockets. This
         will be done if this Bridge is the root
         """
-        # for sock in self.sockets:
         for port in self.ports:
             BPDU_unique_id = hex(random.randrange(0, 65534))
             newBPDU = \
