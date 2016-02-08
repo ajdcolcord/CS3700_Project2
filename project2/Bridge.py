@@ -83,7 +83,7 @@ class Bridge:
 
             for port in self.ports:
                 #port.remove_timedout_head_BPDU()
-                ready, ignore, ignore2 = select.select([port.socket], [], [], 0.5)
+                #ready, ignore, ignore2 = select.select([port.socket], [], [], 0.01)
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
                     # attempt to create BPDU object from incoming message
