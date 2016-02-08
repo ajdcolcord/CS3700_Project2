@@ -74,6 +74,13 @@ class Bridge:
         # Main loop
         while True:
             for port in self.ports:
+                ######
+                if not port.BPDU_list:
+                    port.designated = True
+                    port.enabled = True
+                if port.port_id == self.rootPort_ID:
+                    port.enabled = True
+                ######
                 ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
@@ -82,7 +89,10 @@ class Bridge:
                     if bpdu_in:
                         # self._determine_new_root(bpdu_in, port)
                         port.add_BPDU(bpdu_in)
-                        self._assign_new_root(bpdu_in, port.port_id)
+                        #self._assign_new_root(bpdu_in, port.port_id)
+                        ##########
+                        self._assign_new_root_2(bpdu_in, port)
+                        ##########
                         if self.id != self.rootID:
                             self._broadcast_message(message, port.port_id)
                             # BPDU_buffer.append(bpdu_in)
@@ -140,6 +150,23 @@ class Bridge:
         while len(result) < 108:
             result += '\0'
         return result
+
+    def _assign_new_root_2(self, bpdu_in, port_in):
+        # if incoming bpdu is better, this port_in is no longer designated. else, it is designated
+        if self.rootID < bpdu_in.root:
+            port_in.designated = True
+            port_in.enabled = True
+        elif self.rootID == bpdu_in.root and self.cost < bpdu_in.cost:
+            port_in.designated = True
+            port_in.enabled = True
+        elif self.rootID == bpdu_in.root and self.cost == bpdu_in.cost and self.id < bpdu_in.source:
+            port_in.designated = True
+            port_in.enabled = True
+        else:
+            port_in.designated = False
+            self.rootID = bpdu_in.root
+            self.rootPort_ID = port_in.port_id
+            self.cost = bpdu_in.cost + 1
 
     def _assign_new_root(self, bpdu_in, port_in):
         """
