@@ -156,8 +156,10 @@ class Bridge:
 
         oldRootPort = self.rootPort_ID
         #if self.rootPort_ID:
-        if self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
-            self.root = bpdu_in.root
+        #if self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+        if self.ports[self.rootID].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+
+            self.rootID = bpdu_in.root
             self.rootPort_ID = port_in
             self.cost += bpdu_in.cost
             print "New root: " + str(self.id) + "/" + str(self.rootID)
