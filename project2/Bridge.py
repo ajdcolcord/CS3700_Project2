@@ -184,6 +184,10 @@ class Bridge:
 
 
     def _determine_new_root(self, BPDU, port):
+        if self.id > bpdu_in.source:
+            self.ports[port_in].enabled = False
+            print "Disabled port: " + str(self.id) + "/" + str(port_in)
+
         if self.rootID < BPDU.root:
             port.designated = True
             return
