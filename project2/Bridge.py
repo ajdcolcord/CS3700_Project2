@@ -50,7 +50,7 @@ class Bridge:
         iterator = 0
         for x in range(len(LAN_list)):
             if LAN_list[x] not in self.lans:
-                print "CREATING LAN: ", x
+                # print "CREATING LAN: ", x
                 s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
                 port = Port(iterator, s)
                 s.connect(self._pad(LAN_list[x]))
@@ -134,7 +134,7 @@ class Bridge:
             if int(round((time.time() - start_time) * 1000)) > 500:
                 if self.id == self.rootID:
                     self._broadcast_BPDU()
-                    print "Root BPDU Sent"
+                    #print "Root BPDU Sent"
                 """
                 else:
                     # _broadcast_message(best bpdu)
@@ -156,7 +156,7 @@ class Bridge:
         """
         result = '\0' + name
         while len(result) < 108:
-                result += '\0'
+            result += '\0'
         return result
 
     def _assign_new_root(self, bpdu_in, port_in):
@@ -168,6 +168,7 @@ class Bridge:
         """
         if self.id > bpdu_in.source:
             self.ports[port_in].enabled = False
+            print "Disabled port: " + str(self.id) + "/" + str(port_in)
 
         #if self.id < bpdu_in.source:
         #    self.ports[port_in].enabled = True
@@ -182,9 +183,10 @@ class Bridge:
                 print "New root: " + str(self.id) + "/" + str(self.rootID)
                 print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
                 self.ports[self.rootPort_ID].enabled = True
-                self.ports[oldRootPort].enabled = False
+                #self.ports[oldRootPort].enabled = False
                 if self.id > bpdu_in.source:
                     self.ports[port_in].enabled = False
+                    print "Disabled port: " + str(self.id) + "/" + str(port_in)
                 self.forwarding_table = ForwardingTable()
 
 
@@ -199,6 +201,7 @@ class Bridge:
                 self.ports[self.rootPort_ID].enabled = True
                 if self.id > bpdu_in.source:
                     self.ports[port_in].enabled = False
+                    print "Disabled port: " + str(self.id) + "/" + str(port_in)
                 self.forwarding_table = ForwardingTable()
 
 
