@@ -96,7 +96,7 @@ class Bridge:
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
                             if port.enabled:
-                                self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest):
+                                self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
                                 self.forwarding_table.add_address(data_in.source, port.port_id)
 
