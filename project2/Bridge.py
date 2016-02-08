@@ -84,7 +84,7 @@ class Bridge:
                         self._assign_new_root(bpdu_in, port.port_id)
 
                         #######
-                        self._broadcast_BPDU()
+                        #self._broadcast_BPDU()
                         #######
 
                         #if self.id != self.rootID:
