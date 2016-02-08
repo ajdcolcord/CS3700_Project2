@@ -82,8 +82,7 @@ class Bridge:
             # -------------------------#
 
             for port in self.ports:
-                #port.remove_timedout_head_BPDU()
-                ready, ignore, ignore2 = select.select([port.socket], [], [], 0.01)
+                ready, ignore, ignore2 = select.select([port.socket], [], [], 0.1)
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
                     # attempt to create BPDU object from incoming message
@@ -128,6 +127,15 @@ class Bridge:
                                 print "Not forwarding message " + str(data_in.id)
                     ########################################################
 
+                    for bpdu in port.BPDU_list:
+                        if bpdu.cost < self.cost or bpdu.source < self.id:
+                            port.designated = False
+
+                    if not port.BPDU_list or port.port_id == self.rootID or port.designated:
+                        port.enabled = True
+                    else:
+                        port.enabled = False
+
 
             # is it time to send a BPDU?
             # compare start time to current time, if > 500ms, send BPDU
@@ -146,6 +154,7 @@ class Bridge:
                         print "SENT MESSAGE: ", message
                 """
                 start_time = time.time()
+
 
 
     def _pad(self, name):
