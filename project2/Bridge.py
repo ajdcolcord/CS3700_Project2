@@ -83,12 +83,12 @@ class Bridge:
                         port.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
 
-                        if self.id != self.rootID:
+                        #if self.id != self.rootID:
 
                             ##########
-                            bpdu_in.cost += self.cost
-                            updated_bpdu = bpdu_in.create_json_BPDU()
-                            self._broadcast_message(updated_bpdu, port.port_id)
+                            #bpdu_in.cost += self.cost
+                            #updated_bpdu = bpdu_in.create_json_BPDU()
+                            #self._broadcast_message(updated_bpdu, port.port_id)
                             #############
                             #self._broadcast_message(message, port.port_id)
                             # BPDU_buffer.append(bpdu_in)
