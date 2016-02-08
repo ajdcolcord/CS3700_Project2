@@ -83,9 +83,12 @@ class Bridge:
                         port.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
                         if self.id != self.rootID:
+
+                            ##########
                             bpdu_in.cost += self.cost
                             updated_bpdu = bpdu_in.create_json_BPDU()
                             self._broadcast_message(updated_bpdu, port.port_id)
+                            #############
                             #self._broadcast_message(message, port.port_id)
                             # BPDU_buffer.append(bpdu_in)
 
@@ -214,3 +217,13 @@ class Bridge:
         """
         port_id = self.forwarding_table.get_address_port(address)
         self.ports[port_id].socket.send(message)
+
+    '''
+    def _print_received_message(self, data):
+    print "Received message " + \
+                                    str(data_in.id) + \
+                                    " on port " + str(port.port_id) + \
+                                    " from " + \
+                                    str(data_in.source) + \
+                                    " to " + str(data_in.dest)
+    '''
