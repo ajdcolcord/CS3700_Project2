@@ -47,7 +47,7 @@ class Bridge:
             ready, ignr, ignr2 = select.select(self.ports, [], [], 1)
 
             for x in ready:
-                data = x.recv(RECEIVE_SIZE)
+                #data = x.recv(RECEIVE_SIZE)
                 print "Data: ", data
 
 
