@@ -155,26 +155,21 @@ class Bridge:
         #    self.ports[port_in].enabled = True
 
         oldRootPort = self.rootPort_ID
-        #if self.rootPort_ID:
-        #if self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
-        if self.ports[self.rootID].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+        if self.rootPort_ID:
+            if self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+                self.rootID = bpdu_in.root
+                self.rootPort_ID = port_in
+                self.cost += bpdu_in.cost
+                print "New root: " + str(self.id) + "/" + str(self.rootID)
+                print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
+                self.ports[self.rootPort_ID].enabled = True
+                # self.ports[oldRootPort].enabled = False
+                if self.id > bpdu_in.source:
+                    self.ports[port_in].enabled = False
+                    print "Disabled port: " + str(self.id) + "/" + str(port_in)
+                self.forwarding_table = ForwardingTable()
 
-            self.rootID = bpdu_in.root
-            self.rootPort_ID = port_in
-            self.cost += bpdu_in.cost
-            print "New root: " + str(self.id) + "/" + str(self.rootID)
-            print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
-            self.ports[self.rootPort_ID].enabled = True
-            #self.ports[oldRootPort].enabled = False
-            if self.id > bpdu_in.source:
-                self.ports[port_in].enabled = False
-                print "Disabled port: " + str(self.id) + "/" + str(port_in)
-            self.forwarding_table = ForwardingTable()
-
-
-        else:
-            # if this known rootid is worse than the incoming rootid
-            if self.rootID > bpdu_in.root:
+        elif self.rootID > bpdu_in.root:
                 self.rootID = bpdu_in.root
                 self.rootPort_ID = port_in
                 self.cost += bpdu_in.cost
