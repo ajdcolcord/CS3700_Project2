@@ -31,7 +31,7 @@ class ForwardingTable():
         """
         if address in self.addresses:
             if int(round((time.time() - self.addresses[address][1]) * 1000)) > 5000:
-                print "REMOVING ADDRESS FROM ForwardingTable"
+                #print "REMOVING ADDRESS FROM ForwardingTable"
                 del self.addresses[address]
                 return False
             else:

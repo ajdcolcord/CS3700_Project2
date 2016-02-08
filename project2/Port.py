@@ -35,7 +35,7 @@ class Port:
             bpdu_added = True
 
             # TODO: is this port still designated?
-            
+
         for bpdu in self.BPDU_list:
             self._remove_timedout_BPDU(bpdu)
 
@@ -76,7 +76,7 @@ class Port:
         """
         self.BPDU_list.insert(position, BPDU)
         bpdu_added = True
-        print "ADDED BPDU TO PORT: ", self.port_id
+        #print "ADDED BPDU TO PORT: ", self.port_id
         return True
 
     # def activate_or_deactivate_port(self, BPDU):
