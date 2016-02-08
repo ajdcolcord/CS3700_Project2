@@ -183,6 +183,9 @@ class Bridge:
                     self._print_disabled_port(port_in)
                 self.forwarding_table = ForwardingTable()
 
+        if port_in == self.rootPort_ID:
+            self.ports[port_in].enabled = True
+
     def _broadcast_BPDU(self):
         """
         Broadcasts a new BPDU from this bridge to all sockets. This
