@@ -83,9 +83,12 @@ class Bridge:
                         port.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
 
-                        #######
-                        #self._broadcast_BPDU()
-                        #######
+                        ######
+                        if bpdu_in.cost > self.cost and bpdu_in.source < self.id and bpdu_in.root == self.rootID:
+                            port.designated = True
+                        else:
+                            port.designated = False
+                        ######
 
                         #if self.id != self.rootID:
 
@@ -114,16 +117,12 @@ class Bridge:
                             else:
                                 self._print_not_forwarding_message(data_in.id)
 
-                    for bpdu in port.BPDU_list:
+
+
+                    #for bpdu in port.BPDU_list:
                         #if bpdu.cost < self.cost or bpdu.source < self.id:
                         #    port.designated = False
 
-                        #########
-                        if bpdu.cost > self.cost and bpdu.source < self.id and bpdu.root == self.rootID:
-                            port.designated = True
-                        else:
-                            port.designated = False
-                        #########
 
                     if not port.BPDU_list or port.port_id == self.rootID or port.designated:
                         port.enabled = True
