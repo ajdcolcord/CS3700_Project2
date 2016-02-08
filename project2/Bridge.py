@@ -166,11 +166,11 @@ class Bridge:
         @param BPDU_in : the BPDU to be checked if better
         @param port_in : the port that the bpdu_in was received
         """
-        if self.id > bpdu_in.source:
-            self.ports[port_in].enabled = False
+        #if self.id > bpdu_in.source:
+        #    self.ports[port_in].enabled = False
 
-        elif self.id < bpdu_in.source:
-            self.ports[port_in].enabled = True
+        #elif self.id < bpdu_in.source:
+        #    self.ports[port_in].enabled = True
 
 
         oldRootPort = self.rootPort_ID
