@@ -187,10 +187,10 @@ class Bridge:
         if self.rootID < BPDU.root:
             port.designated = True
             return
-        elif self.rootID == BPDU.rootID and self.cost < BPDU.cost:
+        elif self.rootID == BPDU.root and self.cost < BPDU.cost:
             port.designated = True
             return
-        elif self.rootID == BPDU.rootID and self.cost == BPDU.cost and self.id < BPDU.source:
+        elif self.rootID == BPDU.root and self.cost == BPDU.cost and self.id < BPDU.source:
             port.designated = True
             return
         else:
