@@ -89,9 +89,9 @@ class Bridge:
                     if bpdu_in:
                         # self._determine_new_root(bpdu_in, port)
                         port.add_BPDU(bpdu_in)
-                        #self._assign_new_root(bpdu_in, port.port_id)
+                        self._assign_new_root(bpdu_in, port.port_id)
                         ##########
-                        self._assign_new_root_2(bpdu_in, port)
+                        #self._assign_new_root_2(bpdu_in, port)
                         ##########
                         if self.id != self.rootID:
                             self._broadcast_message(message, port.port_id)
