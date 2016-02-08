@@ -202,6 +202,7 @@ class Bridge:
             self.rootID = BPDU.root
             self.rootPort_ID = port.port_id
             port.designated = False
+            self.forwarding_table = ForwardingTable()
             return
 
 
