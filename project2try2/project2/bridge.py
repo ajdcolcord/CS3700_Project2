@@ -48,7 +48,9 @@ class Bridge:
 
             for x in ready:
                 data = x.recv(RECEIVE_SIZE)
-                print (data)
+                print "Data: ", data
+
+
 
     def _pad(self, name):
         """
