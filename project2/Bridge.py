@@ -49,7 +49,7 @@ class Bridge:
         """
         iterator = 0
         for x in range(len(LAN_list)):
-            if x not in self.lans:
+            if LAN_list[x] not in self.lans:
                 print "CREATING LAN: ", x
                 s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
                 port = Port(iterator, s)
@@ -57,7 +57,7 @@ class Bridge:
                 self.ports.append(port)
                 self.sockets.append(s)
                 iterator += 1
-                self.lans.append(x)
+                self.lans.append(LAN_list[x])
 
     def _start_receiving(self):
         """
