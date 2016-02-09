@@ -22,7 +22,7 @@ class ForwardingTable():
         @param port : the port to add
         """
         self.addresses[address] = (port, time.time())
-        print "Adding Address " + address + " to port " + port
+        print "Adding Address " + str(address) + " to port " + str(port)
 
     def get_address_port(self, address):
         """
@@ -36,4 +36,4 @@ class ForwardingTable():
                 return False
             else:
                 return self.addresses[address][0]
-                print "Retrieved Address " + address + " from port " + self.addresses[address][0]
+                print "Retrieved Address " + str(address) + " from port " + str(self.addresses[address][0])
