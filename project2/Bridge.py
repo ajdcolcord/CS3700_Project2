@@ -73,14 +73,16 @@ class Bridge:
 
         # Main loop
         while True:
+            ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
+
             for port in self.ports:
-                ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
+                # ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
                     # attempt to create BPDU object from incoming message
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
-                        port.add_BPDU(bpdu_in)
+                        po art.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
 
                         #if self.id != self.rootID:
