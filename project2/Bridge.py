@@ -96,10 +96,6 @@ class Bridge:
                     elif not bpdu_in:
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
-                            #######
-                            self._print_boradcasting_message(data_in.id)
-                            self._broadcast_message(message, port.port_id)
-                            #####
                             if port.enabled:
                                 self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
