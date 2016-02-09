@@ -171,20 +171,21 @@ class Bridge:
                 self.ports[port_in].enabled = False
                 self._print_disabled_port(port_in)
                 self.forwarding_table = ForwardingTable()
-
+                self._broadcast_BPDU()
 
         elif self.rootID > bpdu_in.root:
-                self.rootID = bpdu_in.root
-                self.rootPort_ID = port_in
-                # self.cost += bpdu_in.cost
-                self.cost = bpdu_in.cost + 1
-                print "New root: " + str(self.id) + "/" + str(self.rootID)
-                print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
-                self.ports[self.rootPort_ID].enabled = True
-                if self.id > bpdu_in.source:
-                    self.ports[port_in].enabled = False
-                    self._print_disabled_port(port_in)
-                self.forwarding_table = ForwardingTable()
+            self.rootID = bpdu_in.root
+            self.rootPort_ID = port_in
+            # self.cost += bpdu_in.cost
+            self.cost = bpdu_in.cost + 1
+            print "New root: " + str(self.id) + "/" + str(self.rootID)
+            print "Root port: " + str(self.id) + "/" + str(self.rootPort_ID)
+            self.ports[self.rootPort_ID].enabled = True
+            if self.id > bpdu_in.source:
+                self.ports[port_in].enabled = False
+                self._print_disabled_port(port_in)
+            self.forwarding_table = ForwardingTable()
+            self._broadcast_BPDU()
 
         if port_in == self.rootPort_ID:
             self.ports[port_in].enabled = True
