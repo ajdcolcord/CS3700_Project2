@@ -94,6 +94,8 @@ class Bridge:
                             elif message_json['message']['cost'] == self.cost:
                                 if message_json['source'] < self.id:
                                     port.enabled = False
+                        else:
+                            port.enabled = True
 
                         #if self.id == self.rootID:
                         #        port.enabled = True
