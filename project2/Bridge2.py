@@ -80,7 +80,6 @@ class Bridge:
                         message_json = json.loads(message)
 
                         if message_json['type'] == 'bpdu':
-                            print "BPDU : ", message
                             bpdu_in = create_BPDU_from_json(message)
                             port.add_BPDU(bpdu_in)
 
@@ -100,7 +99,6 @@ class Bridge:
                                     self._broadcast_BPDU()
                                 elif message_json['message']['cost'] == self.cost:
                                     if message_json['source'] <= self.id:
-                                        self.forwarding_table = ForwardingTable()
                                         port.enabled = False
                                         self._print_disabled_port(port)
 
