@@ -10,6 +10,7 @@ from ForwardingTable import ForwardingTable
 from Port import Port
 import time
 import random
+import json
 
 RECEIVE_SIZE = 1500
 
