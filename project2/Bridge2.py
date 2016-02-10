@@ -98,7 +98,8 @@ class Bridge:
                                 self._broadcast_BPDU()
                             elif message_json['message']['cost'] == self.cost:
                                 if message_json['source'] < self.id:
-                                    # port.enabled = False
+                                    #port.enabled = False
+                                    print "HIT HERE"
 
                         # if received bpdu, and rootID and cost match, if this bridge ID is lower, disable port
                         else:
