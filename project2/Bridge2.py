@@ -95,8 +95,8 @@ class Bridge:
                                 if message_json['source'] < self.id:
                                     port.enabled = False
 
-                        if self.id == self.rootID:
-                            port.enabled = True
+                        #if self.id == self.rootID:
+                        #        port.enabled = True
 
                         # if incoming bpdu root is less than this root:
                         #       - set this root port to this port,
