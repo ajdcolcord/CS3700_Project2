@@ -125,8 +125,8 @@ class Bridge:
                         self._broadcast_BPDU()
                         start_time = time.time()
 
-                    #if not port.BPDU_list:
-                    #    port.enabled = True
+                    if not port.BPDU_list:
+                        port.enabled = True
 
 
     def _pad(self, name):
