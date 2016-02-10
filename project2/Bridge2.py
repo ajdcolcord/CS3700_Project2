@@ -78,11 +78,11 @@ class Bridge:
                     message_json = json.loads(message)
 
                     if message_json['type'] == 'bpdu':
-
+                        print "BPDU : ", message
                         bpdu_in = create_BPDU_from_json(message)
                         port.add_BPDU(bpdu_in)
-                        if bpdu_in.source == self.id:
-                            pass
+                        # if bpdu_in.source == self.id:
+                        #    pass
 
                         if message_json['message']['root'] < self.rootID:
                             self.rootPort_ID = port
@@ -129,19 +129,20 @@ class Bridge:
 
                     elif message_json['type'] == 'data':
                         data_in = create_DataMessage_from_json(message)
-                        # if port.enabled:
-                        self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
+                        print "Data Message = ", message
+                        if port.enabled:
+                            self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
-                        self.forwarding_table.add_address(data_in.source, port.port_id)
+                            self.forwarding_table.add_address(data_in.source, port.port_id)
 
-                        if data_in.dest in self.forwarding_table.addresses:
-                            self._print_forwarding_message(data_in.id, port.port_id)
-                            self._send_to_address(message, data_in.dest)
+                            if data_in.dest in self.forwarding_table.addresses:
+                                self._print_forwarding_message(data_in.id, port.port_id)
+                                self._send_to_address(message, data_in.dest)
+                            else:
+                                self._print_boradcasting_message(data_in.id)
+                                self._broadcast_message(message, port.port_id)
                         else:
-                            self._print_boradcasting_message(data_in.id)
-                            self._broadcast_message(message, port.port_id)
-                        #else:
-                        #    self._print_not_forwarding_message(data_in.id)
+                            self._print_not_forwarding_message(data_in.id)
 
                 # is it time to send a new BPDU?
                 if int(round((time.time() - start_time) * 1000)) > 500:
