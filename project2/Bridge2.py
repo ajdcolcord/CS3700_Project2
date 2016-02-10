@@ -80,6 +80,7 @@ class Bridge:
                     if message_json['type'] == 'bpdu':
 
                         bpdu_in = create_BPDU_from_json(message)
+                        port.add_BPDU(bpdu_in)
                         if bpdu_in.source == self.id:
                             pass
 
@@ -99,10 +100,7 @@ class Bridge:
                                 if message_json['source'] < self.id:
                                     port.enabled = False
 
-                        #if received bpdu, and rootID and cost match, if this bridge ID is lower, disable port
-
-                        port.add_BPDU(bpdu_in)
-
+                        # if received bpdu, and rootID and cost match, if this bridge ID is lower, disable port
                         else:
                             port.enabled = True
 
