@@ -94,8 +94,8 @@ class Bridge:
                             elif message_json['message']['cost'] == self.cost:
                                 if message_json['source'] < self.id:
                                     port.enabled = False
-                        else:
-                            port.enabled = True
+                        # else:
+                        # port.enabled = True
 
                         #if self.id == self.rootID:
                         #        port.enabled = True
@@ -136,6 +136,8 @@ class Bridge:
                     self._broadcast_BPDU()
                     start_time = time.time()
 
+                if not port.BPDU_list:
+                    port.enabled = True
 
 
     def _pad(self, name):
