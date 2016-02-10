@@ -16,7 +16,7 @@ class Port:
         is defaulted to an empty array
         """
         self.port_id = port_id
-        self.enabled = True
+        self.enabled = enabled
         self.BPDU_list = BPDU_list
         self.socket = socket
         self.designated = True
@@ -33,8 +33,6 @@ class Port:
         if not self.BPDU_list:
             self.BPDU_list.insert(0, BPDU)
             bpdu_added = True
-
-            # TODO: is this port still designated?
 
         for bpdu in self.BPDU_list:
             self._remove_timedout_BPDU(bpdu)
