@@ -82,7 +82,7 @@ class Bridge:
                     # attempt to create BPDU object from incoming message
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
-                        po art.add_BPDU(bpdu_in)
+                        port.add_BPDU(bpdu_in)
                         self._assign_new_root(bpdu_in, port.port_id)
 
                         #if self.id != self.rootID:
