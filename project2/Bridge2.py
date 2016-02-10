@@ -90,7 +90,7 @@ class Bridge:
                                 if bpdu_in['source'] < self.id:
                                     port.enabled = False
 
-                        if self.id = self.rootID:
+                        if self.id == self.rootID:
                             port.enabled = True
 
                         # if incoming bpdu root is less than this root:
