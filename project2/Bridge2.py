@@ -122,12 +122,11 @@ class Bridge:
 
                     # is it time to send a new BPDU?
                     if int(round((time.time() - start_time) * 1000)) > 500:
-                        self.__init__(self.id, self.lans)
                         self._broadcast_BPDU()
                         start_time = time.time()
 
-                    if not port.BPDU_list:
-                        port.enabled = True
+                    #if not port.BPDU_list:
+                    #    port.enabled = True
 
 
     def _pad(self, name):
