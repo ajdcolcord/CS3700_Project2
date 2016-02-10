@@ -83,15 +83,15 @@ class Bridge:
                         bpdu_in = create_BPDU_from_json(message)
                         port.add_BPDU(bpdu_in)
 
-                        if message_json['root'] < self.rootID:
+                        if message_json['message']['root'] < self.rootID:
                             self.rootPort_ID = port
-                            self.rootID = message_json['root']
+                            self.rootID = message_json['message']['root']
                             self._broadcast_BPDU()
                             start_time = time.time()
-                        elif message_json['root'] == self.rootID:
-                            if message_json['cost'] < self.cost:
+                        elif message_json['message']['root'] == self.rootID:
+                            if message_json['message']['cost'] < self.cost:
                                 port.enabled = False
-                            elif message_json['cost'] == self.cost:
+                            elif message_json['message']['cost'] == self.cost:
                                 if message_json['source'] < self.id:
                                     port.enabled = False
 
