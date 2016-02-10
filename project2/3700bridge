@@ -2,7 +2,7 @@
 # The -u makes output unbuffered, so it will show up immediately
 # Austin Colcord and Nick Scheuring
 import sys
-from Bridge2 import Bridge
+from Bridge import Bridge
 
 
 def main():
