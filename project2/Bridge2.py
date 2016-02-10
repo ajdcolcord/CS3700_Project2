@@ -104,7 +104,7 @@ class Bridge:
                         else:
                             port.enabled = True
 
-                        if self.id == self.root:
+                        if self.id == self.rootID:
                             port.enabled = True
                         if not self.rootPort_ID:
                             port.enabled = True
