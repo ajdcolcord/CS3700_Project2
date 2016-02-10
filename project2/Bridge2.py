@@ -74,23 +74,23 @@ class Bridge:
             if ready:
                 for port in self.ports:
                     message = ready[0].recv(RECEIVE_SIZE)
-                    bpdu_in = create_BPDU_from_json(message)
-                    data_in = create_DataMessage_from_json(message)
+                    #bpdu_in = create_BPDU_from_json(message)
+                    #data_in = create_DataMessage_from_json(message)
+                    message_json = json.loads(message)
 
-                    if bpdu_in:
-                        if bpdu_in.type == 'bpdu':
+                        if message_json['type'] == 'bpdu':
                             port.add_BPDU(bpdu_in)
 
-                            if bpdu_in['root'] < self.rootID:
+                            if message_json['root'] < self.rootID:
                                 self.rootPort_ID = port
-                                self.rootID = bpdu_in['root']
+                                self.rootID = message_json['root']
                                 self._broadcast_BPDU()
                                 start_time = time.time()
-                            elif bpdu_in['root'] == self.rootID:
-                                if bpdu_in['cost'] < self.cost:
+                            elif message_json['root'] == self.rootID:
+                                if message_json['cost'] < self.cost:
                                     port.enabled = False
-                                elif bpdu_in['cost'] == self.cost:
-                                    if bpdu_in['source'] < self.id:
+                                elif message_json['cost'] == self.cost:
+                                    if message_json['source'] < self.id:
                                         port.enabled = False
 
                             if self.id == self.rootID:
@@ -111,8 +111,8 @@ class Bridge:
 
                             #self._assign_new_root(bpdu_in, port.port_id)
 
-                    elif data_in:
-                        if data_in.type == 'data':
+                        elif message_json['type'] == 'data':
+                            data_in = create_DataMessage_from_json(message)
                             if port.enabled:
                                 self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
