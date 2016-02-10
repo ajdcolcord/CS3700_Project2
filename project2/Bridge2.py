@@ -80,8 +80,10 @@ class Bridge:
                     message_json = json.loads(message)
 
                     if message_json['type'] == 'bpdu':
+
                         bpdu_in = create_BPDU_from_json(message)
-                        port.add_BPDU(bpdu_in)
+                        if bpdu_in.source == self.id:
+                            pass
 
                         if message_json['message']['root'] < self.rootID:
                             self.rootPort_ID = port
@@ -96,6 +98,9 @@ class Bridge:
                             elif message_json['message']['cost'] == self.cost:
                                 if message_json['source'] < self.id:
                                     port.enabled = False
+
+                        port.add_BPDU(bpdu_in)
+
                         # else:
                         # port.enabled = True
 
@@ -234,7 +239,7 @@ class Bridge:
             self.ports[port_id].socket.send(message)
 
     def _print_received_message(self, data_in_id, port_port_id, data_in_source, data_in_dest):
-        print "Received message " + str(data_in_id) + "on port " + str(port_port_id) + \
+        print "Received message " + str(data_in_id) + " on port " + str(port_port_id) + \
             " from " + str(data_in_source) + " to " + str(data_in_dest)
 
     def _print_forwarding_message(self, data_in_id, port_port_id):
