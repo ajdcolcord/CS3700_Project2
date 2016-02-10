@@ -90,7 +90,9 @@ class Bridge:
                             start_time = time.time()
                         elif message_json['message']['root'] == self.rootID:
                             if message_json['message']['cost'] < self.cost:
-                                port.enabled = False
+                                self.rootPort_ID = port
+                                self.rootID = message_json['message']['cost']
+                                self._broadcast_BPDU()
                             elif message_json['message']['cost'] == self.cost:
                                 if message_json['source'] < self.id:
                                     port.enabled = False
