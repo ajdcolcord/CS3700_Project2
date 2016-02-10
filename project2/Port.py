@@ -16,7 +16,7 @@ class Port:
         is defaulted to an empty array
         """
         self.port_id = port_id
-        self.enabled = enabled
+        self.enabled = True
         self.BPDU_list = BPDU_list
         self.socket = socket
         self.designated = True
