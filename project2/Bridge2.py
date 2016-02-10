@@ -77,7 +77,7 @@ class Bridge:
                     bpdu_in = create_BPDU_from_json(message)
                     data_in = create_DataMessage_from_json(message)
 
-                    if bpdu_in['type'] == 'bpdu':
+                    if bpdu_in and bpdu_in['type'] == 'bpdu':
                         port.add_BPDU(bpdu_in)
 
                         if bpdu_in['root'] < self.rootID:
@@ -110,7 +110,7 @@ class Bridge:
 
                         #self._assign_new_root(bpdu_in, port.port_id)
 
-                    elif data_in['type'] == 'data':
+                    elif data_in and data_in['type'] == 'data':
                         if port.enabled:
                             self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
