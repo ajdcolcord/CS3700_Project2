@@ -106,7 +106,6 @@ class Bridge:
 
                         elif message_json['type'] == 'data':
                             data_in = create_DataMessage_from_json(message)
-                            print "Data Message = ", message
                             if port.enabled:
                                 self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
@@ -187,4 +186,4 @@ class Bridge:
         print "Not forwarding message " + str(data_in_id)
 
     def _print_disabled_port(self, port):
-        print "Disabled port: " + str(self.id) + "/" + str(port.id)
+        print "Disabled port: " + str(self.id) + "/" + str(port.port_id)
