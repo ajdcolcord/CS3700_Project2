@@ -72,60 +72,62 @@ class Bridge:
         # Main loop
         while True:
             #ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
-                for port in self.ports:
-                    ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
-                    if ready:
+            for port in self.ports:
+                ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
+                if ready:
+                    message = ready[0].recv(RECEIVE_SIZE)
+                    message_json = json.loads(message)
 
-                        message = ready[0].recv(RECEIVE_SIZE)
-                        message_json = json.loads(message)
+                    if message_json['type'] == 'bpdu':
+                        bpdu_in = create_BPDU_from_json(message)
+                        port.add_BPDU(bpdu_in)
 
-                        if message_json['type'] == 'bpdu':
-                            bpdu_in = create_BPDU_from_json(message)
-                            port.add_BPDU(bpdu_in)
+                        if message_json['message']['root'] < self.rootID:
+                            self.rootPort_ID = port
+                            self.rootID = message_json['message']['root']
+                            self.cost = message_json['message']['cost'] + 1
 
-                            if message_json['message']['root'] < self.rootID:
+                            self.forwarding_table = ForwardingTable()
+                            self._broadcast_BPDU()
+                            start_time = time.time()
+
+                        elif message_json['message']['root'] == self.rootID:
+                            if message_json['message']['cost'] < self.cost:
                                 self.rootPort_ID = port
                                 self.rootID = message_json['message']['root']
                                 self.cost = message_json['message']['cost'] + 1
                                 self.forwarding_table = ForwardingTable()
                                 self._broadcast_BPDU()
                                 start_time = time.time()
-                            elif message_json['message']['root'] == self.rootID:
-                                if message_json['message']['cost'] < self.cost:
-                                    self.rootPort_ID = port
-                                    self.rootID = message_json['message']['root']
-                                    self.cost = message_json['message']['cost'] + 1
+                            elif message_json['message']['cost'] == self.cost:
+                                if message_json['source'] <= self.id:
                                     self.forwarding_table = ForwardingTable()
-                                    self._broadcast_BPDU()
-                                elif message_json['message']['cost'] == self.cost:
-                                    if message_json['source'] <= self.id:
-                                        self.forwarding_table = ForwardingTable()
-                                        port.enabled = False
-                                        self._print_disabled_port(port)
+                                    port.enabled = False
+                                    self._print_disabled_port(port)
 
-                        elif message_json['type'] == 'data':
-                            data_in = create_DataMessage_from_json(message)
-                            if port.enabled:
-                                self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
+                    elif message_json['type'] == 'data':
+                        data_in = create_DataMessage_from_json(message)
+                        if port.enabled:
+                            self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
-                                self.forwarding_table.add_address(data_in.source, port.port_id)
+                            self.forwarding_table.add_address(data_in.source, port.port_id)
 
-                                if data_in.dest in self.forwarding_table.addresses:
-                                    self._print_forwarding_message(data_in.id, port.port_id)
-                                    self._send_to_address(message, data_in.dest)
-                                else:
-                                    self._print_boradcasting_message(data_in.id)
-                                    self._broadcast_message(message, port.port_id)
+                            if data_in.dest in self.forwarding_table.addresses:
+                                self._print_forwarding_message(data_in.id, port.port_id)
+                                self._send_to_address(message, data_in.dest)
                             else:
-                                self._print_not_forwarding_message(data_in.id)
+                                self._print_boradcasting_message(data_in.id)
+                                self._broadcast_message(message, port.port_id)
+                        else:
+                            self._print_not_forwarding_message(data_in.id)
 
-                    # is it time to send a new BPDU?
-                    if int(round((time.time() - start_time) * 1000)) > 500:
-                        self._broadcast_BPDU()
-                        start_time = time.time()
+                # is it time to send a new BPDU?
+                if int(round((time.time() - start_time) * 1000)) > 500:
+                    self._broadcast_BPDU()
+                    start_time = time.time()
 
-                    if not port.BPDU_list:
-                        port.enabled = True
+                if not port.BPDU_list:
+                    port.enabled = True
 
 
     def _pad(self, name):
