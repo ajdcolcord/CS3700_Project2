@@ -103,8 +103,13 @@ class Bridge:
 
                         port.add_BPDU(bpdu_in)
 
-                        # else:
-                        # port.enabled = True
+                        else:
+                            port.enabled = True
+
+                        if self.id == self.root:
+                            port.enabled = True
+                        if not self.rootPort_ID:
+                            port.enabled = True
 
                         #if self.id == self.rootID:
                         #        port.enabled = True
