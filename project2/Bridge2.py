@@ -80,6 +80,7 @@ class Bridge:
                     message_json = json.loads(message)
 
                     if message_json['type'] == 'bpdu':
+                        bpdu_in = create_BPDU_from_json(message)
                         port.add_BPDU(bpdu_in)
 
                         if message_json['root'] < self.rootID:
