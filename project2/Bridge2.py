@@ -15,9 +15,6 @@ import json
 RECEIVE_SIZE = 1500
 
 
-# check through all top BPDUs of all ports...
-# for those that are the same, close the highest cost ports
-
 class Bridge:
     """
     This is the class for a Bridge, which contains all the information
@@ -37,6 +34,7 @@ class Bridge:
         self.rootPort_ID = None
         self.cost = 1
         self.forwarding_table = ForwardingTable()
+        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.rootID, self.cost)
 
         self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
@@ -71,9 +69,9 @@ class Bridge:
 
         # Main loop
         while True:
-            #ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
+            ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
-                ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
+                #ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
                     message_json = json.loads(message)
@@ -89,6 +87,8 @@ class Bridge:
 
                             self.forwarding_table = ForwardingTable()
                             self._broadcast_BPDU()
+                            #check to see if port status has changed (might now be designated port)
+                            #loop through ports to recalculate enabled/disabled
                             start_time = time.time()
 
                         elif message_json['message']['root'] == self.rootID:
