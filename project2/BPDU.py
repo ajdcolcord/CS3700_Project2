@@ -1,5 +1,6 @@
 #!/usr/bin/python -u
 import json
+import time
 
 
 class BPDU:
@@ -18,7 +19,7 @@ class BPDU:
         self.id = ID
         self.root = root
         self.cost = cost
-        self.timeout = None
+        self.timeout = time.time()
 
     def create_json_BPDU(self):
         """
