@@ -8,7 +8,9 @@ from Bridge4 import Bridge
 def main():
     id = sys.argv[1]
     LAN = sys.argv[2:]
-    myBridge = Bridge(id, LAN)
+    myBridge = Bridge(id)
+    myBridge.create_ports_for_lans(LAN)
+
 
 
 if __name__ == "__main__":
