@@ -85,8 +85,10 @@ class Bridge:
                 start_time = time.time()
 
 
-            ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.5)
+            # ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.5)
             for port in self.ports:
+                ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
+
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
                     bpdu_in = create_BPDU_from_json(message)
