@@ -45,7 +45,7 @@ class Bridge:
         iterator = 0
         print "THERE ARE: " + str(len(LAN_list)) + " INPUTTED LANS"
         for x in range(len(LAN_list)):
-            print "X = " + x 
+            print "X = " + str(x)
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
             port = Port(iterator, s)
             s.connect(self._pad(LAN_list[x]))
