@@ -35,7 +35,7 @@ class Bridge:
 
         self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
-        # self._start_receiving()
+        self._start_receiving()
 
     def _create_ports_for_lans(self, LAN_list):
         """
@@ -75,13 +75,14 @@ class Bridge:
             ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
                 if ready:
-                    message = ready[0].recv(RECEIVE_SIZE)
+                    #message = ready[0].recv(RECEIVE_SIZE)
+                    message = port.socket.recv(RECEIVE_SIZE)
                     message_json = json.loads(message)
 
                     # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
                     if message_json['type'] == 'data':
-                        for port in self.ports:
-                            port.socket.send(message)
+                        for p in self.ports:
+                            p.socket.send(message)
 
 
 
