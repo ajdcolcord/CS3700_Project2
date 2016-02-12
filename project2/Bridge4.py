@@ -32,10 +32,7 @@ class Bridge:
         self.cost = 1
         self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, self.cost)
         self.ports = []
-
-        #self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
-        #self._start_receiving()
 
     def create_ports_for_lans(self, LAN_list):
         """
@@ -64,10 +61,10 @@ class Bridge:
             self.ports.append(port)
             print "CREATED LAN: " + str(lan) + " on port " + str(port.port_id)
             iterator += 1
+        return True
 
-        self._start_receiving()
 
-    def _start_receiving(self):
+    def start_receiving(self):
         """
         This function starts by broadcasting a BPDU, then runs the main loop
         for a Bridge that receives and sends messages and BPDUs to specific

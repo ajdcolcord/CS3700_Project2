@@ -9,7 +9,9 @@ def main():
     id = sys.argv[1]
     LAN = sys.argv[2:]
     myBridge = Bridge(id)
-    myBridge.create_ports_for_lans(LAN)
+    if myBridge.create_ports_for_lans(LAN):
+        myBridge.start_receiving()
+
 
 
 
