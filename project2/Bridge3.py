@@ -123,7 +123,7 @@ class Bridge:
         # TODO: print stuff (disabled, designated, root)
         return result
 
-    def update_bridge(self):
+    def _update_bridge(self):
         # determine if this bridge should be updated
         # go through the tops of all ports and check if any are better than this bridge's BPDU
         # return True if updated, False if not
