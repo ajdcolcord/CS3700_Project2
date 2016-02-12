@@ -58,10 +58,9 @@ class Bridge:
 
             print "LAN = " + str(lan)
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-            port = Port(iterator, s)
-            self.ports.append(port)
-            print "CREATING LAN: " + str(lan) + " on port " + str(port.port_id)
             s.connect(self._pad(lan))
+            port = Port(iterator, s)
+            print "CREATING LAN: " + str(lan) + " on port " + str(port.port_id)
             self.ports.append(port)
             print "CREATED LAN: " + str(lan) + " on port " + str(port.port_id)
             iterator += 1
