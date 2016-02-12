@@ -59,12 +59,12 @@ class Bridge:
             print "LAN = " + str(lan)
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
             port = Port(iterator, s)
+            self.ports.append(port)
+            print "CREATING LAN: " + str(lan) + " on port " + str(port.port_id)
             s.connect(self._pad(lan))
             self.ports.append(port)
             print "CREATED LAN: " + str(lan) + " on port " + str(port.port_id)
             iterator += 1
-
-
 
     def _start_receiving(self):
         """
@@ -73,10 +73,8 @@ class Bridge:
         ports, and takes care of broadcasting BPDUs and messages to all ports
         """
         while True:
-            ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.5)
+            ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
-                #ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
-
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
                     message_json = json.loads(message)
