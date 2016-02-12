@@ -74,7 +74,9 @@ class Bridge:
         """
         print "Number of Ports on this Bridge: " + str(len(self.ports))
         while True:
-            ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
+            print "Number of Ports on this Bridge: " + str(len(self.ports))
+
+            ready, ignore, ignore2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
                 if ready:
                     x = 1
