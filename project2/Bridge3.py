@@ -71,7 +71,19 @@ class Bridge:
             if int(round((time.time() - start_time) * 1000)) > 500:
                 self._broadcast_BPDU()
                 start_time = time.time()
-            # port.remove_all_timedout_BPDUs()
+
+            # TODO: port.remove_all_timedout_BPDUs()
+            for port in self.ports:
+                port.remove_all_timedout_BPDUs()
+            # TODO: update_bridge
+            br_updated = self._update_bridge()
+            if br_updated:
+                start_time = time.time()
+            # TODO: for port in self.ports: update_port(self.bridge_BPDU)
+            for port in self.ports:
+                self.update_port(port)
+                start_time = time.time()
+
 
             ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.5)
             for port in self.ports:
@@ -93,6 +105,7 @@ class Bridge:
                                 for thisPort in self.ports:
                                     self._update_port(thisPort)
                                 self._broadcast_BPDU()
+                                start_time = time.time()
 
                     elif not bpdu_in:
                         print "DATA MESSAGE"
@@ -145,6 +158,8 @@ class Bridge:
                 #self.forwarding_table = ForwardingTable()
                 self._print_new_root()
                 result = True
+        if result:
+            self._broadcast_BPDU()
         return result
 
     def _pad(self, name):
