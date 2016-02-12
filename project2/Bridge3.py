@@ -67,6 +67,12 @@ class Bridge:
         start_time = time.time()
 
         while True:
+            # is it time to send a new BPDU?
+            if int(round((time.time() - start_time) * 1000)) > 500:
+                self._broadcast_BPDU()
+                start_time = time.time()
+            # port.remove_all_timedout_BPDUs()
+
             ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.5)
             for port in self.ports:
                 if ready:
@@ -105,11 +111,7 @@ class Bridge:
                                     self._broadcast_message(message, port.port_id)
                             else:
                                 self._print_not_forwarding_message(data_in.id)
-                # is it time to send a new BPDU?
-                if int(round((time.time() - start_time) * 1000)) > 500:
-                    self._broadcast_BPDU()
-                    start_time = time.time()
-                # port.remove_all_timedout_BPDUs()
+
 
 
     #before this, incoming BPDU was added to the port's list
