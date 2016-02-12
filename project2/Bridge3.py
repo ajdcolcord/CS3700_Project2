@@ -132,7 +132,7 @@ class Bridge:
             if self.bridge_BPDU.is_incoming_BPDU_better(port.BPDU_list[0]):
                 self.bridge_BPDU = port.BPDU_list[0]
                 self.rootPort_ID = port.port_id
-                self.cost = port.BPDU_list[0] + 1
+                self.cost = port.BPDU_list[0].cost + 1
                 self.forwarding_table = ForwardingTable()
                 self.print_new_root()
                 result = True
