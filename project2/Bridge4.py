@@ -46,15 +46,33 @@ class Bridge:
         print "THERE ARE: " + str(len(LAN_list)) + " INPUTTED LANS"
         print "LEN_LAN_LIST_RANGE = ", str(range(len(LAN_list)))
         print "LAN LIST = ", LAN_list
-        for x in range(len(LAN_list)):
-            print "LAN_list[x] = ", LAN_list[x]
-            print "X = " + str(x)
+
+        unique_lan_list = []
+        for lan in LAN_list:
+            if lan not in unique_lan_list:
+                unique_lan_list.append(lan)
+
+        for lan in unique_lan_list:
+
+            print "LAN = " + str(lan)
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-            port = Port(x, s)
-            s.connect(self._pad(LAN_list[x]))
+            port = Port(iterator, s)
+            s.connect(self._pad(lan))
             self.ports.append(port)
-            print "CREATED LAN: " + str(LAN_list[x]) + " on port " + str(x)
+            print "CREATED LAN: " + str(lan) + " on port " + str(port.port_id)
             iterator += 1
+
+        # for x in range(len(LAN_list)):
+        '''
+        print "LAN_list[x] = ", LAN_list[x]
+        print "X = " + str(x)
+        s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
+        port = Port(x, s)
+        s.connect(self._pad(LAN_list[x]))
+        self.ports.append(port)
+        print "CREATED LAN: " + str(LAN_list[x]) + " on port " + str(x)
+        iterator += 1
+        '''
 
     def _start_receiving(self):
         """
