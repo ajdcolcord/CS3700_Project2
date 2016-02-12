@@ -33,13 +33,13 @@ class Port:
         if not self.BPDU_list:
             self.BPDU_list.insert(0, BPDU)
             bpdu_added = True
+        else:
+            for bpdu in self.BPDU_list:
+                self._remove_timedout_BPDU(bpdu)
 
-        for bpdu in self.BPDU_list:
-            self._remove_timedout_BPDU(bpdu)
-
-            if bpdu.is_incoming_BPDU_better(BPDU) and not bpdu_added:
-                bpdu_added = self._add_BPDU_at_position(BPDU, iterator)
-            iterator += 1
+                if bpdu.is_incoming_BPDU_better(BPDU) and not bpdu_added:
+                    bpdu_added = self._add_BPDU_at_position(BPDU, iterator)
+                iterator += 1
 
         # if the BPDU has not been added yet, add it at the end
         if not bpdu_added:
@@ -57,6 +57,10 @@ class Port:
             self.BPDU_list.remove(BPDU)
             return True
 
+    def remove_all_timedout_BPDUs(self):
+        for bpdu in self.BPDU_list:
+            self._remove_timedout_BPDU(bpdu)
+
     def _add_BPDU_at_position(self, BPDU, position):
         """
         Adds the given BPDU at the given position in this BPDU list
@@ -66,5 +70,4 @@ class Port:
         @return True
         """
         self.BPDU_list.insert(position, BPDU)
-        bpdu_added = True
         return True
