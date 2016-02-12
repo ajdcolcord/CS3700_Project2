@@ -67,7 +67,7 @@ class Bridge:
         start_time = time.time()
 
         while True:
-            ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
+            ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.5)
             for port in self.ports:
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
