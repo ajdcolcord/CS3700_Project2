@@ -21,7 +21,7 @@ class Bridge:
     This is the class for a Bridge, which contains all the information
     for a network bridge
     """
-    def __init__(self, bridgeID, LAN_list):
+    def __init__(self, bridgeID):
         """
         creates a new Bridge
         @param bridgeID : unique bridge id, set
@@ -33,11 +33,11 @@ class Bridge:
         self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, self.cost)
         self.ports = []
 
-        self._create_ports_for_lans(LAN_list)
+        #self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
         #self._start_receiving()
 
-    def _create_ports_for_lans(self, LAN_list):
+    def create_ports_for_lans(self, LAN_list):
         """
         Creates a new socket with a respective port for each
         LAN in the LAN_list
