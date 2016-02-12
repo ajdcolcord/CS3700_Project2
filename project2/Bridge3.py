@@ -134,7 +134,7 @@ class Bridge:
                 self.rootPort_ID = port.port_id
                 self.cost = port.BPDU_list[0].cost + 1
                 self.forwarding_table = ForwardingTable()
-                self.print_new_root()
+                self._print_new_root()
                 result = True
         return result
 
