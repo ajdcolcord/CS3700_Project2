@@ -72,7 +72,7 @@ class Bridge:
         for a Bridge that receives and sends messages and BPDUs to specific
         ports, and takes care of broadcasting BPDUs and messages to all ports
         """
-
+        print "Number of Ports on this Bridge: " + str(len(self.ports))
         while True:
             ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
