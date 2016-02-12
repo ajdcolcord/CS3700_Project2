@@ -79,12 +79,13 @@ class Bridge:
                     # message = ready[0].recv(RECEIVE_SIZE)
                     print "RECEIVING FROM SOCKET ON PORT: " + str(port.port_id)
                     message = port.socket.recv(RECEIVE_SIZE)
-                    #message_json = json.loads(message)
+                    message_json = json.loads(message)
 
                     # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
-                    #if message_json['type'] == 'data':
-                    #    for p in self.ports:
-                    #        p.socket.send(message)
+                    if message_json['type'] == 'data':
+                        print "PARSED MESSAGE " + str(message_json['message']['id'])
+                        for p in self.ports:
+                            p.socket.send(message)
 
 
 
