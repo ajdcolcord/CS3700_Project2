@@ -20,7 +20,7 @@ class Bridge:
     This is the class for a Bridge, which contains all the information
     for a network bridge
     """
-    def __init__(self, bridgeID, LAN_list=[]):
+    def __init__(self, bridgeID, LAN_list):
         """
         creates a new Bridge
         @param bridgeID : unique bridge id, set
@@ -45,13 +45,16 @@ class Bridge:
         iterator = 0
         print "THERE ARE: " + str(len(LAN_list)) + " INPUTTED LANS"
         print "LEN_LAN_LIST_RANGE = ", str(range(len(LAN_list)))
-        for x in range(len(LAN_list)):
-            print "X = " + str(x)
+        num_lans = len(LAN_list)
+        #for x in range(len(LAN_list)):
+        while num_lans:
+
+            print "X = " + str(iterator)
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
             port = Port(iterator, s)
-            s.connect(self._pad(LAN_list[x]))
+            s.connect(self._pad(LAN_list[iterator]))
             self.ports.append(port)
-            print "CREATED LAN: " + str(LAN_list[x]) + " on port " + str(iterator)
+            print "CREATED LAN: " + str(LAN_list[iterator]) + " on port " + str(iterator)
             iterator += 1
 
     def _start_receiving(self):
