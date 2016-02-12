@@ -48,7 +48,7 @@ class Bridge:
         unique_lan_list = []
         for lan in LAN_list:
             print str(lan)
-            if not unique_lan_list[lan]:
+            if lan not in unique_lan_list:
                 unique_lan_list.append(lan)
 
         print "UNIQUE LAN LIST: " + str(unique_lan_list)
@@ -76,9 +76,9 @@ class Bridge:
             ready, ignore, ignore2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
                 if ready:
-                    x = 1
                     # message = ready[0].recv(RECEIVE_SIZE)
-                    #message = port.socket.recv(RECEIVE_SIZE)
+                    print "RECEIVING FROM SOCKET ON PORT: " + str(port.port_id)
+                    message = port.socket.recv(RECEIVE_SIZE)
                     #message_json = json.loads(message)
 
                     # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
