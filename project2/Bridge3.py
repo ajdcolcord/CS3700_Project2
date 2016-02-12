@@ -75,13 +75,13 @@ class Bridge:
                     if bpdu_in:
                         port.add_BPDU(bpdu_in)
                         # TODO: WHAT IF PORT's TOP BPDU EXPIRES?
-                        changed = self._update_port(port, bpdu_in)
+                        changed = self._update_port(port)
 
                         if changed:
                             b_changed = self._update_bridge()
                             if b_changed:
                                 for thisPort in self.ports:
-                                    self._update_port(thisPort, self.bridge_BPDU)
+                                    self._update_port(thisPort)
                                 self._broadcast_BPDU()
 
                     elif not bpdu_in:
