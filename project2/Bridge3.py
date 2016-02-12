@@ -100,12 +100,15 @@ class Bridge:
                                     self._broadcast_message(message, port.port_id)
                             else:
                                 self._print_not_forwarding_message(data_in.id)
-
+                # is it time to send a new BPDU?
+                if int(round((time.time() - start_time) * 1000)) > 500:
+                    self._broadcast_BPDU()
+                    start_time = time.time()
                 # port.remove_all_timedout_BPDUs()
 
 
     #before this, incoming BPDU was added to the port's list
-    def update_port(self, port):
+    def _update_port(self, port):
         # determine if this port shoudl be enabled or disabled
         is_root = port.port_id == self.rootPort_ID
 
