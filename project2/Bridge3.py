@@ -73,6 +73,7 @@ class Bridge:
                     message = ready[0].recv(RECEIVE_SIZE)
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
+                        bpdu_in.timeout = time.time()
                         print "BPDU"
                         port.add_BPDU(bpdu_in)
                         # TODO: WHAT IF PORT's TOP BPDU EXPIRES?
