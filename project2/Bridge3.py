@@ -87,7 +87,7 @@ class Bridge:
 
             # ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.5)
             for port in self.ports:
-                ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
+                ready, ignr, ignr2 = select.select([port.socket], [], [], 0.5)
 
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
