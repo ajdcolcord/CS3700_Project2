@@ -48,7 +48,7 @@ class Bridge:
         unique_lan_list = []
         for lan in LAN_list:
             print str(lan)
-            if lan not in unique_lan_list:
+            if not unique_lan_list[lan]:
                 unique_lan_list.append(lan)
 
         print "UNIQUE LAN LIST: " + str(unique_lan_list)
