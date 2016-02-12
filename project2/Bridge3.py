@@ -81,7 +81,7 @@ class Bridge:
                 start_time = time.time()
             # TODO: for port in self.ports: update_port(self.bridge_BPDU)
             for port in self.ports:
-                self.update_port(port)
+                self._update_port(port)
                 start_time = time.time()
 
 
