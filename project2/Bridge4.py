@@ -46,7 +46,7 @@ class Bridge:
         """
         iterator = 0
         for x in range(len(LAN_list)):
-            print "CREATING LAN: " + x + " on port " + iterator
+            print "CREATING LAN: " + str(x) + " on port " + str(iterator)
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
             port = Port(iterator, s)
             s.connect(self._pad(LAN_list[x]))
