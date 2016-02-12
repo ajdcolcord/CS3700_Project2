@@ -35,7 +35,7 @@ class Bridge:
 
         self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
-        self._start_receiving()
+        #self._start_receiving()
 
     def _create_ports_for_lans(self, LAN_list):
         """
@@ -71,6 +71,7 @@ class Bridge:
         for a Bridge that receives and sends messages and BPDUs to specific
         ports, and takes care of broadcasting BPDUs and messages to all ports
         """
+
         while True:
             ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
