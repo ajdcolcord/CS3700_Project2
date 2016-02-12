@@ -76,8 +76,8 @@ class Bridge:
             for port in self.ports:
                 if ready:
                     #message = ready[0].recv(RECEIVE_SIZE)
-                    message = port.socket.recv(RECEIVE_SIZE)
-                    message_json = json.loads(message)
+                    #message = port.socket.recv(RECEIVE_SIZE)
+                    #message_json = json.loads(message)
 
                     # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
                     if message_json['type'] == 'data':
