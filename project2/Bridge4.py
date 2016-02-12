@@ -82,10 +82,11 @@ class Bridge:
                     message_json = json.loads(message)
 
                     # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
-                    #if message_json['type'] == 'data':
+                    if message_json['type'] == 'data':
                     #    print "PARSED MESSAGE " + str(message_json['message']['id'])
-                    #    for p in self.ports:
-                    #        p.socket.send(message)
+                        for p in self.ports:
+                            if p.port_id != port.port_id:
+                                p.socket.send(message)
 
 
 
