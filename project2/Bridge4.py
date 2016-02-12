@@ -48,7 +48,7 @@ class Bridge:
             port = Port(iterator, s)
             s.connect(self._pad(LAN_list[x]))
             self.ports.append(port)
-            print "CREATED LAN: " + str(x) + " on port " + str(iterator)
+            print "CREATED LAN: " + str(LAN_list[x]) + " on port " + str(iterator)
             iterator += 1
 
     def _start_receiving(self):
