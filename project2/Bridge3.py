@@ -158,7 +158,7 @@ class Bridge:
                     self.bridge_BPDU = port.BPDU_list[0]
                     self.rootPort_ID = port.port_id
                     self.cost = port.BPDU_list[0].cost + 1
-                    #self.forwarding_table = ForwardingTable()
+                    self.forwarding_table = ForwardingTable()
                     self._print_new_root()
                     result = True
         if result:
