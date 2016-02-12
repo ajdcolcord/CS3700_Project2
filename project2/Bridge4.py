@@ -8,6 +8,7 @@ from DataMessage import DataMessage, create_DataMessage_from_json
 from ForwardingTable import ForwardingTable
 from Port import Port
 import time
+import json
 
 RECEIVE_SIZE = 1500
 
@@ -52,6 +53,7 @@ class Bridge:
             if lan not in unique_lan_list:
                 unique_lan_list.append(lan)
 
+        print "UNIQUE LAN LIST: " + str(unique_lan_list)
         for lan in unique_lan_list:
 
             print "LAN = " + str(lan)
@@ -62,17 +64,7 @@ class Bridge:
             print "CREATED LAN: " + str(lan) + " on port " + str(port.port_id)
             iterator += 1
 
-        # for x in range(len(LAN_list)):
-        '''
-        print "LAN_list[x] = ", LAN_list[x]
-        print "X = " + str(x)
-        s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
-        port = Port(x, s)
-        s.connect(self._pad(LAN_list[x]))
-        self.ports.append(port)
-        print "CREATED LAN: " + str(LAN_list[x]) + " on port " + str(x)
-        iterator += 1
-        '''
+
 
     def _start_receiving(self):
         """
@@ -87,6 +79,14 @@ class Bridge:
 
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
+                    message_json = json.loads(message)
+
+                    # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
+                    if message_json['type'] == 'data':
+                        for port in self.ports:
+                            port.socket.send(message)
+
+
 
 
 
