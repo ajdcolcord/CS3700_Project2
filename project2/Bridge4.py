@@ -47,6 +47,7 @@ class Bridge:
 
         unique_lan_list = []
         for lan in LAN_list:
+            print str(lan)
             if lan not in unique_lan_list:
                 unique_lan_list.append(lan)
 
@@ -57,12 +58,11 @@ class Bridge:
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
             s.connect(self._pad(lan))
             port = Port(iterator, s)
-            print "CREATING LAN: " + str(lan) + " on port " + str(port.port_id)
             self.ports.append(port)
             print "CREATED LAN: " + str(lan) + " on port " + str(port.port_id)
             iterator += 1
-        return True
 
+        self.start_receiving()
 
     def start_receiving(self):
         """
@@ -72,12 +72,11 @@ class Bridge:
         """
         print "Number of Ports on this Bridge: " + str(len(self.ports))
         while True:
-            print "Number of Ports on this Bridge: " + str(len(self.ports))
 
             ready, ignore, ignore2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
                 if ready:
-                    x = 1
+
                     # message = ready[0].recv(RECEIVE_SIZE)
                     #message = port.socket.recv(RECEIVE_SIZE)
                     #message_json = json.loads(message)
