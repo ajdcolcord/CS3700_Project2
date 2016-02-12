@@ -27,12 +27,10 @@ class Bridge:
         @param LAN_list : default to empty list, else, will hold the LANs
         """
         self.id = bridgeID
-        self.ports = []
-        self.sockets = []
         self.rootPort_ID = None
         self.cost = 1
-        self.forwarding_table = ForwardingTable()
         self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, self.cost)
+        self.ports = []
 
         self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
@@ -46,14 +44,12 @@ class Bridge:
         """
         iterator = 0
         for x in range(len(LAN_list)):
-            print "CREATING LAN: " + str(x) + " on port " + str(iterator)
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
             port = Port(iterator, s)
             s.connect(self._pad(LAN_list[x]))
             self.ports.append(port)
-            self.sockets.append(s)
+            print "CREATED LAN: " + str(x) + " on port " + str(iterator)
             iterator += 1
-            self.lans.append(LAN_list[x])
 
     def _start_receiving(self):
         """
