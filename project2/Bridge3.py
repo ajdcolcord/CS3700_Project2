@@ -133,8 +133,10 @@ class Bridge:
         # determine if this port shoudl be enabled or disabled
         is_root = port.port_id == self.rootPort_ID
 
-         # if this bridge's BPDU is better than the best bpdu seen so far on this port
-        is_designated = port.BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU)
+        is_designated = True
+        if port.BPDU_list:
+             # if this bridge's BPDU is better than the best bpdu seen so far on this port
+            is_designated = port.BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU)
 
         is_enabled = is_root or is_designated
         result = is_enabled != port.enabled
