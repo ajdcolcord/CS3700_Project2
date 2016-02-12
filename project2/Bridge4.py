@@ -43,6 +43,7 @@ class Bridge:
         @LAN_list : List of LANs to create sockets for
         """
         iterator = 0
+        print "THERE ARE: " + str(len(LAN_list)) + " INPUTTED LANS"
         for x in range(len(LAN_list)):
             s = socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET)
             port = Port(iterator, s)
