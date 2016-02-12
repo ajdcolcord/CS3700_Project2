@@ -73,18 +73,22 @@ class Bridge:
                     message = ready[0].recv(RECEIVE_SIZE)
                     bpdu_in = create_BPDU_from_json(message)
                     if bpdu_in:
+                        print "BPDU"
                         port.add_BPDU(bpdu_in)
                         # TODO: WHAT IF PORT's TOP BPDU EXPIRES?
                         changed = self._update_port(port)
 
                         if changed:
+                            print "PORT CHANGED"
                             b_changed = self._update_bridge()
                             if b_changed:
+                                print "BRIDGE CHANGED"
                                 for thisPort in self.ports:
                                     self._update_port(thisPort)
                                 self._broadcast_BPDU()
 
                     elif not bpdu_in:
+                        print "DATA MESSAGE"
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
                             if port.enabled:
@@ -109,6 +113,7 @@ class Bridge:
 
     #before this, incoming BPDU was added to the port's list
     def _update_port(self, port):
+        print "UPDATING PORT"
         # determine if this port shoudl be enabled or disabled
         is_root = port.port_id == self.rootPort_ID
 
@@ -124,6 +129,7 @@ class Bridge:
         return result
 
     def _update_bridge(self):
+        print "UPDATING BRIDGE"
         # determine if this bridge should be updated
         # go through the tops of all ports and check if any are better than this bridge's BPDU
         # return True if updated, False if not
@@ -133,7 +139,7 @@ class Bridge:
                 self.bridge_BPDU = port.BPDU_list[0]
                 self.rootPort_ID = port.port_id
                 self.cost = port.BPDU_list[0].cost + 1
-                self.forwarding_table = ForwardingTable()
+                #self.forwarding_table = ForwardingTable()
                 self._print_new_root()
                 result = True
         return result
