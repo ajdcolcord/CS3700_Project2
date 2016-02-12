@@ -75,14 +75,15 @@ class Bridge:
             ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
                 if ready:
-                    #message = ready[0].recv(RECEIVE_SIZE)
+                    print "READY"
+                    # message = ready[0].recv(RECEIVE_SIZE)
                     #message = port.socket.recv(RECEIVE_SIZE)
                     #message_json = json.loads(message)
 
                     # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
-                    if message_json['type'] == 'data':
-                        for p in self.ports:
-                            p.socket.send(message)
+                    #if message_json['type'] == 'data':
+                    #    for p in self.ports:
+                    #        p.socket.send(message)
 
 
 
