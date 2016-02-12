@@ -65,6 +65,8 @@ class Bridge:
             print "CREATED LAN: " + str(lan) + " on port " + str(port.port_id)
             iterator += 1
 
+        self._start_receiving()
+
     def _start_receiving(self):
         """
         This function starts by broadcasting a BPDU, then runs the main loop
