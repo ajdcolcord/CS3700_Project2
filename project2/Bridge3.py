@@ -151,13 +151,14 @@ class Bridge:
         # return True if updated, False if not
         result = False
         for port in self.ports:
-            if self.bridge_BPDU.is_incoming_BPDU_better(port.BPDU_list[0]):
-                self.bridge_BPDU = port.BPDU_list[0]
-                self.rootPort_ID = port.port_id
-                self.cost = port.BPDU_list[0].cost + 1
-                #self.forwarding_table = ForwardingTable()
-                self._print_new_root()
-                result = True
+            if port.BPDU_list:
+                if self.bridge_BPDU.is_incoming_BPDU_better(port.BPDU_list[0]):
+                    self.bridge_BPDU = port.BPDU_list[0]
+                    self.rootPort_ID = port.port_id
+                    self.cost = port.BPDU_list[0].cost + 1
+                    #self.forwarding_table = ForwardingTable()
+                    self._print_new_root()
+                    result = True
         if result:
             self._broadcast_BPDU()
         return result
