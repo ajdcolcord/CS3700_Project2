@@ -35,7 +35,7 @@ class Bridge:
 
         self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
-        self._start_receiving()
+        #self._start_receiving()
 
     def _create_ports_for_lans(self, LAN_list):
         """
