@@ -35,7 +35,7 @@ class Bridge:
 
         self._create_ports_for_lans(LAN_list)
         print "Bridge " + self.id + " starting up\n"
-        #self._start_receiving()
+        self._start_receiving()
 
     def _create_ports_for_lans(self, LAN_list):
         """
@@ -75,7 +75,7 @@ class Bridge:
         while True:
             ready, ignr, ignr2 = select.select([p.socket for p in self.ports], [], [], 0.5)
             for port in self.ports:
-                ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
+                #ready, ignr, ignr2 = select.select([port.socket], [], [], 0.1)
 
                 if ready:
                     message = ready[0].recv(RECEIVE_SIZE)
