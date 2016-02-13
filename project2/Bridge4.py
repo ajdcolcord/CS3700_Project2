@@ -126,15 +126,27 @@ class Bridge:
 
                 elif message_json['type'] == 'data':
                     print "DATA MESSAGE FROM: " + str(message_json['message']['id'])
-
+                    '''
                     data_in = create_DataMessage_from_json(message)
+
 
                     if data_in:
                         if port.enabled:
+                            print "PORT ENABLED FOR MESSAGE: " + str(data_in.id)
+                            self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
-                            self._broadcast_message(message, port.port_id)
+                            self.forwarding_table.add_address(data_in.source, port.port_id)
 
-
+                            if data_in.dest in self.forwarding_table.addresses:
+                                self._print_forwarding_message(data_in.id, port.port_id)
+                                self._send_to_address(message, data_in.dest)
+                            else:
+                                self._print_boradcasting_message(data_in.id)
+                                self._broadcast_message(message, port.port_id)
+                        else:
+                            print "PORT DISABLED FOR MESSAGE: " + str(data_in.id)
+                            self._print_not_forwarding_message(data_in.id)
+                    '''
 
     def _broadcast_BPDU(self):
         """
