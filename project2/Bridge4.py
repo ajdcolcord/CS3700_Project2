@@ -71,11 +71,13 @@ class Bridge:
         """
         print "Number of Ports on this Bridge: " + str(len(self.ports))
 
-        self._broadcast_BPDU()
+        #self._broadcast_BPDU()
 
         while True:
             print "BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
             ready, ignore, ignore2 = select.select([p.socket for p in self.ports], [], [], 0.1)
+            self._broadcast_BPDU()
+
             for port in self.ports:
                 if not port.BPDU_list:
                     # if port not designated, print out designated
