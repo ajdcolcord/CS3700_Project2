@@ -93,6 +93,7 @@ class Bridge:
                 if not port.BPDU_list:
                     # if port not designated, print out designated
                     if not port.designated:
+                        print "PORT LIST EMPTY, CHANGING TO DESIGNATED"
                         self._print_designated_port(port.port_id)
                     port.designated = True
 
@@ -235,6 +236,7 @@ class Bridge:
             else:
                 print "THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
                 if not port_in.designated:
+                    print "NOT ROOT, INCOMING BPDU NOT BETTER"
                     self._print_designated_port(port_in.port_id)
                 port_in.designated = True
 
@@ -250,7 +252,7 @@ class Bridge:
             port.enabled = True
         else:
             port.enabled = False
-            if previous_status:
+            if previous_status != port.enabled:
                 self._print_disabled_port(port.port_id)
 
     #def _recalculate_root_from_all_ports(self):
