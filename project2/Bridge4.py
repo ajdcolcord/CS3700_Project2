@@ -116,6 +116,7 @@ class Bridge:
             port.socket.send(self.bridge_BPDU.create_json_BPDU())
 
     def _port_decisions(self, bpdu_in, port_in):
+        print "PORT DECISIONS..."
         # if this bridge is the ROOT
         if self.rootPort_ID is None:
             if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
