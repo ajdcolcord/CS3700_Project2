@@ -29,7 +29,6 @@ class Bridge:
         """
         self.id = bridgeID
         self.rootPort_ID = None
-        #self.cost = 0
         self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, 0)
         self.ports = []
         print "Bridge " + self.id + " starting up\n"
@@ -98,6 +97,8 @@ class Bridge:
 
                         bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])
                         self._port_decisions(bpdu_in, port)
+                        print "BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
+
 
 
                     # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
