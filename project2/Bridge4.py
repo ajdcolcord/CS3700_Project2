@@ -112,11 +112,11 @@ class Bridge:
 
 
                     ##############
-                    for other_port in self.ports:
-                        if other_port.port_id != port.port_id:
-                            if other_port.BPDU_list:
-                                if other_port.BPDU_list[0].source == bpdu_in.source:
-                                    other_port.enabled = False
+                    #for other_port in self.ports:
+                    #    if other_port.port_id != port.port_id:
+                    #        if other_port.BPDU_list:
+                    #            if other_port.BPDU_list[0].source == bpdu_in.source:
+                    #                other_port.enabled = False
                     ##############
                     self._port_decisions(bpdu_in, port)
 
