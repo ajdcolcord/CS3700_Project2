@@ -109,7 +109,18 @@ class Bridge:
                     print "RECEIVING BPDU FROM SOCKET ON PORT: " + str(port.port_id) + " FROM " + message_json['source']
 
                     bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])
+
+
+                    ##############
+                    for other_port in self.ports:
+                        if other_port.port_id != port.port_id:
+                            if other_port.BPDU_list:
+                                if other_port.BPDU_list[0].source == bpdu_in.source:
+                                    other_port.enabled = False
+                    ##############
                     self._port_decisions(bpdu_in, port)
+
+
                     print "BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
 
                 elif message_json['type'] == 'data':
@@ -202,6 +213,21 @@ class Bridge:
 
                     # broadcast new information about the bridge
                     self._broadcast_BPDU()
+
+
+                elif self.bridge_BPDU.source == bpdu_in.source:
+                    print "THIS THINKS IT's NOT THE ROOT: INCOMING EQUAL TO BRIDGE"
+                    previous_designation = port_in.designated
+                    port_in.designated = False
+
+                    #if the designated status used to be false, print designated
+                    if not previous_designation:
+                        self._print_designated_port(port_in.port_id)
+
+                    # -------NEW------------
+                    port_in.add_BPDU(bpdu_in)
+                    # ---------------------
+
 
                 else:
                     print "THIS THINKS IT's NOT THE ROOT: INCOMING BETTER, BUT NOT BETTER THAN BRIDGE"
