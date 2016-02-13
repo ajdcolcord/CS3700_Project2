@@ -188,7 +188,7 @@ class Bridge:
                     print "THIS THINKS IT's NOT THE ROOT: INCOMING BETTER, BUT NOT BETTER THAN BRIDGE"
 
                     previous_designation = port_in.designated
-                    port_in.designated = True
+                    port_in.designated = False
 
                     #if the designated status used to be false, print designated
                     if not previous_designation:
@@ -199,7 +199,7 @@ class Bridge:
                     # ---------------------
             else:
                 print "THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
-                port_in.designated = False
+                port_in.designated = True
 
                 # -------NEW------------
                 port_in.add_BPDU(bpdu_in)
