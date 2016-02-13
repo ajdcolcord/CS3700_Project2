@@ -194,7 +194,7 @@ class Bridge:
 
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
 
-                    if self.ports[self.rootPort_ID].bpdu_list.source != bpdu_in.source:
+                    if self.ports[self.rootPort_ID].BPDU_list.source != bpdu_in.source:
 
                         print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN BRIDGE BPDU"
 
