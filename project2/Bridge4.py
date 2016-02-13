@@ -31,6 +31,7 @@ class Bridge:
         self.rootPort_ID = None
         self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, 0)
         self.ports = []
+        self.sockets = {}
         self.forwarding_table = ForwardingTable()
         print "Bridge " + self.id + " starting up\n"
 
@@ -59,6 +60,7 @@ class Bridge:
             s.connect(self._pad(lan))
             port = Port(iterator, s)
             self.ports.append(port)
+            self.sockets[s] = port.port_id
             print "CREATED LAN: " + str(lan) + " on port " + str(port.port_id)
             iterator += 1
 
@@ -84,9 +86,12 @@ class Bridge:
 
             print "XX BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
             #ready, ignore, ignore2 = select.select([p.socket for p in self.ports], [], [], 0.1)
-            ready, ignore, ignore2 = select.select([p for p in self.ports], [], [], 0.1)
+            ready, ignore, ignore2 = select.select([port.socket for port in self.ports], [], [], 0.1)
 
-            for port in ready: #self.ports:
+            #for port in ready: #self.ports:
+            for x in ready:
+                port = self.ports[socket[x]]
+
                 if not port.BPDU_list:
                     # if port not designated, print out designated
                     if not port.designated:
