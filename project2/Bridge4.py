@@ -85,7 +85,7 @@ class Bridge:
             print "XX BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
             ready, ignore, ignore2 = select.select([p.socket for p in self.ports], [], [], 0.1)
 
-            for port in self.ports:
+            for port in ready: #self.ports:
                 if not port.BPDU_list:
                     # if port not designated, print out designated
                     if not port.designated:
@@ -96,37 +96,37 @@ class Bridge:
 
                 self._enable_or_disable(port)
 
-                if ready:
+                #if ready:
 
-                    message = port.socket.recv(RECEIVE_SIZE)
-                    message_json = json.loads(message)
+                message = port.socket.recv(RECEIVE_SIZE)
+                message_json = json.loads(message)
 
-                    if message_json['type'] == 'bpdu':
-                        print "RECEIVING BPDU FROM SOCKET ON PORT: " + str(port.port_id) + " FROM " + message_json['source']
+                if message_json['type'] == 'bpdu':
+                    print "RECEIVING BPDU FROM SOCKET ON PORT: " + str(port.port_id) + " FROM " + message_json['source']
 
-                        bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])
-                        self._port_decisions(bpdu_in, port)
-                        print "BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
+                    bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])
+                    self._port_decisions(bpdu_in, port)
+                    print "BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
 
-                    elif message_json['type'] == 'data':
-                        print "DATA MESSAGE FROM: " + str(message_json['message']['id'])
-                        data_in = create_DataMessage_from_json(message)
-                        if data_in:
-                            if port.enabled:
-                                print "PORT ENABLED FOR MESSAGE: " + str(data_in.id)
-                                self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
+                elif message_json['type'] == 'data':
+                    print "DATA MESSAGE FROM: " + str(message_json['message']['id'])
+                    data_in = create_DataMessage_from_json(message)
+                    if data_in:
+                        if port.enabled:
+                            print "PORT ENABLED FOR MESSAGE: " + str(data_in.id)
+                            self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
-                                self.forwarding_table.add_address(data_in.source, port.port_id)
+                            self.forwarding_table.add_address(data_in.source, port.port_id)
 
-                                if data_in.dest in self.forwarding_table.addresses:
-                                    self._print_forwarding_message(data_in.id, port.port_id)
-                                    self._send_to_address(message, data_in.dest)
-                                else:
-                                    self._print_boradcasting_message(data_in.id)
-                                    self._broadcast_message(message, port.port_id)
+                            if data_in.dest in self.forwarding_table.addresses:
+                                self._print_forwarding_message(data_in.id, port.port_id)
+                                self._send_to_address(message, data_in.dest)
                             else:
-                                print "PORT DISABLED FOR MESSAGE: " + str(data_in.id)
-                                self._print_not_forwarding_message(data_in.id)
+                                self._print_boradcasting_message(data_in.id)
+                                self._broadcast_message(message, port.port_id)
+                        else:
+                            print "PORT DISABLED FOR MESSAGE: " + str(data_in.id)
+                            self._print_not_forwarding_message(data_in.id)
 
     def _broadcast_BPDU(self):
         """
@@ -210,6 +210,8 @@ class Bridge:
                     # ---------------------
             else:
                 print "THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
+                if not port_in.designated:
+                    self._print_designated_port(port_in.port_id)
                 port_in.designated = True
 
                 # -------NEW------------
