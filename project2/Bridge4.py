@@ -116,7 +116,7 @@ class Bridge:
 
     def _port_decisions(self, bpdu_in, port_in):
         # if this bridge is the ROOT
-        if not self.rootPort_ID:
+        if self.rootPort_ID is None:
             if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
                 changed_root = self.bridge_BPDU.root != bpdu_in.root
                 changed_root_id = self.rootPort_ID != port_in.port_id
