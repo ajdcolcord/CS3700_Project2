@@ -96,6 +96,7 @@ class Bridge:
                         print "PORT LIST EMPTY, CHANGING TO Designated"
                         self._print_designated_port(port.port_id)
                     port.designated = True
+                    print "Designated = True: " + str(port.port_id)
 
                     # recalculate root port from all of port's lists...
 
@@ -219,6 +220,7 @@ class Bridge:
                         self._broadcast_BPDU()
                     else:
                         port_in.designated = False
+                        print "Designated = False: " + str(port_in.port_id)
 
                         # -------NEW------------
                         port_in.add_BPDU(bpdu_in)
@@ -228,6 +230,7 @@ class Bridge:
                     print "THIS THINKS IT's NOT THE ROOT: INCOMING BETTER, BUT NOT BETTER THAN BRIDGE"
 
                     port_in.designated = False
+                    print "Designated = False: " + str(port_in.port_id)
 
                     # -------NEW------------
                     port_in.add_BPDU(bpdu_in)
@@ -239,6 +242,7 @@ class Bridge:
                     print "NOT ROOT, INCOMING BPDU NOT BETTER - Designated"
                     self._print_designated_port(port_in.port_id)
                 port_in.designated = True
+                print "Designated = True: " + str(port_in.port_id)
 
                 # -------NEW------------
                 port_in.add_BPDU(bpdu_in)
@@ -250,8 +254,10 @@ class Bridge:
         previous_status = port.enabled
         if port.designated or self.rootPort_ID == port.port_id:
             port.enabled = True
+            print "Enabled = True: " + str(port.port_id)
         else:
             port.enabled = False
+            print "Enabled = False: " + str(port.port_id)
             if previous_status != port.enabled:
                 self._print_disabled_port(port.port_id)
 
