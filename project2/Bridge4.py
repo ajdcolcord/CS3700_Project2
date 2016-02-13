@@ -75,6 +75,7 @@ class Bridge:
         self._broadcast_BPDU()
 
         while True:
+            print "BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
             ready, ignore, ignore2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
                 if not port.BPDU_list:
@@ -83,7 +84,7 @@ class Bridge:
                         self._print_designated_port(port.port_id)
                     port.designated = True
 
-                    # recalculate root port from all of port's lists
+                    # recalculate root port from all of port's lists...
 
                 self._enable_or_disable(port)
 
@@ -101,12 +102,10 @@ class Bridge:
 
                     # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
                     if message_json['type'] == 'data':
-                    #    print "PARSED MESSAGE " + str(message_json['message']['id'])
+                    # print "PARSED MESSAGE " + str(message_json['message']['id'])
                         for p in self.ports:
                             if p.port_id != port.port_id:
                                 p.socket.send(message)
-
-
 
     def _broadcast_BPDU(self):
         """
@@ -114,7 +113,6 @@ class Bridge:
         """
         for port in self.ports:
             port.socket.send(self.bridge_BPDU.create_json_BPDU())
-
 
     def _port_decisions(self, bpdu_in, port_in):
         # if this bridge is the ROOT
@@ -175,6 +173,10 @@ class Bridge:
             port.enabled = False
             if previous_status:
                 self._print_disabled_port(port.port_id)
+
+    #def _recalculate_root_from_all_ports(self):
+    #    tops = [port.BPDU_list[0] for port in self.ports]
+
 
     def _pad(self, name):
         """
