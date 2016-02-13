@@ -96,13 +96,10 @@ class Bridge:
                         print "PORT LIST EMPTY, CHANGING TO Designated"
                         self._print_designated_port(port.port_id)
                     port.designated = True
-                    print "Designated = True: " + str(port.port_id) + "NOT IN PORT_DECISIONS"
 
                     # recalculate root port from all of port's lists...
 
                 self._enable_or_disable(port)
-
-                #if ready:
 
                 message = port.socket.recv(RECEIVE_SIZE)
                 message_json = json.loads(message)
@@ -123,11 +120,9 @@ class Bridge:
                     self._port_decisions(bpdu_in, port)
 
 
-                    print "BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
-
                 elif message_json['type'] == 'data':
                     print "DATA MESSAGE FROM: " + str(message_json['message']['id'])
-
+                    '''
                     data_in = create_DataMessage_from_json(message)
 
 
@@ -147,7 +142,7 @@ class Bridge:
                         else:
                             print "PORT DISABLED FOR MESSAGE: " + str(data_in.id)
                             self._print_not_forwarding_message(data_in.id)
-
+                    '''
 
     def _broadcast_BPDU(self):
         """
@@ -191,8 +186,6 @@ class Bridge:
                 port_in.add_BPDU(bpdu_in)
                 # ---------------------
         else:
-            # TODO: WHAT IF PORT LIST IS EMPTY
-
             if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN ON PORT"
 
@@ -236,7 +229,7 @@ class Bridge:
                     # TRUE IF PORT DESIGNATED
 
                     if not port_in.designated:
-                        print "NOT ROOT, INCOMING BPDU NOT BETTER - Designated"
+                        print "NOT ROOT, INCOMING BPDU NOT BETTER"
                         self._print_designated_port(port_in.port_id)
                     port_in.designated = True
                     print "Designated = True: " + str(port_in.port_id)
