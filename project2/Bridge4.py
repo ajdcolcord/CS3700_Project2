@@ -88,15 +88,17 @@ class Bridge:
                 self._enable_or_disable(port)
 
                 if ready:
-                    print "RECEIVING FROM SOCKET ON PORT: " + str(port.port_id)
+
                     message = port.socket.recv(RECEIVE_SIZE)
                     message_json = json.loads(message)
 
                     if message_json['type'] == 'bpdu':
+                        print "RECEIVING BPDU FROM SOCKET ON PORT: " + str(port.port_id) + " FROM " + message_json['source']
+
                         bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])
                         self._port_decisions(bpdu_in, port)
 
-                    '''
+
                     # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
                     if message_json['type'] == 'data':
                     #    print "PARSED MESSAGE " + str(message_json['message']['id'])
@@ -104,7 +106,7 @@ class Bridge:
                             if p.port_id != port.port_id:
                                 p.socket.send(message)
 
-                    '''
+
 
     def _broadcast_BPDU(self):
         """
