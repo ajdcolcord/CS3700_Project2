@@ -119,6 +119,7 @@ class Bridge:
         # if this bridge is the ROOT
         if self.rootPort_ID is None:
             if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
+                print "THIS THINKS IT's THE ROOT BRIDGE: INCOMING BETTER"
                 changed_root = self.bridge_BPDU.root != bpdu_in.root
                 changed_root_id = self.rootPort_ID != port_in.port_id
 
@@ -136,9 +137,15 @@ class Bridge:
 
                 # broadcast new information about the bridge
                 self._broadcast_BPDU()
+            else:
+                print "THIS THINKS IT's THE ROOT: INCOMING NOT BETTER"
         else:
             if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+                print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN ON PORT"
+
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
+                    print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN BRIDGE BPDU"
+
                     changed_root = self.bridge_BPDU.root != bpdu_in.root
                     changed_root_id = self.rootPort_ID != port_in.port_id
 
@@ -155,6 +162,8 @@ class Bridge:
                     self._broadcast_BPDU()
 
                 else:
+                    print "THIS THINKS IT's NOT THE ROOT: INCOMING BETTER, BUT NOT BETTER THAN BRIDGE"
+
                     previous_designation = port_in.designated
                     port_in.designated = True
 
@@ -162,6 +171,7 @@ class Bridge:
                     if not previous_designation:
                         self._print_designated_port(port_in.port_id)
             else:
+                print "THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
                 port_in.designated = False
 
         self._enable_or_disable(port_in)
