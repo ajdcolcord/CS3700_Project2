@@ -193,41 +193,40 @@ class Bridge:
                 print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN ON PORT"
 
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
-                    print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN BRIDGE BPDU"
 
-                    changed_root = self.bridge_BPDU.root != bpdu_in.root
-                    changed_root_id = self.rootPort_ID != port_in.port_id
+                    if self.ports[self.rootPort_ID].bpdu_list.source != bpdu_in.source:
 
-                    self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
+                        print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN BRIDGE BPDU"
 
-                    if changed_root:
-                        self._print_new_root()
+                        changed_root = self.bridge_BPDU.root != bpdu_in.root
+                        changed_root_id = self.rootPort_ID != port_in.port_id
 
-                    self.rootPort_ID = port_in.port_id
-                    if changed_root_id:
-                        self._print_root_port(self.rootPort_ID)
+                        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
 
-                    # -------NEW------------
-                    port_in.add_BPDU(bpdu_in)
-                    # ---------------------
+                        if changed_root:
+                            self._print_new_root()
 
-                    # broadcast new information about the bridge
-                    self._broadcast_BPDU()
+                        self.rootPort_ID = port_in.port_id
+                        if changed_root_id:
+                            self._print_root_port(self.rootPort_ID)
 
+                        # -------NEW------------
+                        port_in.add_BPDU(bpdu_in)
+                        # ---------------------
 
-                elif self.bridge_BPDU.source == bpdu_in.source:
-                    print "THIS THINKS IT's NOT THE ROOT: INCOMING EQUAL TO BRIDGE"
-                    previous_designation = port_in.designated
-                    port_in.designated = False
+                        # broadcast new information about the bridge
+                        self._broadcast_BPDU()
+                    else:
+                        previous_designation = port_in.designated
+                        port_in.designated = False
 
-                    #if the designated status used to be false, print designated
-                    if not previous_designation:
-                        self._print_designated_port(port_in.port_id)
+                        #if the designated status used to be false, print designated
+                        if not previous_designation:
+                            self._print_designated_port(port_in.port_id)
 
-                    # -------NEW------------
-                    port_in.add_BPDU(bpdu_in)
-                    # ---------------------
-
+                        # -------NEW------------
+                        port_in.add_BPDU(bpdu_in)
+                        # ---------------------
 
                 else:
                     print "THIS THINKS IT's NOT THE ROOT: INCOMING BETTER, BUT NOT BETTER THAN BRIDGE"
@@ -242,6 +241,7 @@ class Bridge:
                     # -------NEW------------
                     port_in.add_BPDU(bpdu_in)
                     # ---------------------
+
             else:
                 print "THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
                 if not port_in.designated:
