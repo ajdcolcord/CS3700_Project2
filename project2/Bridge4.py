@@ -230,7 +230,7 @@ class Bridge:
                     print "THIS THINKS IT's NOT THE ROOT: INCOMING BETTER, BUT NOT BETTER THAN BRIDGE"
 
                     port_in.designated = True
-                    print "Designated = True: " + str(port_in.port_id)
+                    #print "Designated = True: " + str(port_in.port_id)
 
                     # -------NEW------------
                     port_in.add_BPDU(bpdu_in)
@@ -239,10 +239,10 @@ class Bridge:
             else:
                 print "THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
                 if not port_in.designated:
-                    print "NOT ROOT, INCOMING BPDU NOT BETTER - Designated"
+                    #print "NOT ROOT, INCOMING BPDU NOT BETTER - Designated"
                     self._print_designated_port(port_in.port_id)
                 port_in.designated = False
-                print "Designated = False: " + str(port_in.port_id)
+                #print "Designated = False: " + str(port_in.port_id)
 
                 # -------NEW------------
                 port_in.add_BPDU(bpdu_in)
