@@ -110,7 +110,7 @@ class Bridge:
                         print "BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
 
                     elif message_json['type'] == 'data':
-                        print "DATA MESSAGE FROM: " + str(message_json['message']['id'].id)
+                        print "DATA MESSAGE FROM: " + str(message_json['message']['id'])
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
                             if port.enabled:
