@@ -29,8 +29,8 @@ class Bridge:
         """
         self.id = bridgeID
         self.rootPort_ID = None
-        self.cost = 1
-        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, self.cost)
+        #self.cost = 0
+        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, 0)
         self.ports = []
         print "Bridge " + self.id + " starting up\n"
 
@@ -71,16 +71,32 @@ class Bridge:
         ports, and takes care of broadcasting BPDUs and messages to all ports
         """
         print "Number of Ports on this Bridge: " + str(len(self.ports))
-        while True:
 
+        self._broadcast_BPDU()
+
+        while True:
             ready, ignore, ignore2 = select.select([p.socket for p in self.ports], [], [], 0.1)
             for port in self.ports:
+                if not port.BPDU_list:
+                    port.designated = True
+                    # recalculate root port from all of port's lists
+
+                self._enable_or_disable(port)
+
                 if ready:
-                    # message = ready[0].recv(RECEIVE_SIZE)
                     print "RECEIVING FROM SOCKET ON PORT: " + str(port.port_id)
                     message = port.socket.recv(RECEIVE_SIZE)
                     message_json = json.loads(message)
 
+                    if message_json['type'] == 'bpdu':
+                        bpdu_in = create_BPDU_from_json(message_json)
+
+                        self._port_decisions(bpdu_in, port)
+
+
+
+
+                    '''
                     # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
                     if message_json['type'] == 'data':
                     #    print "PARSED MESSAGE " + str(message_json['message']['id'])
@@ -88,6 +104,60 @@ class Bridge:
                             if p.port_id != port.port_id:
                                 p.socket.send(message)
 
+                    '''
+
+
+
+
+
+
+
+
+
+
+
+    def _broadcast_BPDU(self):
+        """
+        Broadcasts a new BPDU from this bridge to all sockets
+        """
+        for port in self.ports:
+            port.socket.send(self.bridge_BPDU.create_json_BPDU())
+
+
+    def _port_decisions(self, bpdu_in, port_in):
+        # if this bridge is the ROOT
+        if not self.rootPort_ID:
+            if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
+
+                # set bridge's bpdu to incoming bpdu (with cost updated)
+                self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
+                self._print_new_root()
+
+                # set bridge's root port to this port
+                self.rootPort_ID = port_in.port_id
+                self._print_root_port(self.rootPort_ID)
+
+                # broadcast new information about the bridge
+                self._broadcast_BPDU()
+        else:
+            if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+                if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
+                    self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
+                    self.rootPort_ID = port_in.port_id
+                    self._print_root_port(port_in)
+
+                else:
+                    port_in.designated = True
+            else:
+                port_in.designated = False
+
+        self._enable_or_disable()
+
+    def _enable_or_disable(self, port):
+        if port.designated or self.rootPort_ID == port.port_id:
+            port.enabled = True
+        else:
+            port.enabled = False
 
 
 
@@ -123,3 +193,6 @@ class Bridge:
 
     def _print_new_root(self):
         print "New root: " + str(self.id) + "/" + str(self.bridge_BPDU.root)
+
+    def _print_root_port(self, port_id):
+        print "Root port: " + str(self.id) + "/" + str(port_id)

@@ -47,16 +47,20 @@ class BPDU:
         @param BPDU_in : the BPDU to check
         @return True if the incoming BPDU is better, False otherwise
         """
-        result = True
+        result = True # port should start off not designated
         if self.root < BPDU_in.root:
             result = False
+            # port should be designated here
         elif self.root == BPDU_in.root:
             if self.cost < BPDU_in.cost:
                 result = False
+                # port should be designtaed
             elif self.cost == BPDU_in.cost:
                 if self.source < BPDU_in.source:
                     result = False
+                    # port should be designated
         return result
+
 
 
 def create_BPDU_from_json(json_message):
