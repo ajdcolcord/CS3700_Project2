@@ -89,8 +89,7 @@ class Bridge:
                     message_json = json.loads(message)
 
                     if message_json['type'] == 'bpdu':
-                        bpdu_in = create_BPDU_from_json(message_json)
-
+                        bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])
                         self._port_decisions(bpdu_in, port)
 
 
