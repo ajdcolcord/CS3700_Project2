@@ -83,7 +83,8 @@ class Bridge:
                 start_time = time.time()
 
             print "XX BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
-            ready, ignore, ignore2 = select.select([p.socket for p in self.ports], [], [], 0.1)
+            #ready, ignore, ignore2 = select.select([p.socket for p in self.ports], [], [], 0.1)
+            ready, ignore, ignore2 = select.select([p for p in self.ports], [], [], 0.1)
 
             for port in ready: #self.ports:
                 if not port.BPDU_list:
