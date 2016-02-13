@@ -114,8 +114,8 @@ class Bridge:
                     if message_json['type'] == 'data':
                     # print "PARSED MESSAGE " + str(message_json['message']['id'])
                         for p in self.ports:
-                            if p.port_id != port.port_id:
-                                p.socket.send(message)
+                            #if p.port_id != port.port_id:
+                            p.socket.send(message)
 
     def _broadcast_BPDU(self):
         """
