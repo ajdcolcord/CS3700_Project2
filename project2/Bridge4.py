@@ -110,11 +110,11 @@ class Bridge:
                         print "BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
 
                     elif message_json['type'] == 'data':
-                        print "DATA MESSAGE FROM: " + message_json['message']['id'].id
+                        print "DATA MESSAGE FROM: " + str(message_json['message']['id'].id)
                         data_in = create_DataMessage_from_json(message)
                         if data_in:
                             if port.enabled:
-                                print "PORT ENABLED FOR MESSAGE: " + data_in.id
+                                print "PORT ENABLED FOR MESSAGE: " + str(data_in.id)
                                 self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
                                 self.forwarding_table.add_address(data_in.source, port.port_id)
@@ -126,7 +126,7 @@ class Bridge:
                                     self._print_boradcasting_message(data_in.id)
                                     self._broadcast_message(message, port.port_id)
                             else:
-                                print "PORT DISABLED FOR MESSAGE: " + data_in.id
+                                print "PORT DISABLED FOR MESSAGE: " + str(data_in.id)
                                 self._print_not_forwarding_message(data_in.id)
 
     def _broadcast_BPDU(self):
