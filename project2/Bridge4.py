@@ -150,7 +150,7 @@ class Bridge:
             else:
                 port_in.designated = False
 
-        self._enable_or_disable()
+        self._enable_or_disable(port_in)
 
     def _enable_or_disable(self, port):
         if port.designated or self.rootPort_ID == port.port_id:
