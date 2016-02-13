@@ -217,12 +217,7 @@ class Bridge:
                         # broadcast new information about the bridge
                         self._broadcast_BPDU()
                     else:
-                        previous_designation = port_in.designated
                         port_in.designated = False
-
-                        #if the designated status used to be false, print designated
-                        if not previous_designation:
-                            self._print_designated_port(port_in.port_id)
 
                         # -------NEW------------
                         port_in.add_BPDU(bpdu_in)
@@ -231,12 +226,7 @@ class Bridge:
                 else:
                     print "THIS THINKS IT's NOT THE ROOT: INCOMING BETTER, BUT NOT BETTER THAN BRIDGE"
 
-                    previous_designation = port_in.designated
                     port_in.designated = False
-
-                    #if the designated status used to be false, print designated
-                    if not previous_designation:
-                        self._print_designated_port(port_in.port_id)
 
                     # -------NEW------------
                     port_in.add_BPDU(bpdu_in)
