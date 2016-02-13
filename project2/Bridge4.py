@@ -173,6 +173,7 @@ class Bridge:
 
                 # set bridge's root port to this port
                 self.rootPort_ID = port_in.port_id
+                port_in.designated = False
 
                 if changed_root_id:
                     self._print_root_port(self.rootPort_ID)
@@ -209,6 +210,7 @@ class Bridge:
                             self._print_new_root()
 
                         self.rootPort_ID = port_in.port_id
+                        port_in.designated = False
                         if changed_root_id:
                             self._print_root_port(self.rootPort_ID)
 
@@ -228,20 +230,25 @@ class Bridge:
 
                 else:
                     print "THIS THINKS IT's NOT THE ROOT: INCOMING BETTER, BUT NOT BETTER THAN BRIDGE"
+                    # TRUE IF PORT DISABLED
+                    # TRUE IF PORT DESIGNATED
 
+                    if not port_in.designated:
+                        print "NOT ROOT, INCOMING BPDU NOT BETTER - Designated"
+                        self._print_designated_port(port_in.port_id)
                     port_in.designated = True
-                    #print "Designated = True: " + str(port_in.port_id)
 
                     # -------NEW------------
                     port_in.add_BPDU(bpdu_in)
                     # ---------------------
 
             else:
-                print "THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
-                if not port_in.designated:
+                print "NO ACTION: THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
+
+                #if not port_in.designated:
                     #print "NOT ROOT, INCOMING BPDU NOT BETTER - Designated"
-                    self._print_designated_port(port_in.port_id)
-                port_in.designated = False
+                    #self._print_designated_port(port_in.port_id)
+                #port_in.designated = True
                 #print "Designated = False: " + str(port_in.port_id)
 
                 # -------NEW------------
