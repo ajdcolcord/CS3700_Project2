@@ -31,6 +31,7 @@ class Bridge:
         self.rootPort_ID = None
         self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, 0)
         self.ports = []
+        self.forwarding_table = ForwardingTable()
         print "Bridge " + self.id + " starting up\n"
 
     def create_ports_for_lans(self, LAN_list):
@@ -108,14 +109,23 @@ class Bridge:
                         self._port_decisions(bpdu_in, port)
                         print "BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
 
+                    elif message_json['type'] == 'data':
+                        print "DATA MESSAGE"
+                        data_in = create_DataMessage_from_json(message)
+                        if data_in:
+                            if port.enabled:
+                                self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
+                                self.forwarding_table.add_address(data_in.source, port.port_id)
 
-                    # TODO: THIS IS SENDING MESSAGES TO ALL PORTS FOR NOW
-                    if message_json['type'] == 'data':
-                    # print "PARSED MESSAGE " + str(message_json['message']['id'])
-                        for p in self.ports:
-                            #if p.port_id != port.port_id:
-                            p.socket.send(message)
+                                if data_in.dest in self.forwarding_table.addresses:
+                                    self._print_forwarding_message(data_in.id, port.port_id)
+                                    self._send_to_address(message, data_in.dest)
+                                else:
+                                    self._print_boradcasting_message(data_in.id)
+                                    self._broadcast_message(message, port.port_id)
+                            else:
+                                self._print_not_forwarding_message(data_in.id)
 
     def _broadcast_BPDU(self):
         """
@@ -219,6 +229,27 @@ class Bridge:
     #def _recalculate_root_from_all_ports(self):
     #    tops = [port.BPDU_list[0] for port in self.ports]
 
+    def _broadcast_message(self, message, port_in):
+        """
+        Broadcasts the given message to all socket connections, except the
+        inputted port
+        @param message : string
+        """
+        for port in self.ports:
+            if port != port_in:
+                if port.enabled:
+                    port.socket.send(message)
+
+    def _send_to_address(self, message, address):
+        """
+        Sends the message inputted to the input address directly,
+        using the forwarding table entry
+        @param message : message to Sends
+        @param address : address to send to
+        """
+        port_id = self.forwarding_table.get_address_port(address)
+        if self.ports[port_id].enabled:
+            self.ports[port_id].socket.send(message)
 
     def _pad(self, name):
         """
