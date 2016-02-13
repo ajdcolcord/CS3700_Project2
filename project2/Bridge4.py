@@ -143,6 +143,9 @@ class Bridge:
                 self._broadcast_BPDU()
             else:
                 print "THIS THINKS IT's THE ROOT: INCOMING NOT BETTER"
+                # -------NEW------------
+                port_in.add_BPDU(bpdu_in)
+                # ---------------------
         else:
             # TODO: WHAT IF PORT LIST IS EMPTY
 
@@ -243,4 +246,4 @@ class Bridge:
         print "Root port: " + str(self.id) + "/" + str(port_id)
 
     def _print_designated_port(self, port_id):
-        print "Designated port: " + str(self.id) + + "/" + str(port_id)
+        print "Designated port: " + str(self.id) + "/" + str(port_id)
