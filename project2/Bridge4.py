@@ -96,7 +96,7 @@ class Bridge:
                         print "PORT LIST EMPTY, CHANGING TO Designated"
                         self._print_designated_port(port.port_id)
                     port.designated = True
-                    print "Designated = True: " + str(port.port_id)
+                    print "Designated = True: " + str(port.port_id) + "NOT IN PORT_DECISIONS"
 
                     # recalculate root port from all of port's lists...
 
