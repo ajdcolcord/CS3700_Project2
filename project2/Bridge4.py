@@ -174,6 +174,7 @@ class Bridge:
                 # set bridge's root port to this port
                 self.rootPort_ID = port_in.port_id
                 port_in.designated = False
+                print "Designated = False: " + str(port_in.port_id)
 
                 if changed_root_id:
                     self._print_root_port(self.rootPort_ID)
