@@ -90,7 +90,7 @@ class Bridge:
 
             #for port in ready: #self.ports:
             for x in ready:
-                port = self.ports[socket[x]]
+                port = self.ports[self.sockets[x]]
 
                 if not port.BPDU_list:
                     # if port not designated, print out designated
