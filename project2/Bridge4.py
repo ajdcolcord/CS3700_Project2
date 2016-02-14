@@ -84,7 +84,7 @@ class Bridge:
                 self._broadcast_BPDU()
                 start_time = time.time()
 
-            print "XX BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
+            #print "XX BRIDGE " + str(self.id) + ": ROOT = " + str(self.bridge_BPDU.root) + " ON PORT: " + str(self.rootPort_ID) + " WITH COST: " + str(self.bridge_BPDU.cost)
             ready, ignore, ignore2 = select.select([port.socket for port in self.ports], [], [], 0.1)
 
             for x in ready:
@@ -118,6 +118,7 @@ class Bridge:
                     #                other_port.enabled = False
                     ##############
                     self._port_decisions(bpdu_in, port)
+                    self._print_bridge_info()
 
 
                 elif message_json['type'] == 'data':
@@ -152,11 +153,11 @@ class Bridge:
             port.socket.send(self.bridge_BPDU.create_json_BPDU())
 
     def _port_decisions(self, bpdu_in, port_in):
-        print "PORT DECISIONS..."
+        #print "PORT DECISIONS..."
         # if this bridge is the ROOT
         if self.rootPort_ID is None:
             if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
-                print "THIS THINKS IT's THE ROOT BRIDGE: INCOMING BETTER"
+                #print "THIS THINKS IT's THE ROOT BRIDGE: INCOMING BETTER"
                 changed_root = self.bridge_BPDU.root != bpdu_in.root
                 changed_root_id = self.rootPort_ID != port_in.port_id
 
@@ -181,19 +182,19 @@ class Bridge:
                 # broadcast new information about the bridge
                 self._broadcast_BPDU()
             else:
-                print "THIS THINKS IT's THE ROOT: INCOMING NOT BETTER"
+                #print "THIS THINKS IT's THE ROOT: INCOMING NOT BETTER"
                 # -------NEW------------
                 port_in.add_BPDU(bpdu_in)
                 # ---------------------
         else:
             if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
-                print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN ON PORT"
+                #print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN ON PORT"
 
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
 
                     if self.ports[self.rootPort_ID].BPDU_list[0].source != bpdu_in.source:
 
-                        print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN BRIDGE BPDU"
+                        #print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN BRIDGE BPDU"
 
                         changed_root = self.bridge_BPDU.root != bpdu_in.root
                         changed_root_id = self.rootPort_ID != port_in.port_id
@@ -224,12 +225,12 @@ class Bridge:
                         # ---------------------
 
                 else:
-                    print "THIS THINKS IT's NOT THE ROOT: INCOMING BETTER, BUT NOT BETTER THAN BRIDGE"
+                    #print "THIS THINKS IT's NOT THE ROOT: INCOMING BETTER, BUT NOT BETTER THAN BRIDGE"
                     # TRUE IF PORT DISABLED
                     # TRUE IF PORT DESIGNATED
 
                     if not port_in.designated:
-                        print "NOT ROOT, INCOMING BPDU NOT BETTER"
+                        #print "NOT ROOT, INCOMING BPDU NOT BETTER"
                         self._print_designated_port(port_in.port_id)
                     port_in.designated = True
                     print "Designated = True: " + str(port_in.port_id)
@@ -239,7 +240,7 @@ class Bridge:
                     # ---------------------
 
             else:
-                print "NO ACTION: THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
+                #print "NO ACTION: THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
 
                 #if not port_in.designated:
                     #print "NOT ROOT, INCOMING BPDU NOT BETTER - Designated"
@@ -331,4 +332,4 @@ class Bridge:
         port_status_list = ""
         for port in self.ports:
             port_status_list += "\tPort-" + str(port.port_id) + "-Enabled=" + str(port.enabled) + "-Designated=" + str(port.designated)
-        print "BRIDGE - " + str(self.id) + " ROOT= " + str(self.bridge_BPDU.root) + " COST= " + str(self.bridge_BPDU.cost) + " ROOT PORT= " + str(self.rootPort_ID) + " PORTS:[\n" + str(port_status_list) + "]\n"
+        print "BRIDGE - " + str(self.id) + " ROOT= " + str(self.bridge_BPDU.root) + " COST= " + str(self.bridge_BPDU.cost) + " ROOT PORT= " + str(self.rootPort_ID) + " PORTS:[" + str(port_status_list) + "]\n"
