@@ -35,7 +35,7 @@ class Port:
             bpdu_added = True
         else:
             for bpdu in self.BPDU_list:
-                self._remove_timedout_BPDU(bpdu)
+                self.remove_timedout_BPDU(bpdu)
 
                 if bpdu.is_incoming_BPDU_better(BPDU) and not bpdu_added:
                     bpdu_added = self._add_BPDU_at_position(BPDU, iterator)
@@ -45,7 +45,7 @@ class Port:
         if not bpdu_added:
             self.BPDU_list.append(BPDU)
 
-    def _remove_timedout_BPDU(self, BPDU):
+    def remove_timedout_BPDU(self, BPDU):
         """
         Checks if the given BPDU has timed out. If so, remove it
         from this BPDU list
@@ -56,10 +56,12 @@ class Port:
         if int(round((time.time() - BPDU.time) * 1000)) > 750:
             self.BPDU_list.remove(BPDU)
             return True
+        else:
+            return False
 
     def remove_all_timedout_BPDUs(self):
         for bpdu in self.BPDU_list:
-            self._remove_timedout_BPDU(bpdu)
+            self.remove_timedout_BPDU(bpdu)
 
     def _add_BPDU_at_position(self, BPDU, position):
         """

@@ -79,6 +79,8 @@ class Bridge:
 
         while True:
 
+
+
             self._print_bridge_info()
 
             # is it time to send a new BPDU?
@@ -90,7 +92,11 @@ class Bridge:
             ready, ignore, ignore2 = select.select([port.socket for port in self.ports], [], [], 0.1)
 
             for x in ready:
+
                 port = self.ports[self.sockets[x]]
+
+                #if port.remove_all_timedout_BPDUs():
+                #    self.forwarding_table = ForwardingTable()
 
                 if not port.BPDU_list:
                     # if port not designated, print out designated
@@ -176,9 +182,14 @@ class Bridge:
 
                             # if in the forwarding table, and not expired, send on that port
                             if sending_port_id:
-                                self._print_forwarding_message(data_in.id, port.port_id)
-                                self._send_to_address(message, sending_port_id)
 
+                                if self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
+                                    self.forwarding_table = ForwardingTable()
+                                    self._print_boradcasting_message(data_in.id)
+                                    self._broadcast_message(message, port.port_id)
+                                else:
+                                    self._print_forwarding_message(data_in.id, port.port_id)
+                                    self._send_to_address(message, sending_port_id)
                             else:
                                 self._print_boradcasting_message(data_in.id)
                                 self._broadcast_message(message, port.port_id)
