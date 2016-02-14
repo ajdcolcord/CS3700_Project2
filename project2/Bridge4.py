@@ -191,7 +191,8 @@ class Bridge:
         # if this bridge is currently the ROOT...
         if self.rootPort_ID is None:
 
-            bpdu_in.cost += 1 ###NEWWWW
+            # REMOVING COST
+            # bpdu_in.cost += 1 ###NEWWWW
 
             # if incoming BPDU has a better bridge than this one
             if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
@@ -200,7 +201,7 @@ class Bridge:
                 changed_root_id = self.rootPort_ID != port_in.port_id
 
                 # set bridge's bpdu to incoming bpdu (with cost updated)
-                self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost) # + 1)
+                self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
 
                 if changed_root:
                     self._print_new_root()
@@ -231,7 +232,8 @@ class Bridge:
             # if the incoming BPDU is better than the current port's bpdu (seeing a better bridge)
             if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
 
-                bpdu_in.cost += 1 ###NEWWWW
+                #REMOVE COST
+                #bpdu_in.cost += 1 ###NEWWWW
 
                 # if the incoming BPDU is also better than the bridge's information (better bridge seen)
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
@@ -242,7 +244,7 @@ class Bridge:
                         changed_root = self.bridge_BPDU.root != bpdu_in.root
                         changed_root_id = self.rootPort_ID != port_in.port_id
 
-                        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)#  + 1)
+                        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
 
                         if changed_root:
                             self._print_new_root()
@@ -303,7 +305,8 @@ class Bridge:
                 #if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 #    port_in.designated = False
 
-                bpdu_in.cost += 1 ###NEWWWW
+                # REMOVING COST
+                #bpdu_in.cost += 1 ###NEWWWW
 
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
                     port_in.designated = False
