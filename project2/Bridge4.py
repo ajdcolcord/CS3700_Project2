@@ -142,6 +142,7 @@ class Bridge:
                                 if saved_bpdu:
                                     if saved_bpdu.is_incoming_BPDU_better(self.bridge_BPDU):
                                         self.ports[original_root_port].designated = True
+                                        self._enable_or_disable(self.ports[original_root_port])
                                         print "ORIGINAL PORT BEING DESIGNATED " + str(original_root_port)
                                         self._print_bridge_info()
                                     else:
@@ -150,6 +151,8 @@ class Bridge:
                                 print "ORIGINAL PORT HAS NO BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
 
                                 self.ports[original_root_port].designated = True
+                                self._enable_or_disable(self.ports[original_root_port])
+
 
 
 
@@ -348,6 +351,7 @@ class Bridge:
         """
         for port in self.ports:
             if port != port_in:
+                self._enable_or_disable(port_in)
                 if port.enabled:
                     port.socket.send(message)
 
