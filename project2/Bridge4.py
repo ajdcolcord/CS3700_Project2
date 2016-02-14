@@ -291,7 +291,6 @@ class Bridge:
                     # ---------------------
 
             else:
-                bpdu_in.cost += 1 ###NEWWWW
                 #print "NO ACTION: THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
 
                 #if not port_in.designated:
@@ -305,6 +304,8 @@ class Bridge:
                     port_in.designated = False
                 #else:
                 #    port_in.designated = True
+
+                bpdu_in.cost += 1 ###NEWWWW
 
                 # -------NEW------------
                 port_in.add_BPDU(bpdu_in)
