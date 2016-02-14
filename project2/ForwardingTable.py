@@ -33,7 +33,7 @@ class ForwardingTable:
         if address in self.addresses:
             if int(round((time.time() - self.addresses[address][1]) * 1000)) > 5000:
                 del self.addresses[address]
-                return False
+                return -1
             else:
                 print "Retrieved Address " + str(address) + " from port " + str(self.addresses[address][0])
                 return self.addresses[address][0]
