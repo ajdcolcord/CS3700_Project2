@@ -115,14 +115,6 @@ class Bridge:
                     bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])# + 1)
 
 
-                    ##############
-                    #for other_port in self.ports:
-                    #    if other_port.port_id != port.port_id:
-                    #        if other_port.BPDU_list:
-                    #            if other_port.BPDU_list[0].source == bpdu_in.source:
-                    #                other_port.enabled = False
-                    ##############
-
                     original_root_ID = self.bridge_BPDU.root
                     print "ORIGINAL ROOT ID = " + str(self.bridge_BPDU.root)
 
@@ -187,8 +179,9 @@ class Bridge:
                                     self._broadcast_message(message, port.port_id, data_in.id)
                                 else:
                                     print "BPDU NOT TIMED OUT ON PORT-" + str(sending_port_id) + " FORWARDING ON PORT " + str(sending_port_id)
-                                    self._print_forwarding_message(data_in.id, port.port_id)
+
                                     if port.port_id != sending_port_id:
+                                        self._print_forwarding_message(data_in.id, port.port_id)
                                         self._send_to_address(message, sending_port_id)
                             else:
                                 print "SENDING_PORT EXPIRED OR NOT IN FORWARDING TABLE FOR MESSAGE- " + str(data_in.id)
