@@ -140,7 +140,7 @@ class Bridge:
 
                                 #if self.ports[original_root_port].BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
                                 if saved_bpdu.is_incoming_BPDU_better(self.bridge_BPDU):
-                                    original_root_port.designated = True
+                                    self.ports[original_root_port].designated = True
                                     print "ORIGINAL PORT BEING DESIGNATED " + str(original_root_port)
                                     self._print_bridge_info()
                                 else:
@@ -148,7 +148,7 @@ class Bridge:
                             else:
                                 print "ORIGINAL PORT HAS NO BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
 
-                                original_root_port.desingated = True
+                                self.ports[original_root_port].designated = True
 
 
 
