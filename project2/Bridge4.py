@@ -172,7 +172,7 @@ class Bridge:
 
                         if port.enabled:
 
-                            print "PORT " + port.port_id + " ENABLED FOR MESSAGE: " + str(data_in.id) + " From " + str(data_in.source)
+                            print "PORT " + str(port.port_id) + " ENABLED FOR MESSAGE: " + str(data_in.id) + " From " + str(data_in.source)
 
                             self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
