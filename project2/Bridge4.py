@@ -186,8 +186,8 @@ class Bridge:
                                 if self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
                                     print "BPDU WAS TIMED OUT ON PORT-" + str(sending_port_id) + " SHOULD BROADCAST"
                                     self.forwarding_table = ForwardingTable()
-                                    self._print_boradcasting_message(data_in.id)
-                                    self._broadcast_message(message, port.port_id)
+                                    #self._print_boradcasting_message(data_in.id)
+                                    self._broadcast_message(message, port.port_id, data_in.id)
                                 else:
                                     print "BPDU NOT TIMED OUT ON PORT-" + str(sending_port_id) + " FORWARDING ON PORT " + str(sending_port_id)
                                     self._print_forwarding_message(data_in.id, port.port_id)
@@ -195,8 +195,8 @@ class Bridge:
                                         self._send_to_address(message, sending_port_id)
                             else:
                                 print "SENDING_PORT EXPIRED OR NOT IN FORWARDING TABLE FOR MESSAGE- " + str(data_in.id)
-                                self._print_boradcasting_message(data_in.id)
-                                self._broadcast_message(message, port.port_id)
+                                #self._print_boradcasting_message(data_in.id)
+                                self._broadcast_message(message, port.port_id, data_in.id)
                         else:
                             print "PORT DISABLED FOR MESSAGE: " + str(data_in.id)
                             self._print_not_forwarding_message(data_in.id)
@@ -361,12 +361,14 @@ class Bridge:
     #def _recalculate_root_from_all_ports(self):
     #    tops = [port.BPDU_list[0] for port in self.ports]
 
-    def _broadcast_message(self, message, port_in):
+    def _broadcast_message(self, message, port_in, data_in):
         """
         Broadcasts the given message to all socket connections, except the
         inputted port
         @param message : string
         """
+        self._print_boradcasting_message(data_in)
+
         for port in self.ports:
             if port != port_in:
                 self._enable_or_disable(port)
