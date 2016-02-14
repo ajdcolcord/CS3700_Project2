@@ -303,8 +303,8 @@ class Bridge:
                 #####TODO : 000000000000000000
                 if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                     port_in.designated = False
-                else:
-                    port_in.designated = True
+                #else:
+                #    port_in.designated = True
 
                 # -------NEW------------
                 port_in.add_BPDU(bpdu_in)
