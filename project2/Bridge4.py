@@ -163,7 +163,7 @@ class Bridge:
                     self._print_bridge_info()
 
                 elif message_json['type'] == 'data':
-                    print "DATA MESSAGE FROM: " + str(message_json['message']['id'])
+                    print "DATA MESSAGE FROM: " + str(message_json['message']['source'])
 
                     data_in = create_DataMessage_from_json(message)
 
@@ -172,7 +172,7 @@ class Bridge:
 
                         if port.enabled:
 
-                            print "PORT ENABLED FOR MESSAGE: " + str(data_in.id)
+                            print "PORT " + port.port_id + " ENABLED FOR MESSAGE: " + str(data_in.id) + " From " + str(data_in.source)
 
                             self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
@@ -182,15 +182,18 @@ class Bridge:
 
                             # if in the forwarding table, and not expired, send on that port
                             if sending_port_id and self.ports[sending_port_id].BPDU_list:
-
+                                print "SENDING_PORT_ID Exists (" + str(sending_port_id) + ") - and Not Expired"
                                 if self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
+                                    print "BPDU WAS TIMED OUT ON PORT-" + str(sending_port_id) + " SHOULD BROADCAST"
                                     self.forwarding_table = ForwardingTable()
                                     self._print_boradcasting_message(data_in.id)
                                     self._broadcast_message(message, port.port_id)
                                 else:
+                                    print "BPDU NOT TIMED OUT ON PORT-" + str(sending_port_id) + " FORWARDING ON PORT " + str(sending_port_id)
                                     self._print_forwarding_message(data_in.id, port.port_id)
                                     self._send_to_address(message, sending_port_id)
                             else:
+                                print "SENDING_PORT EXPIRED OR NOT IN FORWARDING TABLE FOR MESSAGE- " + str(data_in.id)
                                 self._print_boradcasting_message(data_in.id)
                                 self._broadcast_message(message, port.port_id)
                         else:
