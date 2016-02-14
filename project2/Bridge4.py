@@ -80,7 +80,7 @@ class Bridge:
         while True:
 
             self._print_bridge_info()
-            
+
             # is it time to send a new BPDU?
             if int(round((time.time() - start_time) * 1000)) > 500:
                 self._broadcast_BPDU()
@@ -109,7 +109,7 @@ class Bridge:
                 if message_json['type'] == 'bpdu':
                     print "RECEIVING BPDU FROM SOCKET ON PORT: " + str(port.port_id) + " FROM " + message_json['source']
 
-                    bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])
+                    bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'] + 1)
 
 
                     ##############
@@ -164,7 +164,7 @@ class Bridge:
                 changed_root_id = self.rootPort_ID != port_in.port_id
 
                 # set bridge's bpdu to incoming bpdu (with cost updated)
-                self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
+                self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost) # + 1)
 
                 if changed_root:
                     self._print_new_root()
@@ -201,7 +201,7 @@ class Bridge:
                         changed_root = self.bridge_BPDU.root != bpdu_in.root
                         changed_root_id = self.rootPort_ID != port_in.port_id
 
-                        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
+                        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)#  + 1)
 
                         if changed_root:
                             self._print_new_root()
