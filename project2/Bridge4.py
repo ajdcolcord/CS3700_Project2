@@ -128,6 +128,7 @@ class Bridge:
                     self._port_decisions(bpdu_in, port)
 
                     print "ORIGINAL ROOT ID (AFTER PORT DECISIONS) = " + str(original_root_ID)
+                    print "ORIGINAL ROOT CHANGED TO " + str(self.rootPort_ID)
 
                     if original_root_port:
                         if self.rootPort_ID != original_root_port:
