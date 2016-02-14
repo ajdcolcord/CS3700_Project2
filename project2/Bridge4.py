@@ -109,7 +109,7 @@ class Bridge:
                 if message_json['type'] == 'bpdu':
                     print "RECEIVING BPDU FROM SOCKET ON PORT: " + str(port.port_id) + " FROM " + message_json['source']
 
-                    bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'] + 1)
+                    bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])# + 1)
 
 
                     ##############
@@ -119,8 +119,17 @@ class Bridge:
                     #            if other_port.BPDU_list[0].source == bpdu_in.source:
                     #                other_port.enabled = False
                     ##############
+
+                    original_root_port = self.rootPort_ID
+
                     self._port_decisions(bpdu_in, port)
-                    #self._print_bridge_info()
+
+                    if self.rootPort_ID != original_root_port:
+                        if self.ports[original_root_port].BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
+                            original_root_port.desingated = True
+                        
+
+                    self._print_bridge_info()
 
 
                 elif message_json['type'] == 'data':
@@ -155,11 +164,14 @@ class Bridge:
             port.socket.send(self.bridge_BPDU.create_json_BPDU())
 
     def _port_decisions(self, bpdu_in, port_in):
-        #print "PORT DECISIONS..."
-        # if this bridge is the ROOT
+        # if this bridge is currently the ROOT...
         if self.rootPort_ID is None:
+
+            bpdu_in.cost += 1 ###NEWWWW
+
+            # if incoming BPDU has a better bridge than this one
             if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
-                #print "THIS THINKS IT's THE ROOT BRIDGE: INCOMING BETTER"
+
                 changed_root = self.bridge_BPDU.root != bpdu_in.root
                 changed_root_id = self.rootPort_ID != port_in.port_id
 
@@ -184,19 +196,24 @@ class Bridge:
                 # broadcast new information about the bridge
                 self._broadcast_BPDU()
             else:
-                #print "THIS THINKS IT's THE ROOT: INCOMING NOT BETTER"
+                # This bridge is better than the bridge on the incoming BPDU, stays the root
                 # -------NEW------------
                 port_in.add_BPDU(bpdu_in)
                 # ---------------------
-        else:
-            if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
-                #print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN ON PORT"
 
+        # if this bridge is currently NOT the root...
+        else:
+
+            # if the incoming BPDU is better than the current port's bpdu (seeing a better bridge)
+            if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+
+                bpdu_in.cost += 1 ###NEWWWW
+
+                # if the incoming BPDU is also better than the bridge's information (better bridge seen)
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
 
+                    # if the incoming bpdu's source is not the same as this bridge's current root port's bpdu's source
                     if self.ports[self.rootPort_ID].BPDU_list[0].source != bpdu_in.source:
-
-                        #print "THIS THINKS IT's NOT THE ROOT BRIDGE: INCOMING BPDU BETTER THAN BRIDGE BPDU"
 
                         changed_root = self.bridge_BPDU.root != bpdu_in.root
                         changed_root_id = self.rootPort_ID != port_in.port_id
@@ -206,8 +223,13 @@ class Bridge:
                         if changed_root:
                             self._print_new_root()
 
+
+
                         self.rootPort_ID = port_in.port_id
                         port_in.designated = False
+
+
+
                         print "Designated = False: " + str(port_in.port_id)
                         if changed_root_id:
                             self._print_root_port(self.rootPort_ID)
@@ -234,6 +256,8 @@ class Bridge:
                     if not port_in.designated:
                         #print "NOT ROOT, INCOMING BPDU NOT BETTER"
                         self._print_designated_port(port_in.port_id)
+
+                    #####TODO : THIS IS NEWWWWW
                     ######port_in.designated = True
                     port_in.designated = False
                     print "Designated = True: " + str(port_in.port_id)
@@ -243,6 +267,7 @@ class Bridge:
                     # ---------------------
 
             else:
+                bpdu_in.cost += 1 ###NEWWWW
                 #print "NO ACTION: THIS THINK's IT's NOT THE ROOT: INCOMING NOT BETTER THAN PORT"
 
                 #if not port_in.designated:
