@@ -78,7 +78,6 @@ class Bridge:
         self._broadcast_BPDU()
 
         while True:
-            self._print_bridge_info()
             # is it time to send a new BPDU?
             if int(round((time.time() - start_time) * 1000)) > 500:
                 self._broadcast_BPDU()
@@ -259,11 +258,15 @@ class Bridge:
         if port.designated or self.rootPort_ID == port.port_id:
             port.enabled = True
             print "Enabled = True: " + str(port.port_id)
+            if previous_status != port.enabled:
+                self._print_bridge_info()
         else:
             port.enabled = False
             print "Enabled = False: " + str(port.port_id)
             if previous_status != port.enabled:
                 self._print_disabled_port(port.port_id)
+                self._print_bridge_info()
+
 
     #def _recalculate_root_from_all_ports(self):
     #    tops = [port.BPDU_list[0] for port in self.ports]
