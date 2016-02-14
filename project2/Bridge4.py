@@ -78,7 +78,7 @@ class Bridge:
         self._broadcast_BPDU()
 
         while True:
-
+            self._print_bridge_info()
             # is it time to send a new BPDU?
             if int(round((time.time() - start_time) * 1000)) > 500:
                 self._broadcast_BPDU()
@@ -326,3 +326,9 @@ class Bridge:
 
     def _print_designated_port(self, port_id):
         print "Designated port: " + str(self.id) + "/" + str(port_id)
+
+    def _print_bridge_info(self):
+        port_status_list = ""
+        for port in self.ports:
+            port_status_list += "\tPort-" + str(port.port_id) + "-Enabled=" + str(port.enabled) + "-Designated=" + str(port.designated) + "\n"
+        print "BRIDGE - " + str(self.id) + " ROOT= " + str(self.bridge_BPDU.root) + " COST= " + str(self.bridge_BPDU.cost) + " ROOT PORT= " + str(self.rootPort_ID) + " PORTS:[\n" + str(port_status_list) + "]\n"
