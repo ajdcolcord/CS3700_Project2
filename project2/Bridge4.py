@@ -166,6 +166,8 @@ class Bridge:
 
 
                     if data_in:
+                        self._enable_or_disable(port)
+
                         if port.enabled:
                             self._broadcast_message(message, port.port_id)
                             '''
@@ -351,7 +353,7 @@ class Bridge:
         """
         for port in self.ports:
             if port != port_in:
-                self._enable_or_disable(port_in)
+                self._enable_or_disable(port)
                 if port.enabled:
                     port.socket.send(message)
 
