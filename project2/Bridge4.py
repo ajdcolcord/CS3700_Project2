@@ -164,6 +164,8 @@ class Bridge:
 
                     if data_in:
                         if port.enabled:
+                            self._broadcast_message(message, port.port_id)
+                            '''
                             print "PORT ENABLED FOR MESSAGE: " + str(data_in.id)
                             self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
@@ -178,6 +180,7 @@ class Bridge:
                         else:
                             print "PORT DISABLED FOR MESSAGE: " + str(data_in.id)
                             self._print_not_forwarding_message(data_in.id)
+                            '''
 
     def _broadcast_BPDU(self):
         """
