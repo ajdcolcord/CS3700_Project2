@@ -300,12 +300,16 @@ class Bridge:
                 #print "Designated = False: " + str(port_in.port_id)
                 #port_in.designated = False ##############
                 #####TODO : 000000000000000000
-                if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+                #if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+                #    port_in.designated = False
+
+                bpdu_in.cost += 1 ###NEWWWW
+
+                if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
                     port_in.designated = False
                 #else:
                 #    port_in.designated = True
 
-                bpdu_in.cost += 1 ###NEWWWW
 
                 # -------NEW------------
                 port_in.add_BPDU(bpdu_in)
