@@ -92,8 +92,8 @@ class Bridge:
 
                 port = self.ports[self.sockets[x]]
 
-                if port.remove_all_timedout_BPDUs():
-                    self.forwarding_table = ForwardingTable()
+                #if port.remove_all_timedout_BPDUs():
+                #    self.forwarding_table = ForwardingTable()
 
                 if not port.BPDU_list:
                     # if port not designated, print out designated
@@ -138,7 +138,7 @@ class Bridge:
 
                     if original_root_port:
                         if self.rootPort_ID != original_root_port:
-                            self.forwarding_table = ForwardingTable() # clear forwarding table
+                            #self.forwarding_table = ForwardingTable() # clear forwarding table
                             print "ORIGINAL PORT CHANGED FROM " + str(original_root_port) + " to " + str(self.rootPort_ID)
                             if self.ports[original_root_port].BPDU_list:
                                 print "ORIGINAL PORT HAS BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
@@ -182,7 +182,7 @@ class Bridge:
                                 print "SENDING_PORT_ID Exists (" + str(sending_port_id) + ") - and Not Expired"
                                 if self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
                                     print "BPDU WAS TIMED OUT ON PORT-" + str(sending_port_id) + " SHOULD BROADCAST"
-                                    self.forwarding_table = ForwardingTable()
+                                    #self.forwarding_table = ForwardingTable()
                                     #self._print_boradcasting_message(data_in.id)
                                     self._broadcast_message(message, port.port_id, data_in.id)
                                 else:
@@ -344,14 +344,14 @@ class Bridge:
             port.enabled = True
             print "Enabled = True: " + str(port.port_id)
             if previous_status != port.enabled:
-                self.forwarding_table = ForwardingTable()
+                #self.forwarding_table = ForwardingTable()
                 self._print_bridge_info()
         else:
             port.enabled = False
             print "Enabled = False: " + str(port.port_id)
             if previous_status != port.enabled:
                 self._print_disabled_port(port.port_id)
-                self.forwarding_table = ForwardingTable()
+                #self.forwarding_table = ForwardingTable()
                 self._print_bridge_info()
 
 
