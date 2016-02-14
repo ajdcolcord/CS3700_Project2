@@ -135,6 +135,7 @@ class Bridge:
 
                     if original_root_port:
                         if self.rootPort_ID != original_root_port:
+                            self.forwarding_table = ForwardingTable() # clear forwarding table
                             print "ORIGINAL PORT CHANGED FROM " + str(original_root_port) + " to " + str(self.rootPort_ID)
                             if self.ports[original_root_port].BPDU_list:
                                 print "ORIGINAL PORT HAS BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
@@ -153,39 +154,37 @@ class Bridge:
                                 self.ports[original_root_port].designated = True
                                 self._enable_or_disable(self.ports[original_root_port])
 
-
-
-
                     self._print_bridge_info()
-
 
                 elif message_json['type'] == 'data':
                     print "DATA MESSAGE FROM: " + str(message_json['message']['id'])
 
                     data_in = create_DataMessage_from_json(message)
 
-
                     if data_in:
                         self._enable_or_disable(port)
 
                         if port.enabled:
-                            self._broadcast_message(message, port.port_id)
-                            '''
+
                             print "PORT ENABLED FOR MESSAGE: " + str(data_in.id)
+
                             self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
 
                             self.forwarding_table.add_address(data_in.source, port.port_id)
 
-                            if data_in.dest in self.forwarding_table.addresses:
+                            sending_port_id = self.forwarding_table.get_address_port(data_in.dest)
+
+                            # if in the forwarding table, and not expired, send on that port
+                            if sending_port_id:
                                 self._print_forwarding_message(data_in.id, port.port_id)
-                                self._send_to_address(message, data_in.dest)
+                                self._send_to_address(message, sending_port_id)
+
                             else:
                                 self._print_boradcasting_message(data_in.id)
                                 self._broadcast_message(message, port.port_id)
                         else:
                             print "PORT DISABLED FOR MESSAGE: " + str(data_in.id)
                             self._print_not_forwarding_message(data_in.id)
-                            '''
 
     def _broadcast_BPDU(self):
         """
@@ -333,12 +332,14 @@ class Bridge:
             port.enabled = True
             print "Enabled = True: " + str(port.port_id)
             if previous_status != port.enabled:
+                self.forwarding_table = ForwardingTable()
                 self._print_bridge_info()
         else:
             port.enabled = False
             print "Enabled = False: " + str(port.port_id)
             if previous_status != port.enabled:
                 self._print_disabled_port(port.port_id)
+                self.forwarding_table = ForwardingTable()
                 self._print_bridge_info()
 
 
@@ -357,16 +358,17 @@ class Bridge:
                 if port.enabled:
                     port.socket.send(message)
 
-    def _send_to_address(self, message, address):
+    def _send_to_address(self, message, dest_port_id):
         """
         Sends the message inputted to the input address directly,
         using the forwarding table entry
         @param message : message to Sends
         @param address : address to send to
         """
-        port_id = self.forwarding_table.get_address_port(address)
-        if self.ports[port_id].enabled:
-            self.ports[port_id].socket.send(message)
+        #port_id = self.forwarding_table.get_address_port(address)
+        #if self.ports[port_id].enabled:
+        #    self.ports[port_id].socket.send(message)
+        self.ports[dest_port_id].socket.send(message)
 
     def _pad(self, name):
         """
