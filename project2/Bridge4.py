@@ -117,7 +117,7 @@ class Bridge:
                     #                other_port.enabled = False
                     ##############
                     self._port_decisions(bpdu_in, port)
-                    self._print_bridge_info()
+                    #self._print_bridge_info()
 
 
                 elif message_json['type'] == 'data':
