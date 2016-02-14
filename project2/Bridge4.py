@@ -124,6 +124,7 @@ class Bridge:
                     print "ORIGINAL ROOT ID = " + str(self.bridge_BPDU.root)
 
                     original_root_port = self.rootPort_ID
+                    saved_bpdu = self.ports[original_root_port].BPDU_list[0]
 
                     self._port_decisions(bpdu_in, port)
 
@@ -135,7 +136,9 @@ class Bridge:
                             print "ORIGINAL PORT CHANGED FROM " + str(original_root_port) + " to " + str(self.rootPort_ID)
                             if self.ports[original_root_port].BPDU_list:
                                 print "ORIGINAL PORT HAS BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
-                                if self.ports[original_root_port].BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
+
+                                #if self.ports[original_root_port].BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
+                                if saved_bpdu.is_incoming_BPDU_better(self.bridge_BPDU):
                                     original_root_port.desingated = True
                                     print "ORIGINAL PORT BEING DESIGNATED " + str(original_root_port)
                                     self._print_bridge_info()
