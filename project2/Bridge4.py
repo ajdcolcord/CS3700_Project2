@@ -301,7 +301,8 @@ class Bridge:
                 #print "Designated = False: " + str(port_in.port_id)
                 #port_in.designated = False ##############
                 #####TODO : 000000000000000000
-                port_in.designated = False
+                if not port_in.BPDU_list:
+                    port_in.designated = False
 
                 # -------NEW------------
                 port_in.add_BPDU(bpdu_in)
