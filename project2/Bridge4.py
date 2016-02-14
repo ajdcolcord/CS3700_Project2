@@ -124,7 +124,8 @@ class Bridge:
                     print "ORIGINAL ROOT ID = " + str(self.bridge_BPDU.root)
 
                     original_root_port = self.rootPort_ID
-                    saved_bpdu = self.ports[original_root_port].BPDU_list[0]
+                    if self.ports[original_root_port].BPDU_list[0]:
+                        saved_bpdu = self.ports[original_root_port].BPDU_list[0]
 
                     self._port_decisions(bpdu_in, port)
 
