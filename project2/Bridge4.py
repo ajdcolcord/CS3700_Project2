@@ -78,9 +78,6 @@ class Bridge:
         self._broadcast_BPDU()
 
         while True:
-
-
-
             self._print_bridge_info()
 
             # is it time to send a new BPDU?
@@ -95,8 +92,8 @@ class Bridge:
 
                 port = self.ports[self.sockets[x]]
 
-                #if port.remove_all_timedout_BPDUs():
-                #    self.forwarding_table = ForwardingTable()
+                if port.remove_all_timedout_BPDUs():
+                    self.forwarding_table = ForwardingTable()
 
                 if not port.BPDU_list:
                     # if port not designated, print out designated
