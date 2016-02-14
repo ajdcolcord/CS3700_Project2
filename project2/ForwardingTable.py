@@ -14,15 +14,15 @@ class ForwardingTable:
         """
         self.addresses = {}
 
-    def add_address(self, address, port):
+    def add_address(self, address, port_id):
         """
         Adds the given address to the forwarding table at the given port, or
         updates the existing entry with the new port and a new timeout
         @param address : the address to add
         @param port : the port to add
         """
-        self.addresses[address] = (port, time.time())
-        print "Adding Address " + str(address) + " to port " + str(port)
+        self.addresses[address] = (port_id, time.time())
+        print "Adding Address " + str(address) + " to port " + str(port_id)
 
     def get_address_port(self, address):
         """
