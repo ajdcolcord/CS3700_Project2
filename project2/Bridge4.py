@@ -124,6 +124,7 @@ class Bridge:
                     print "ORIGINAL ROOT ID = " + str(self.bridge_BPDU.root)
 
                     original_root_port = self.rootPort_ID
+                    saved_bpdu = None
                     if self.rootPort_ID:
                         saved_bpdu = self.ports[original_root_port].BPDU_list[0]
 
@@ -138,13 +139,13 @@ class Bridge:
                             if self.ports[original_root_port].BPDU_list:
                                 print "ORIGINAL PORT HAS BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
 
-                                #if self.ports[original_root_port].BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
-                                if saved_bpdu.is_incoming_BPDU_better(self.bridge_BPDU):
-                                    self.ports[original_root_port].designated = True
-                                    print "ORIGINAL PORT BEING DESIGNATED " + str(original_root_port)
-                                    self._print_bridge_info()
-                                else:
-                                    print "ORIGINAL PORT - INCOMING NOT BETTER: original.root-" + str(self.ports[original_root_port].BPDU_list[0].root) + " bridge.root- " + str(self.bridge_BPDU.root)
+                                if saved_bpdu:
+                                    if saved_bpdu.is_incoming_BPDU_better(self.bridge_BPDU):
+                                        self.ports[original_root_port].designated = True
+                                        print "ORIGINAL PORT BEING DESIGNATED " + str(original_root_port)
+                                        self._print_bridge_info()
+                                    else:
+                                        print "ORIGINAL PORT - INCOMING NOT BETTER: original.root-" + str(self.ports[original_root_port].BPDU_list[0].root) + " bridge.root- " + str(self.bridge_BPDU.root)
                             else:
                                 print "ORIGINAL PORT HAS NO BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
 
@@ -300,6 +301,7 @@ class Bridge:
                 #print "Designated = False: " + str(port_in.port_id)
                 #port_in.designated = False ##############
                 #####TODO : 000000000000000000
+                port_in.designated = False
 
                 # -------NEW------------
                 port_in.add_BPDU(bpdu_in)
