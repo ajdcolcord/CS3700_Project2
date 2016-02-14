@@ -181,7 +181,7 @@ class Bridge:
                             sending_port_id = self.forwarding_table.get_address_port(data_in.dest)
 
                             # if in the forwarding table, and not expired, send on that port
-                            if sending_port_id:
+                            if sending_port_id and self.ports[sending_port_id].BPDU_list:
 
                                 if self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
                                     self.forwarding_table = ForwardingTable()
