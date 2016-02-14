@@ -121,14 +121,17 @@ class Bridge:
                     ##############
 
                     original_root_port = self.rootPort_ID
+                    print "ORIGINAL ROOT = " + str(self.rootPort_ID)
 
                     self._port_decisions(bpdu_in, port)
 
+                    print "ORIGINAL ROOT (AFTER PORT DECISIONS) = " + str(original_root_port)
+
                     if original_root_port:
                         if self.rootPort_ID != original_root_port:
-                            print "ORIGINAL PORT CHANGED FROM " + str(self.rootPort_ID) + " to " + str(original_root_port)
+                            print "ORIGINAL PORT CHANGED FROM " + str(original_root_port) + " to " + str(self.rootPort_ID)
                             if self.ports[original_root_port].BPDU_list:
-                                print "ORIGINAL PORT HAS BPDUS " + str(self.rootPort_ID) + " to " + str(original_root_port)
+                                print "ORIGINAL PORT HAS BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
                                 if self.ports[original_root_port].BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
                                     original_root_port.desingated = True
                                     print "ORIGINAL PORT BEING DESIGNATED " + str(original_root_port)
@@ -136,7 +139,7 @@ class Bridge:
                                 else:
                                     print "ORIGINAL PORT - INCOMING NOT BETTER: original.root-" + str(self.ports[original_root_port].BPDU_list[0].root) + " bridge.root- " + str(self.bridge_BPDU.root)
                             else:
-                                print "ORIGINAL PORT HAS NO BPDUS " + str(self.rootPort_ID) + " to " + str(original_root_port)
+                                print "ORIGINAL PORT HAS NO BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
 
                                 original_root_port.desingated = True
 
