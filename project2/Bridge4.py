@@ -124,12 +124,13 @@ class Bridge:
 
                     self._port_decisions(bpdu_in, port)
 
+                    '''
                     if self.rootPort_ID != original_root_port:
                         if self.ports[original_root_port].BPDU_list:
                             if self.ports[original_root_port].BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
                                 original_root_port.desingated = True
                                 self._print_bridge_info()
-
+                    '''
 
 
                     self._print_bridge_info()
