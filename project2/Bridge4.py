@@ -120,12 +120,14 @@ class Bridge:
                     #                other_port.enabled = False
                     ##############
 
+                    original_root_ID = self.bridge_BPDU.root
+                    print "ORIGINAL ROOT ID = " + str(self.bridge_BPDU.root)
+
                     original_root_port = self.rootPort_ID
-                    print "ORIGINAL ROOT = " + str(self.rootPort_ID)
 
                     self._port_decisions(bpdu_in, port)
 
-                    print "ORIGINAL ROOT (AFTER PORT DECISIONS) = " + str(original_root_port)
+                    print "ORIGINAL ROOT ID (AFTER PORT DECISIONS) = " + str(original_root_ID)
 
                     if original_root_port:
                         if self.rootPort_ID != original_root_port:
