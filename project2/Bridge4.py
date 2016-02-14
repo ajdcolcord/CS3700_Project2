@@ -126,11 +126,11 @@ class Bridge:
 
                     if original_root_port:
                         if self.rootPort_ID != original_root_port:
-                            print "ORIGINAL PORT CHANGED FROM " + self.rootPort_ID + " to " + original_root_port
+                            print "ORIGINAL PORT CHANGED FROM " + str(self.rootPort_ID) + " to " + str(original_root_port)
                             if self.ports[original_root_port].BPDU_list:
                                 if self.ports[original_root_port].BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
                                     original_root_port.desingated = True
-                                    print "ORIGINAL PORT BEING DESIGNATED " + original_root_port
+                                    print "ORIGINAL PORT BEING DESIGNATED " + str(original_root_port)
                                     self._print_bridge_info()
                             else:
                                 original_root_port.desingated = True
