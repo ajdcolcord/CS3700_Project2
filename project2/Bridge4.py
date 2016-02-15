@@ -100,7 +100,7 @@ class Bridge:
                 message_json = json.loads(message)
 
                 if message_json['type'] == 'bpdu':
-                    bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])
+                    bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'] + 1)
                     self._received_bpdu_logic(bpdu_in, port)
 
                 elif message_json['type'] == 'data':
@@ -114,8 +114,12 @@ class Bridge:
         if original_root_port:
             saved_bpdu = self.ports[original_root_port].BPDU_list[0]
 
-        self._port_decisions(bpdu, port)
+        #self._port_decisions(bpdu, port)
         #self._simple_port_decisions(bpdu, port)
+
+        # TODO - NEWWWWWW
+        self._simple_port_decisions2(bpdu, port)
+        # TODO - ########
 
         if original_root_port:
             if self.rootPort_ID != original_root_port:
@@ -198,8 +202,41 @@ class Bridge:
         port_in.designated = False
         port_in.add_BPDU(bpdu_in)
 
+
+
+    # TODO: ############################
+
+    def _simple_port_decisions_2(self, bpdu_in, port_in):
+        if bpdu_in.is_incoming_BPDU_better(bpdu_in):
+            self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
+            self.rootPort_ID = port_in
+            self.forwarding_table = ForwardingTable()
+            self._broadcast_BPDU()
+
+        if self.id < bpdu_in.source:
+            if not port_in.designated:
+                port_in.designated = True
+                self.forwarding_table = ForwardingTable()
+                self._broadcast_BPDU()
+        else:
+            if port_in.designated:
+                port_in.designated = False
+                self.forwarding_table = ForwardingTable()
+                self._broadcast_BPDU()
+
+        port_in.add_BPDU(bpdu_in)
+
+    #def _is_incoming_BPDU_better_for_port(self, bpdu_in, port):
+    #    if self.id < bpdu_in.source:
+    #        port.designated = True
+    #    else:
+    #        port.designated = False
+
+    # TODO: ###########################
+
+
     def _simple_port_decisions(self, bpdu_in, port_in):
-        bpdu_in.cost += 1
+        #bpdu_in.cost += 1
         if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
             self._incoming_bpdu_better_than_bridge(bpdu_in, port_in)
         else:
@@ -210,7 +247,6 @@ class Bridge:
             else:
                 bpdu_in.cost += 1
                 port_in.add_BPDU(bpdu_in)
-
 
     def _port_decisions(self, bpdu_in, port_in):
         # if this bridge is currently the ROOT...
