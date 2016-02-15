@@ -120,11 +120,10 @@ class Bridge:
         if self.rootPort_ID != old_root_port:
             if old_root_port:
                 if self.id > bpdu.source:
-                    if self.ports[old_root_port].designated:
-                        self.ports[old_root_port].designated = False
-                        self.ports[old_root_port].enabled = False
-                        self.forwarding_table = ForwardingTable()
-                        self._broadcast_BPDU()
+                    self.ports[old_root_port].designated = False
+                    self.ports[old_root_port].enabled = False
+                    self.forwarding_table = ForwardingTable()
+                    self._broadcast_BPDU()
                 else:
                     self.ports[old_root_port].designated = True
                     self.ports[old_root_port].enabled = True
