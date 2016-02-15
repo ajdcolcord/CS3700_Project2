@@ -100,9 +100,8 @@ class Bridge:
                 if message_json['type'] == 'bpdu':
                     bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])# + 1)
                     self._received_bpdu_logic2(bpdu_in, port)
-                    if port.port_id != self.bridge_BPDU.root and not port.designated:
-                        port.enabled = False
-                    #self._enable_or_disable(port)
+
+                    self._enable_or_disable(port)
 
 
                 ''' SHUTTING OFF DATA FOR NOW
@@ -126,7 +125,7 @@ class Bridge:
             self.forwarding_table = ForwardingTable()
             self._broadcast_BPDU()
 
-        if self.id > bpdu_in.source:
+        elif self.id > bpdu_in.source:
             if port_in.designated:
                 port_in.designated = False
                 self.forwarding_table = ForwardingTable()
