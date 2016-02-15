@@ -259,7 +259,6 @@ class Bridge:
                     if not port_in.designated:
                         self._print_designated_port(port_in.port_id)
 
-                    #############
                     self.forwarding_table = ForwardingTable()
 
                     port_in.designated = False
@@ -267,34 +266,10 @@ class Bridge:
 
             else:
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
-                    port_in.designated = False
-
-                    #self.forwarding_table = ForwardingTable()
-
-                    ########NEWWWW#######
-                    changed_root = self.bridge_BPDU.root != bpdu_in.root
-                    changed_root_id = self.rootPort_ID != port_in.port_id
-
-                    self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
-
-                    if changed_root:
-                        self._print_new_root()
-
-                    self.rootPort_ID = port_in.port_id
-                    port_in.designated = False
-
-                    if changed_root_id:
-                        self._print_root_port(self.rootPort_ID)
-
-                    #port_in.add_BPDU(bpdu_in)
-
-                    if changed_root or changed_root_id:
+                    if port_in.designated:
                         self.forwarding_table = ForwardingTable()
 
-                    # broadcast new information about the bridge
-                    self._broadcast_BPDU()
-
-                    ####################
+                    port_in.designated = False
 
                 port_in.add_BPDU(bpdu_in)
 
