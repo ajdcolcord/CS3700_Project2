@@ -143,7 +143,7 @@ class Bridge:
 
                 if sending_port_id >= 0 and self.ports[sending_port_id].enabled:
                     ###NEW###
-                    if self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
+                    if self.ports[sending_port_id].BPDU_list and self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
                         print "BPDU WAS TIMED OUT ON PORT-" + str(sending_port_id) + " SHOULD BROADCAST"
                         self.forwarding_table = ForwardingTable()
                         self._print_boradcasting_message(data_in.id)
