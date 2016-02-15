@@ -134,7 +134,7 @@ class Bridge:
 
                 if sending_port_id >= 0 and self.ports[sending_port_id].enabled:
                     if sending_port_id == port.port_id:
-                        print "NOT FORWARDING BECAUSE NOT IN FORWARDING TABLE - ENABLED = " + str(self.ports[sending_port_id].enabled)
+                        print "NOT FORWARDING MESSAGE " + str(data_in.id) + "-  NOT IN FORWARDING TABLE - ENABLED = " + str(self.ports[sending_port_id].enabled)
                         self._print_not_forwarding_message(data_in.id)
                         return
                     else:
