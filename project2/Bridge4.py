@@ -122,6 +122,8 @@ class Bridge:
                     self.ports[original_root_port].designated = True
                     self._enable_or_disable(self.ports[original_root_port])
 
+        self._enable_or_disable(port)
+
     def _received_data_logic(self, data_in, port, message):
         if data_in:
             self._enable_or_disable(port)
