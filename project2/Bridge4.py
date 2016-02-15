@@ -111,7 +111,7 @@ class Bridge:
         if original_root_port:
             saved_bpdu = self.ports[original_root_port].BPDU_list[0]
 
-        #self._port_decisions(bpdu, port)
+        self._port_decisions(bpdu, port)
 
 
         # TODO: #####################
@@ -122,7 +122,7 @@ class Bridge:
 
         # TODO - NEWWWWWW
         old_root_port_id = self.rootPort_ID
-        self._simple_port_decisions_2(bpdu, port)
+        #self._simple_port_decisions_2(bpdu, port)
         #self._enable_or_disable(port)
         #if old_root_port_id:
         #    if old_root_port_id != self.rootPort_ID:
@@ -132,7 +132,7 @@ class Bridge:
         # TODO - ########
 
         # TODO ------REMOVING THIS FOR NOW -------
-        '''
+
         if original_root_port:
             if self.rootPort_ID != original_root_port:
                 self.forwarding_table = ForwardingTable() # clear forwarding table
@@ -144,10 +144,10 @@ class Bridge:
                 else:
                     self.ports[original_root_port].designated = True
                     self._enable_or_disable(self.ports[original_root_port])
-        '''
+
         # TODO -------------------------------
 
-        #self._enable_or_disable(port)
+        self._enable_or_disable(port)
 
     def _received_data_logic(self, data_in, port, message):
         if data_in:
