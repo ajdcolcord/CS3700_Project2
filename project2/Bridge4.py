@@ -140,7 +140,7 @@ class Bridge:
                     # self._print_bridge_info()
 
                 elif message_json['type'] == 'data':
-                    print "DATA MESSAGE FROM: " + str(message_json['source'])
+                    #print "DATA MESSAGE FROM: " + str(message_json['source'])
 
                     data_in = create_DataMessage_from_json(message)
 
