@@ -142,17 +142,26 @@ class Bridge:
                 sending_port_id = self.forwarding_table.get_address_port(data_in.dest)
 
                 if sending_port_id >= 0 and self.ports[sending_port_id].enabled:
-                    if sending_port_id == port.port_id:
-                        print "NOT FORWARDING MESSAGE " + str(data_in.id) + "-  NOT IN FORWARDING TABLE - ENABLED = " + str(self.ports[sending_port_id].enabled)
-                        self._print_not_forwarding_message(data_in.id)
-                        #self._print_boradcasting_message(data_in.id)
-                        #self._broadcast_message(message, port)
+                    ###NEW###
+                    if self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
+                        print "BPDU WAS TIMED OUT ON PORT-" + str(sending_port_id) + " SHOULD BROADCAST"
+                        self.forwarding_table = ForwardingTable()
+                        self._print_boradcasting_message(data_in.id)
+                        self._broadcast_message(message, port.port_id, data_in.id)
                         return
+                        ###
                     else:
-                        print "FORWARDING MESSAGE " + str(data_in.id) + "- IN FORWARDING TABLE and ENABLED = " + str(self.ports[sending_port_id].enabled)
-                        self._print_forwarding_message(data_in.id, port.port_id)
-                        self.ports[sending_port_id].socket.send(message)
-                        return
+                        if sending_port_id == port.port_id:
+                            print "NOT FORWARDING MESSAGE " + str(data_in.id) + "-  NOT IN FORWARDING TABLE - ENABLED = " + str(self.ports[sending_port_id].enabled)
+                            self._print_not_forwarding_message(data_in.id)
+                            #self._print_boradcasting_message(data_in.id)
+                            #self._broadcast_message(message, port)
+                            return
+                        else:
+                            print "FORWARDING MESSAGE " + str(data_in.id) + "- IN FORWARDING TABLE and ENABLED = " + str(self.ports[sending_port_id].enabled)
+                            self._print_forwarding_message(data_in.id, port.port_id)
+                            self.ports[sending_port_id].socket.send(message)
+                            return
 
                 else:
                     self._print_boradcasting_message(data_in.id)
