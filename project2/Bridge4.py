@@ -118,7 +118,7 @@ class Bridge:
         #self._simple_port_decisions(bpdu, port)
 
         # TODO - NEWWWWWW
-        self._simple_port_decisions2(bpdu, port)
+        self._simple_port_decisions_2(bpdu, port)
         # TODO - ########
 
         if original_root_port:
