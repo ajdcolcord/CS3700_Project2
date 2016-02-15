@@ -103,7 +103,7 @@ class Bridge:
 
                     data_in = create_DataMessage_from_json(message)
 
-                    self._received_data_logic(self, data_in, port, message)
+                    self._received_data_logic(data_in, port, message)
 
                     '''
                     if data_in:
