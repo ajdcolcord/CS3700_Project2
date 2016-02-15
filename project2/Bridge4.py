@@ -150,6 +150,7 @@ class Bridge:
                         if port.enabled:
                             self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
                             self.forwarding_table.add_address(data_in.source, port.port_id)
+
                             sending_port_id = self.forwarding_table.get_address_port(data_in.dest)
 
                             if sending_port_id >= 0 and self.ports[sending_port_id].enabled:
@@ -159,7 +160,7 @@ class Bridge:
                                     self._print_forwarding_message(data_in.id, port.port_id)
                                     self.ports[sending_port_id].socket.send(message)
                             else:
-                                self._broadcast_message(message, port.port_id, data_in.id)
+                                self._broadcast_message(message, port.port_id)
 
                             '''
 
@@ -294,14 +295,12 @@ class Bridge:
                 #self.forwarding_table = ForwardingTable()
                 self._print_bridge_info()
 
-    def _broadcast_message(self, message, port_in, data_in):
+    def _broadcast_message(self, message, port_in):
         """
         Broadcasts the given message to all socket connections, except the
         inputted port
         @param message : string
         """
-        self._print_boradcasting_message(data_in)
-
         for port in self.ports:
             if port != port_in:
                 self._enable_or_disable(port)
