@@ -220,8 +220,10 @@ class Bridge:
         else:
             bpdu_in.cost -= 1
             if port_in.BPDU_list and port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+                bpdu_in.cost += 1
                 self._incoming_bpdu_better_than_port(bpdu_in, port_in)
             else:
+                bpdu_in.cost += 1
                 port_in.add_BPDU(bpdu_in)
 
 
