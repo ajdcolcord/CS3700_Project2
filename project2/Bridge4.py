@@ -108,8 +108,8 @@ class Bridge:
         if original_root_port:
             saved_bpdu = self.ports[original_root_port].BPDU_list[0]
 
-        #self._port_decisions(bpdu, port)
-        self._simple_port_decisions(bpdu, port)
+        self._port_decisions(bpdu, port)
+        #self._simple_port_decisions(bpdu, port)
 
         if original_root_port:
             if self.rootPort_ID != original_root_port:
@@ -123,7 +123,7 @@ class Bridge:
                     self.ports[original_root_port].designated = True
                     self._enable_or_disable(self.ports[original_root_port])
 
-        self._enable_or_disable(port)
+        #self._enable_or_disable(port)
 
     def _received_data_logic(self, data_in, port, message):
         if data_in:
@@ -138,9 +138,9 @@ class Bridge:
                 if sending_port_id >= 0 and self.ports[sending_port_id].enabled:
                     if sending_port_id == port.port_id:
                         print "NOT FORWARDING MESSAGE " + str(data_in.id) + "-  NOT IN FORWARDING TABLE - ENABLED = " + str(self.ports[sending_port_id].enabled)
-                        #self._print_not_forwarding_message(data_in.id)
-                        self._print_boradcasting_message(data_in.id)
-                        self._broadcast_message(message, port)
+                        self._print_not_forwarding_message(data_in.id)
+                        #self._print_boradcasting_message(data_in.id)
+                        #self._broadcast_message(message, port)
                         return
                     else:
                         print "FORWARDING MESSAGE " + str(data_in.id) + "- IN FORWARDING TABLE and ENABLED = " + str(self.ports[sending_port_id].enabled)
