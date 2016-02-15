@@ -217,7 +217,7 @@ class Bridge:
         if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
             self._incoming_bpdu_better_than_bridge(bpdu_in, port_in)
         else:
-            if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+            if port_in.BPDU_list and port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 self._incoming_bpdu_better_than_port(bpdu_in, port_in)
             else:
                 port_in.add_BPDU(bpdu_in)
