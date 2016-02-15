@@ -34,7 +34,7 @@ class ForwardingTable:
             time_passed_since_address_added = datetime.datetime.now() - self.addresses[address][1]
             #if int(round((time.time() - self.addresses[address][1]) * 1000)) > 5000:
             if time_passed_since_address_added.total_seconds() >= 5:
-                print "DELETING ADDRESS, TIMED OUT: " + self.addresses[address]
+                print "DELETING ADDRESS, TIMED OUT: " + str(self.addresses[address])
                 del self.addresses[address]
                 return -1
             else:
