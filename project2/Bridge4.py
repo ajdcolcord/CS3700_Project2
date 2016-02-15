@@ -122,10 +122,9 @@ class Bridge:
         old_root_port_id = self.rootPort_ID
         self._simple_port_decisions_2(bpdu, port)
         self._enable_or_disable(port)
-        if old_root_port_id!= self.rootPort_ID:
+        if old_root_port_id and old_root_port_id != self.rootPort_ID:
             self._simple_port_decisions_2(bpdu, self.ports[old_root_port_id])
-            if old_root_port_id:
-                self._enable_or_disable(self.ports[old_root_port_id])
+            self._enable_or_disable(self.ports[old_root_port_id])
         # TODO - ########
 
         # TODO ------REMOVING THIS FOR NOW -------
