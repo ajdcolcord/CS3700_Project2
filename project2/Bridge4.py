@@ -124,7 +124,7 @@ class Bridge:
 
     def _received_data_logic(self, data_in, port, message):
         if data_in:
-            #self._enable_or_disable(port)
+            self._enable_or_disable(port)
 
             if port.enabled:
                 self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
@@ -134,6 +134,7 @@ class Bridge:
 
                 if sending_port_id >= 0 and self.ports[sending_port_id].enabled:
                     if sending_port_id == port.port_id:
+                        print "NOT FORWARDING BECAUSE NOT IN FORWARDING TABLE - ENABLED = " + str(self.ports[sending_port_id].enabled)
                         self._print_not_forwarding_message(data_in.id)
                         return
                     else:
@@ -175,6 +176,7 @@ class Bridge:
                     self._broadcast_message(message, port.port_id, data_in.id)
                 '''
             else:
+                print "NOT FORWARDING BECAUSE INCOMING PORT NOT ENABLED- " + port.port_id
                 self._print_not_forwarding_message(data_in.id)
                 return
 
