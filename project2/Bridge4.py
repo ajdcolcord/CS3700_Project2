@@ -176,7 +176,7 @@ class Bridge:
                     self._broadcast_message(message, port.port_id, data_in.id)
                 '''
             else:
-                print "NOT FORWARDING BECAUSE INCOMING PORT NOT ENABLED- " + port.port_id
+                print "NOT FORWARDING BECAUSE INCOMING PORT NOT ENABLED- " + str(port.port_id)
                 self._print_not_forwarding_message(data_in.id)
                 return
 
