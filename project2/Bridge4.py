@@ -159,8 +159,9 @@ class Bridge:
                                 else:
                                     self._print_forwarding_message(data_in.id, port.port_id)
                                     self.ports[sending_port_id].socket.send(message)
-                            else:
-                                self._broadcast_message(message, port.port_id)
+
+                            #else:
+                            #    self._broadcast_message(message, port.port_id)
 
                             '''
 
