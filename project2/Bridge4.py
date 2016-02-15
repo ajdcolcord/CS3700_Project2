@@ -109,12 +109,19 @@ class Bridge:
                     self._received_data_logic(data_in, port, message)
 
     def _received_bpdu_logic(self, bpdu, port):
+        # TODO: REMOVING THIS FOR NOW
+        '''
         original_root_port = self.rootPort_ID
         saved_bpdu = None
         if original_root_port:
             saved_bpdu = self.ports[original_root_port].BPDU_list[0]
 
         #self._port_decisions(bpdu, port)
+
+        '''
+        # TODO: #####################
+
+
         #self._simple_port_decisions(bpdu, port)
 
 
