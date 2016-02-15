@@ -266,8 +266,8 @@ class Bridge:
 
             else:
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
-                    if port_in.designated:
-                        self.forwarding_table = ForwardingTable()
+                    #if port_in.designated:
+                    self.forwarding_table = ForwardingTable()
 
                     port_in.designated = False
 
