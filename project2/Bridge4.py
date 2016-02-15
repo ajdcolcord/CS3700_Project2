@@ -122,7 +122,7 @@ class Bridge:
                     self.ports[original_root_port].designated = True
                     self._enable_or_disable(self.ports[original_root_port])
 
-        self._enable_or_disable(port)
+        #self._enable_or_disable(port)
 
     def _received_data_logic(self, data_in, port, message):
         if data_in:
@@ -267,7 +267,7 @@ class Bridge:
                     port_in.add_BPDU(bpdu_in)
 
             else:
-                bpdu_in.cost += 1
+                #bpdu_in.cost += 1
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
                     #if port_in.designated:
                     self.forwarding_table = ForwardingTable()
@@ -276,7 +276,7 @@ class Bridge:
                     changed_root_id = self.rootPort_ID != port_in.port_id
 
                     self.rootPort_ID = port_in.port_id
-                    self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost) # + 1)
+                    self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
 
                     if changed_root_id:
                         self._print_root_port(self.rootPort_ID)
@@ -285,7 +285,6 @@ class Bridge:
 
                     self._broadcast_BPDU()
                     #########
-
 
                     port_in.designated = False
 
