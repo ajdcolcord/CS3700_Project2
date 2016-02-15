@@ -95,7 +95,7 @@ class Bridge:
                 message_json = json.loads(message)
 
                 if message_json['type'] == 'bpdu':
-                    bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'] + 1)
+                    bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])# + 1)
                     self._received_bpdu_logic(bpdu_in, port)
 
                 elif message_json['type'] == 'data':
