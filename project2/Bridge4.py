@@ -97,65 +97,10 @@ class Bridge:
                     bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])
                     self._received_bpdu_logic(bpdu_in, port)
 
-
                 elif message_json['type'] == 'data':
                     #print "DATA MESSAGE FROM: " + str(message_json['source'])
-
                     data_in = create_DataMessage_from_json(message)
-
                     self._received_data_logic(data_in, port, message)
-
-                    '''
-                    if data_in:
-                        #self._enable_or_disable(port)
-
-                        if port.enabled:
-                            self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
-                            self.forwarding_table.add_address(data_in.source, port.port_id)
-
-                            sending_port_id = self.forwarding_table.get_address_port(data_in.dest)
-
-                            if sending_port_id >= 0 and self.ports[sending_port_id].enabled:
-                                if sending_port_id == port.port_id:
-                                    self._print_not_forwarding_message(data_in.id)
-                                else:
-                                    self._print_forwarding_message(data_in.id, port.port_id)
-                                    self.ports[sending_port_id].socket.send(message)
-
-                            else:
-                                self._broadcast_message(message, port)
-                    '''
-                    '''
-
-                    print "PORT " + str(port.port_id) + " ENABLED FOR MESSAGE: " + str(data_in.id) + " From " + str(data_in.source)
-
-                    self._print_received_message(data_in.id, port.port_id, data_in.source, data_in.dest)
-
-                    self.forwarding_table.add_address(data_in.source, port.port_id)
-
-                    sending_port_id = self.forwarding_table.get_address_port(data_in.dest)
-
-                    # if in the forwarding table, and not expired, send on that port
-                    if sending_port_id >= 0 and self.ports[sending_port_id].BPDU_list:
-                        print "SENDING_PORT_ID Exists (" + str(sending_port_id) + ") - and Not Expired"
-                        if self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
-                            print "BPDU WAS TIMED OUT ON PORT-" + str(sending_port_id) + " SHOULD BROADCAST"
-                            #self.forwarding_table = ForwardingTable()
-                            #self._print_boradcasting_message(data_in.id)
-                            self._broadcast_message(message, port.port_id, data_in.id)
-                        else:
-                            print "BPDU NOT TIMED OUT ON PORT-" + str(sending_port_id) + " FORWARDING ON PORT " + str(sending_port_id)
-
-                            if port.port_id != sending_port_id:
-                                self._print_forwarding_message(data_in.id, port.port_id)
-                                self._send_to_address(message, sending_port_id)
-                    else:
-                        print "SENDING_PORT EXPIRED OR NOT IN FORWARDING TABLE FOR MESSAGE- " + str(data_in.id)
-                        #self._print_boradcasting_message(data_in.id)
-                        self._broadcast_message(message, port.port_id, data_in.id)
-                    '''
-                        #else:
-                            #self._print_not_forwarding_message(data_in.id)
 
     def _received_bpdu_logic(self, bpdu, port):
         original_root_port = self.rootPort_ID
@@ -190,12 +135,15 @@ class Bridge:
                 if sending_port_id >= 0 and self.ports[sending_port_id].enabled:
                     if sending_port_id == port.port_id:
                         self._print_not_forwarding_message(data_in.id)
+                        return
                     else:
                         self._print_forwarding_message(data_in.id, port.port_id)
                         self.ports[sending_port_id].socket.send(message)
+                        return
 
                 else:
                     self._broadcast_message(message, port)
+                    return
 
                 '''
 
@@ -228,6 +176,7 @@ class Bridge:
                 '''
             else:
                 self._print_not_forwarding_message(data_in.id)
+                return
 
 
     def _port_decisions(self, bpdu_in, port_in):
