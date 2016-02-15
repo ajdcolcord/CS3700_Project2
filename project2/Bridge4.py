@@ -259,6 +259,9 @@ class Bridge:
                     if not port_in.designated:
                         self._print_designated_port(port_in.port_id)
 
+                    #############
+                    self.forwarding_table = ForwardingTable()
+
                     port_in.designated = False
                     port_in.add_BPDU(bpdu_in)
 
