@@ -112,12 +112,23 @@ class Bridge:
                 '''
 
     def _received_bpdu_logic2(self, bpdu, port):
+
+        old_root_port = self.rootPort_ID
+
         self._simple_port_decisions_2(bpdu, port)
+
+        if self.rootPort_ID != old_root_port:
+            if self.id > bpdu.source:
+                if port.designated:
+                    port.designated = False
+                    self.forwarding_table = ForwardingTable()
+                    self._broadcast_BPDU()
 
 
     # TODO: ############################
 
     def _simple_port_decisions_2(self, bpdu_in, port_in):
+
         if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
             self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
             self.rootPort_ID = port_in.port_id
@@ -130,6 +141,7 @@ class Bridge:
                 port_in.designated = False
                 self.forwarding_table = ForwardingTable()
                 self._broadcast_BPDU()
+
 
         #if self.bridge_BPDU.root != self.rootPort_ID
         port_in.add_BPDU(bpdu_in)
