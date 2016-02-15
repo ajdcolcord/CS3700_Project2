@@ -115,7 +115,7 @@ class Bridge:
     # TODO: ############################
 
     def _simple_port_decisions_2(self, bpdu_in, port_in):
-        if bpdu_in.is_incoming_BPDU_better(bpdu_in):
+        if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
             self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
             self.rootPort_ID = port_in.port_id
             port_in.designated = False
