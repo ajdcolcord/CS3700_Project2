@@ -102,10 +102,8 @@ class Bridge:
 
                     bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])# + 1)
 
-
-                    original_root_ID = self.bridge_BPDU.root
-                    #print "ORIGINAL ROOT ID = " + str(self.bridge_BPDU.root)
-
+                    self._received_bpdu_logic(bpdu_in, port)
+                    '''
                     original_root_port = self.rootPort_ID
                     saved_bpdu = None
                     if self.rootPort_ID:
@@ -113,31 +111,18 @@ class Bridge:
 
                     self._port_decisions(bpdu_in, port)
 
-                    #print "ORIGINAL ROOT ID (AFTER PORT DECISIONS) = " + str(original_root_ID)
-                    #print "ORIGINAL ROOT CHANGED TO " + str(self.bridge_BPDU.root)
-
                     if original_root_port:
                         if self.rootPort_ID != original_root_port:
-                            #self.forwarding_table = ForwardingTable() # clear forwarding table
-                            #print "ORIGINAL PORT CHANGED FROM " + str(original_root_port) + " to " + str(self.rootPort_ID)
+                            self.forwarding_table = ForwardingTable() # clear forwarding table
                             if self.ports[original_root_port].BPDU_list:
-                                #print "ORIGINAL PORT HAS BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
-
                                 if saved_bpdu:
                                     if saved_bpdu.is_incoming_BPDU_better(self.bridge_BPDU):
                                         self.ports[original_root_port].designated = True
                                         self._enable_or_disable(self.ports[original_root_port])
-                                        #print "ORIGINAL PORT BEING DESIGNATED " + str(original_root_port)
-                                        # self._print_bridge_info()
-                                    # else:
-                                        # print "ORIGINAL PORT - INCOMING NOT BETTER: original.root-" + str(self.ports[original_root_port].BPDU_list[0].root) + " bridge.root- " + str(self.bridge_BPDU.root)
                             else:
-                                #print "ORIGINAL PORT HAS NO BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
-
                                 self.ports[original_root_port].designated = True
                                 self._enable_or_disable(self.ports[original_root_port])
-
-                    # self._print_bridge_info()
+                    '''
 
                 elif message_json['type'] == 'data':
                     #print "DATA MESSAGE FROM: " + str(message_json['source'])
@@ -195,12 +180,26 @@ class Bridge:
                         else:
                             self._print_not_forwarding_message(data_in.id)
 
-    def _broadcast_BPDU(self):
-        """
-        Broadcasts a new BPDU from this bridge to all sockets
-        """
-        for port in self.ports:
-            port.socket.send(self.bridge_BPDU.create_json_BPDU())
+    def _received_bpdu_logic(self, bpdu, port):
+        original_root_port = self.rootPort_ID
+        saved_bpdu = None
+        if original_root_port:
+            saved_bpdu = self.ports[original_root_port].BPDU_list[0]
+
+        self._port_decisions(bpdu, port)
+
+        if original_root_port:
+            if self.rootPort_ID != original_root_port:
+                self.forwarding_table = ForwardingTable() # clear forwarding table
+                if self.ports[original_root_port].BPDU_list:
+                    if saved_bpdu:
+                        if saved_bpdu.is_incoming_BPDU_better(self.bridge_BPDU):
+                            self.ports[original_root_port].designated = True
+                            self._enable_or_disable(self.ports[original_root_port])
+                else:
+                    self.ports[original_root_port].designated = True
+                    self._enable_or_disable(self.ports[original_root_port])
+
 
     def _port_decisions(self, bpdu_in, port_in):
         # if this bridge is currently the ROOT...
@@ -304,6 +303,13 @@ class Bridge:
                 self.forwarding_table = ForwardingTable()
                 # self._print_bridge_info()
 
+    def _broadcast_BPDU(self):
+        """
+        Broadcasts a new BPDU from this bridge to all sockets
+        """
+        for port in self.ports:
+            port.socket.send(self.bridge_BPDU.create_json_BPDU())
+
     def _broadcast_message(self, message, port_in):
         """
         Broadcasts the given message to all socket connections, except the
@@ -325,7 +331,6 @@ class Bridge:
         """
         #port_id = self.forwarding_table.get_address_port(address)
         #if self.ports[port_id].enabled:
-        #    self.ports[port_id].socket.send(message)
         self.ports[dest_port_id].socket.send(message)
 
     def _pad(self, name):
