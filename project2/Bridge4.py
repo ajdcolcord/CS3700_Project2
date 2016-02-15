@@ -192,7 +192,7 @@ class Bridge:
         changed_root_id = self.rootPort_ID != port_in.port_id
 
         # set bridge's bpdu to incoming bpdu (with cost updated)
-        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
+        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)# + 1)
 
         if changed_root:
             self._print_new_root()
@@ -214,9 +214,11 @@ class Bridge:
         port_in.add_BPDU(bpdu_in)
 
     def _simple_port_decisions(self, bpdu_in, port_in):
+        bpdu_in.cost += 1
         if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
             self._incoming_bpdu_better_than_bridge(bpdu_in, port_in)
         else:
+            bpdu_in.cost -= 1
             if port_in.BPDU_list and port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 self._incoming_bpdu_better_than_port(bpdu_in, port_in)
             else:
