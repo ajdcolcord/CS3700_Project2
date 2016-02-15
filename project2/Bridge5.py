@@ -84,15 +84,15 @@ class Bridge:
             for x in ready:
                 port = self.ports[self.sockets[x]]
 
-                if not port.BPDU_list:
+                #if not port.BPDU_list:
                     # if port not designated, print out designating, since list is empty
-                    if not port.designated:
-                        self._print_designated_port(port.port_id)
-                    port.designated = True
+                #    if not port.designated:
+                #        self._print_designated_port(port.port_id)
+                #    port.designated = True
 
                     # recalculate root port from all of port's lists...
 
-                self._enable_or_disable(port)
+                #self._enable_or_disable(port)
 
                 message = port.socket.recv(RECEIVE_SIZE)
                 message_json = json.loads(message)
