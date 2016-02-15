@@ -130,8 +130,8 @@ class Bridge:
                                         self._enable_or_disable(self.ports[original_root_port])
                                         #print "ORIGINAL PORT BEING DESIGNATED " + str(original_root_port)
                                         self._print_bridge_info()
-                                    else:
-                                        #print "ORIGINAL PORT - INCOMING NOT BETTER: original.root-" + str(self.ports[original_root_port].BPDU_list[0].root) + " bridge.root- " + str(self.bridge_BPDU.root)
+                                    # else:
+                                        # print "ORIGINAL PORT - INCOMING NOT BETTER: original.root-" + str(self.ports[original_root_port].BPDU_list[0].root) + " bridge.root- " + str(self.bridge_BPDU.root)
                             else:
                                 #print "ORIGINAL PORT HAS NO BPDUS " + str(original_root_port) + " to " + str(self.rootPort_ID)
 
