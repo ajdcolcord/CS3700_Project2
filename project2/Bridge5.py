@@ -121,8 +121,10 @@ class Bridge:
             if self.id > bpdu.source:
                 if port.designated:
                     port.designated = False
+                    port.enabled = False
                     self.forwarding_table = ForwardingTable()
                     self._broadcast_BPDU()
+
 
 
     # TODO: ############################
