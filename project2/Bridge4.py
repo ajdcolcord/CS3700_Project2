@@ -192,7 +192,6 @@ class Bridge:
                                 self._broadcast_message(message, port.port_id, data_in.id)
                             '''
                         else:
-                            print "PORT DISABLED FOR MESSAGE: " + str(data_in.id)
                             self._print_not_forwarding_message(data_in.id)
 
     def _broadcast_BPDU(self):
@@ -285,14 +284,14 @@ class Bridge:
             port.enabled = True
             print "Enabled = True: " + str(port.port_id)
             if previous_status != port.enabled:
-                #self.forwarding_table = ForwardingTable()
+                self.forwarding_table = ForwardingTable()
                 self._print_bridge_info()
         else:
             port.enabled = False
             print "Enabled = False: " + str(port.port_id)
             if previous_status != port.enabled:
                 self._print_disabled_port(port.port_id)
-                #self.forwarding_table = ForwardingTable()
+                self.forwarding_table = ForwardingTable()
                 self._print_bridge_info()
 
     def _broadcast_message(self, message, port_in):
