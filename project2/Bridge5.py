@@ -118,14 +118,15 @@ class Bridge:
         self._simple_port_decisions_2(bpdu, port)
 
         if self.rootPort_ID != old_root_port:
-            if self.id > bpdu.source:
-                if old_root_port.designated:
-                    old_root_port.designated = False
-                    old_root_port.enabled = False
-                    self.forwarding_table = ForwardingTable()
-                    self._broadcast_BPDU()
-            else:
-                old_root_port.designated = True
+            if old_root_port:
+                if self.id > bpdu.source:
+                    if old_root_port.designated:
+                        old_root_port.designated = False
+                        old_root_port.enabled = False
+                        self.forwarding_table = ForwardingTable()
+                        self._broadcast_BPDU()
+                else:
+                    old_root_port.designated = True
 
 
 
