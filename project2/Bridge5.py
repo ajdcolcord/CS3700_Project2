@@ -98,10 +98,12 @@ class Bridge:
                     bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])# + 1)
                     self._received_bpdu_logic(bpdu_in, port)
 
+                ''' SHUTTING OFF DATA FOR NOW
                 elif message_json['type'] == 'data':
                     #print "DATA MESSAGE FROM: " + str(message_json['source'])
                     data_in = create_DataMessage_from_json(message)
                     self._received_data_logic(data_in, port, message)
+                '''
 
     def _received_bpdu_logic(self, bpdu, port):
         # TODO: REMOVING THIS FOR NOW
