@@ -78,6 +78,7 @@ class Bridge:
             time_passed_since_broadcast = datetime.datetime.now() - start_time
 
             if time_passed_since_broadcast.total_seconds() >= 0.5:
+                print "BROADCASTING BPDU"
                 self._broadcast_BPDU()
                 start_time = datetime.datetime.now()
 
