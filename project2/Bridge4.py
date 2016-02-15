@@ -8,7 +8,6 @@ from DataMessage import DataMessage, create_DataMessage_from_json
 from ForwardingTable import ForwardingTable
 from Port import Port
 import time
-import datetime
 import json
 
 RECEIVE_SIZE = 1500
@@ -68,19 +67,15 @@ class Bridge:
         """
         print "Number of Ports on this Bridge: " + str(len(self.ports))
 
-        #start_time = time.time()
-        start_time = datetime.datetime.now()
+        start_time = time.time()
         self._broadcast_BPDU()
 
         while True:
             # is it time to send a new BPDU?
-            #if int(round((time.time() - start_time) * 1000)) > 500:
-            time_passed_since_broadcast = datetime.datetime.now() - start_time
-
-            if time_passed_since_broadcast.total_seconds() >= 0.5:
+            if int(round((time.time() - start_time) * 1000)) > 500:
                 print "BROADCASTING BPDU"
                 self._broadcast_BPDU()
-                start_time = datetime.datetime.now()
+                start_time = time.time()
 
             ready, ignore, ignore2 = select.select([port.socket for port in self.ports], [], [], 0.1)
             for x in ready:
@@ -110,7 +105,7 @@ class Bridge:
 
     def _received_bpdu_logic(self, bpdu, port):
         # TODO: REMOVING THIS FOR NOW
-        '''
+
         original_root_port = self.rootPort_ID
         saved_bpdu = None
         if original_root_port:
@@ -118,7 +113,7 @@ class Bridge:
 
         #self._port_decisions(bpdu, port)
 
-        '''
+
         # TODO: #####################
 
 
