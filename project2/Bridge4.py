@@ -160,8 +160,8 @@ class Bridge:
                                     self._print_forwarding_message(data_in.id, port.port_id)
                                     self.ports[sending_port_id].socket.send(message)
 
-                            #else:
-                            #    self._broadcast_message(message, port.port_id)
+                            else:
+                                self._broadcast_message(message, port)
 
                             '''
 
@@ -311,7 +311,7 @@ class Bridge:
         @param message : string
         """
         for port in self.ports:
-            if port != port_in:
+            if port.port_id != port_in.port_id:
                 self._enable_or_disable(port)
                 if port.enabled:
                     port.socket.send(message)
