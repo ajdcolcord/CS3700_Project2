@@ -131,7 +131,7 @@ class Bridge:
                 self.forwarding_table = ForwardingTable()
                 self._broadcast_BPDU()
 
-
+        #if self.bridge_BPDU.root != self.rootPort_ID
         port_in.add_BPDU(bpdu_in)
 
     #def _is_incoming_BPDU_better_for_port(self, bpdu_in, port):
