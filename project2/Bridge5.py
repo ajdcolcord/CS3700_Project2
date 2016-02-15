@@ -70,7 +70,10 @@ class Bridge:
         start_time = time.time()
         self._broadcast_BPDU()
 
+
         while True:
+            self._print_bridge_info()
+
             # is it time to send a new BPDU?
             if int(round((time.time() - start_time) * 1000)) > 500:
                 print "BROADCASTING BPDU"
@@ -82,7 +85,7 @@ class Bridge:
                 port = self.ports[self.sockets[x]]
 
                 if not port.BPDU_list:
-                    # if port not designated, print out designated
+                    # if port not designated, print out designating, since list is empty
                     if not port.designated:
                         self._print_designated_port(port.port_id)
                     port.designated = True
@@ -96,7 +99,7 @@ class Bridge:
 
                 if message_json['type'] == 'bpdu':
                     bpdu_in = BPDU(message_json['source'], message_json['dest'], message_json['message']['id'], message_json['message']['root'], message_json['message']['cost'])# + 1)
-                    self._received_bpdu_logic(bpdu_in, port)
+                    self._received_bpdu_logic2(bpdu_in, port)
 
                 ''' SHUTTING OFF DATA FOR NOW
                 elif message_json['type'] == 'data':
@@ -104,6 +107,38 @@ class Bridge:
                     data_in = create_DataMessage_from_json(message)
                     self._received_data_logic(data_in, port, message)
                 '''
+
+    def _received_bpdu_logic2(self, bpdu, port):
+        self._simple_port_decisions_2(bpdu, port)
+
+
+    # TODO: ############################
+
+    def _simple_port_decisions_2(self, bpdu_in, port_in):
+        if bpdu_in.is_incoming_BPDU_better(bpdu_in):
+            self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
+            self.rootPort_ID = port_in.port_id
+            port_in.designated = False
+            self.forwarding_table = ForwardingTable()
+            self._broadcast_BPDU()
+
+        if self.id > bpdu_in.source:
+            if port_in.designated:
+                port_in.designated = False
+                self.forwarding_table = ForwardingTable()
+                self._broadcast_BPDU()
+
+        port_in.add_BPDU(bpdu_in)
+
+    #def _is_incoming_BPDU_better_for_port(self, bpdu_in, port):
+    #    if self.id < bpdu_in.source:
+    #        port.designated = True
+    #    else:
+    #        port.designated = False
+
+    # TODO: ###########################
+
+
 
     def _received_bpdu_logic(self, bpdu, port):
         # TODO: REMOVING THIS FOR NOW
@@ -220,35 +255,7 @@ class Bridge:
 
 
 
-    # TODO: ############################
 
-    def _simple_port_decisions_2(self, bpdu_in, port_in):
-        if bpdu_in.is_incoming_BPDU_better(bpdu_in):
-            self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
-            self.rootPort_ID = port_in.port_id
-            self.forwarding_table = ForwardingTable()
-            self._broadcast_BPDU()
-
-        if self.id < bpdu_in.source:
-            if not port_in.designated:
-                port_in.designated = True
-                self.forwarding_table = ForwardingTable()
-                self._broadcast_BPDU()
-        else:
-            if port_in.designated:
-                port_in.designated = False
-                self.forwarding_table = ForwardingTable()
-                self._broadcast_BPDU()
-
-        port_in.add_BPDU(bpdu_in)
-
-    #def _is_incoming_BPDU_better_for_port(self, bpdu_in, port):
-    #    if self.id < bpdu_in.source:
-    #        port.designated = True
-    #    else:
-    #        port.designated = False
-
-    # TODO: ###########################
 
 
     def _simple_port_decisions(self, bpdu_in, port_in):
