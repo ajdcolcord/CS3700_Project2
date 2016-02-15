@@ -117,10 +117,19 @@ class Bridge:
         #self._port_decisions(bpdu, port)
         #self._simple_port_decisions(bpdu, port)
 
+
         # TODO - NEWWWWWW
+        old_root_port_id = self.rootPort_ID
         self._simple_port_decisions_2(bpdu, port)
+        self._enable_or_disable(port)
+        if old_root_port_id!= self.rootPort_ID:
+            self._simple_port_decisions_2(bpdu, self.ports[old_root_port_id])
+            if old_root_port_id:
+                self._enable_or_disable(self.ports[old_root_port_id])
         # TODO - ########
 
+        # TODO ------REMOVING THIS FOR NOW -------
+        '''
         if original_root_port:
             if self.rootPort_ID != original_root_port:
                 self.forwarding_table = ForwardingTable() # clear forwarding table
@@ -132,6 +141,8 @@ class Bridge:
                 else:
                     self.ports[original_root_port].designated = True
                     self._enable_or_disable(self.ports[original_root_port])
+        '''
+        # TODO -------------------------------
 
         #self._enable_or_disable(port)
 
