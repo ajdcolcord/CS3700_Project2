@@ -108,7 +108,8 @@ class Bridge:
         if original_root_port:
             saved_bpdu = self.ports[original_root_port].BPDU_list[0]
 
-        self._port_decisions(bpdu, port)
+        #self._port_decisions(bpdu, port)
+        self._simple_port_decisions(bpdu, port)
 
         if original_root_port:
             if self.rootPort_ID != original_root_port:
@@ -122,7 +123,7 @@ class Bridge:
                     self.ports[original_root_port].designated = True
                     self._enable_or_disable(self.ports[original_root_port])
 
-        #self._enable_or_disable(port)
+        self._enable_or_disable(port)
 
     def _received_data_logic(self, data_in, port, message):
         if data_in:
@@ -185,6 +186,41 @@ class Bridge:
                 print "NOT FORWARDING MESSAGE " + str(data_in.id) + " BECAUSE INCOMING PORT NOT ENABLED- " + str(port.port_id)
                 self._print_not_forwarding_message(data_in.id)
                 return
+
+    def _incoming_bpdu_better_than_bridge(self, bpdu_in, port_in):
+        changed_root = self.bridge_BPDU.root != bpdu_in.root
+        changed_root_id = self.rootPort_ID != port_in.port_id
+
+        # set bridge's bpdu to incoming bpdu (with cost updated)
+        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
+
+        if changed_root:
+            self._print_new_root()
+
+        # set bridge's root port to this port
+        self.rootPort_ID = port_in.port_id
+        port_in.designated = False
+
+        if changed_root_id:
+            self._print_root_port(self.rootPort_ID)
+
+        self.forwarding_table = ForwardingTable()
+
+        port_in.add_BPDU(bpdu_in)
+        self._broadcast_BPDU()
+
+    def _incoming_bpdu_better_than_port(self, bpdu_in, port_in):
+        port_in.designated = False
+        port_in.add_BPDU(bpdu_in)
+
+    def _simple_port_decisions(self, bpdu_in, port_in):
+        if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
+            self._incoming_bpdu_better_than_bridge(bpdu_in, port_in)
+        else:
+            if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+                self._incoming_bpdu_better_than_port(bpdu_in, port_in)
+            else:
+                port_in.add_BPDU(bpdu_in)
 
 
     def _port_decisions(self, bpdu_in, port_in):
