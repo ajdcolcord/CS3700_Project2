@@ -138,6 +138,7 @@ class Bridge:
                         self._print_not_forwarding_message(data_in.id)
                         return
                     else:
+                        print "FORWARDING MESSAGE " + str(data_in.id) + "- IN FORWARDING TABLE and ENABLED = " + str(self.ports[sending_port_id].enabled)
                         self._print_forwarding_message(data_in.id, port.port_id)
                         self.ports[sending_port_id].socket.send(message)
                         return
