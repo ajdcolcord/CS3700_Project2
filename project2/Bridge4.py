@@ -143,6 +143,7 @@ class Bridge:
                         return
 
                 else:
+                    self._print_boradcasting_message(data_in.id)
                     self._broadcast_message(message, port)
                     return
 
