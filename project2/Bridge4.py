@@ -212,8 +212,7 @@ class Bridge:
         # if this bridge is currently NOT the root...
         else:
             # if the incoming BPDU is better than the current port's bpdu (seeing a better bridge)
-            if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
-
+            if not len(port_in.BPDU_list) or port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
                 # if the incoming BPDU is also better than the bridge's information (better bridge seen)
                 #if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
                 root_bpdu = self.ports[self.rootPort_ID].BPDU_list[0]
