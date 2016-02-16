@@ -275,7 +275,7 @@ class Bridge:
 
             else:
                 # TODO: TROUBLE SPOT HERE -------
-                #bpdu_in.cost += 1
+                bpdu_in.cost += 1
 
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
                     #if port_in.designated:
@@ -287,7 +287,7 @@ class Bridge:
                     changed_root_id = self.rootPort_ID != port_in.port_id
 
                     self.rootPort_ID = port_in.port_id
-                    self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
+                    self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)# + 1)
 
                     if changed_root_id:
                         self._print_root_port(self.rootPort_ID)
@@ -298,6 +298,8 @@ class Bridge:
 
                     #########
 
+                    port_in.designated = False
+                else:
                     port_in.designated = False
                     #else:
 
