@@ -230,10 +230,10 @@ class Bridge:
     def _designate_port(self, port):
         if port.BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
             port.designated = True
-            print "PORT BPDU = " + str(port.BPDU_list[0].create_json_BPDU()) + " --- BRIDGE BPDU = " + str(self.bridge_BPDU.create_json_BPDU()) + " TRUE"
+            print "PORT " + str(port.port_id) + " BPDU = " + str(port.BPDU_list[0].create_json_BPDU()) + " --- BRIDGE BPDU = " + str(self.bridge_BPDU.create_json_BPDU()) + " TRUE"
 
         else:
-            print "PORT BPDU = " + str(port.BPDU_list[0].create_json_BPDU()) + " --- BRIDGE BPDU = " + str(self.bridge_BPDU.create_json_BPDU()) + " FALSE"
+            print "PORT " + str(port.port_id) + " BPDU = " + str(port.BPDU_list[0].create_json_BPDU()) + " --- BRIDGE BPDU = " + str(self.bridge_BPDU.create_json_BPDU()) + " FALSE"
             port.designated = False
 
     def _port_decisions(self, bpdu_in, port_in):
