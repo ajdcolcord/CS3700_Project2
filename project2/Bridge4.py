@@ -86,6 +86,7 @@ class Bridge:
                     # if port not designated, print out designated
                     if not port.designated:
                         self._print_designated_port(port.port_id)
+                        self.forwarding_table = ForwardingTable()
                     port.designated = True
 
                     # recalculate root port from all of port's lists...
