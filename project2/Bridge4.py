@@ -158,7 +158,7 @@ class Bridge:
                         print "BPDU WAS TIMED OUT ON PORT-" + str(sending_port_id) + " SHOULD BROADCAST"
                         self.forwarding_table = ForwardingTable()
                         self._print_boradcasting_message(data_in.id)
-                        self._broadcast_message(message, port.port_id)
+                        self._broadcast_message(message, port)
                         return
                     else:
                         if sending_port_id == port.port_id:
