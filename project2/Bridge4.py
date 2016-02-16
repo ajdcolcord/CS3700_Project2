@@ -275,7 +275,7 @@ class Bridge:
 
             else:
                 # TODO: TROUBLE SPOT HERE -------
-                bpdu_in.cost += 1
+                #bpdu_in.cost += 1
 
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
                     #if port_in.designated:
