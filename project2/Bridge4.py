@@ -112,6 +112,9 @@ class Bridge:
         :param port: the port that the BPDU came in on
         :return: Void
         """
+        print "RECEIVED BPDU FROM " + str(bpdu.source) + " ON PORT " + str(port.port_id) + " COST = " + str(bpdu.cost) + " ROOT = " + str(bpdu.root)
+        self._print_bridge_info()
+
         original_root_port = self.rootPort_ID
         saved_bpdu = None
         if original_root_port:
