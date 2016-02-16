@@ -227,7 +227,7 @@ class Bridge:
         self._enable_or_disable(port_in)
 
     def _designate_port(self, port):
-        if port.BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
+        if not len(port.BPDU_list) or port.BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
             port.designated = True
             print "PORT " + str(port.port_id) + " BPDU = " + str(port.BPDU_list[0].create_json_BPDU()) + " --- BRIDGE BPDU = " + str(self.bridge_BPDU.create_json_BPDU()) + " TRUE"
 
