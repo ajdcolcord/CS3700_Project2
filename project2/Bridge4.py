@@ -274,8 +274,9 @@ class Bridge:
                     port_in.add_BPDU(bpdu_in)
 
             else:
+                # TODO: TROUBLE SPOT HERE -------
                 #bpdu_in.cost += 1
-                '''
+
                 if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
                     #if port_in.designated:
 
@@ -298,9 +299,9 @@ class Bridge:
                     #########
 
                     port_in.designated = False
-                else:
-                '''
-                port_in.designated = False
+                    #else:
+
+                    #    port_in.designated = False
 
                 port_in.add_BPDU(bpdu_in)
 
