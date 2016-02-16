@@ -160,13 +160,24 @@ class Bridge:
             self.forwarding_table = ForwardingTable()
             self._broadcast_BPDU()
 
-        elif self.rootPort_ID != port_in.port_id and self.bridge_BPDU.cost == bpdu_in.cost - 1:
-            if self.id < bpdu_in.source:
+        else:
+            if self.bridge_BPDU.root < bpdu_in.root and port_in.port_id not self.:
                 port_in.designated = True
+
+            elif self.bridge_BPDU.root == bpdu_in.root and port_in.port_id not root port:
+                if self.bridge_BPDU.cost < bpdu_in.cost:
+                    port_in.designated = True
+                elif self.bridge_BPDU.cost == bpdu_in.cost:
+                    if self.id < bpdu_in.id:
+                        port_in.designated = True
+                    else:
+                        port_in.designated = False
+                else:
+                    port_in.designated = False
+
             else:
                 port_in.designated = False
-        else:
-            port_in.designated = False
+
 
         port_in.add_BPDU(bpdu_in)
 
