@@ -125,7 +125,7 @@ class Bridge:
                     self.forwarding_table = ForwardingTable()
                     self._broadcast_BPDU()
                 else:
-                    #self.ports[old_root_port].designated = True
+                    self.ports[old_root_port].designated = True
                     #self.ports[old_root_port].enabled = True
 
 
