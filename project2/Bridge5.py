@@ -140,8 +140,8 @@ class Bridge:
                 self._broadcast_BPDU()
             else:
                 self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
-                port_in.designated = False
-                port_in.enabled = False
+                #port_in.designated = False
+                #port_in.enabled = False
 
         elif self.id > bpdu_in.source:
             if port_in.designated:
