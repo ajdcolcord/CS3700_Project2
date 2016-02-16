@@ -116,48 +116,25 @@ class Bridge:
         old_root_port = self.rootPort_ID
 
         self._simple_port_decisions_2(bpdu, port)
+        self._enable_or_disable(port)
 
         if self.rootPort_ID != old_root_port:
             if old_root_port:
                 if self.id > bpdu.source:
                     self.ports[old_root_port].designated = False
                     self.ports[old_root_port].enabled = False
+                    self._enable_or_disable(self.ports[old_root_port])
                     self.forwarding_table = ForwardingTable()
                     self._broadcast_BPDU()
                 else:
                     self.ports[old_root_port].designated = True
-                    #self.ports[old_root_port].enabled = True
+                    self.ports[old_root_port].enabled = True
+                    self._enable_or_disable(self.ports[old_root_port])
 
 
 
     # TODO: ############################
     def _simple_port_decisions_2(self, bpdu_in, port_in):
-
-        '''
-        if bpdu_in.root < self.bridge_BPDU.root:
-            self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
-            self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
-            self.rootPort_ID = port_in.port_id
-            port_in.designated = False
-            port_in.enabled = True
-            self.forwarding_table = ForwardingTable()
-            self._broadcast_BPDU()
-
-        elif bpdu_in.root == self.bridge_BPDU.root and bpdu_in.cost < self.bridge_BPDU.cost:
-            self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
-            self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
-            self.rootPort_ID = port_in.port_id
-            port_in.designated = False
-            port_in.enabled = True
-            self.forwarding_table = ForwardingTable()
-            self._broadcast_BPDU()
-
-        elif bpdu_in.root == self.bridge_BPDU.root and bpdu_in.cost == self.bridge_BPDU.cost:
-
-
-        '''
-
-
         bpdu_better_than_bridge = False
         if self.bridge_BPDU.root > bpdu_in.root:
             bpdu_better_than_bridge = True
@@ -183,8 +160,6 @@ class Bridge:
                 self.forwarding_table = ForwardingTable()
                 self._broadcast_BPDU()
 
-
-        #if self.bridge_BPDU.root != self.rootPort_ID
         port_in.add_BPDU(bpdu_in)
 
     #def _is_incoming_BPDU_better_for_port(self, bpdu_in, port):
