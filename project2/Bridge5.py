@@ -126,7 +126,7 @@ class Bridge:
                     self._broadcast_BPDU()
                 else:
                     self.ports[old_root_port].designated = True
-                    self.ports[old_root_port].enabled = True
+                    #self.ports[old_root_port].enabled = True
 
 
 
