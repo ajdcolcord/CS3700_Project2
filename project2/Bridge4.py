@@ -100,7 +100,7 @@ class Bridge:
 
                 elif message_json['type'] == 'data':
                     data_in = create_DataMessage_from_json(message)
-                    self._received_data_logic(data_in, port, message)
+                    #self._received_data_logic(data_in, port, message)
 
     def _received_bpdu_logic(self, bpdu, port):
         """
@@ -278,7 +278,7 @@ class Bridge:
                     #if port_in.designated:
                     self.forwarding_table = ForwardingTable()
                     ###NEW###
-                    '''
+
                     changed_root = self.bridge_BPDU.root != bpdu_in.root
                     changed_root_id = self.rootPort_ID != port_in.port_id
 
@@ -291,9 +291,11 @@ class Bridge:
                         self._print_new_root()
 
                     self._broadcast_BPDU()
-                    '''
+
                     #########
 
+                    port_in.designated = False
+                else:
                     port_in.designated = False
 
                 port_in.add_BPDU(bpdu_in)
