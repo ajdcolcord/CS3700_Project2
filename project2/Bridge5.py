@@ -153,12 +153,14 @@ class Bridge:
 
         bpdu_better_than_bridge = self._bpdu_better_than_bridge(bpdu_in, port_in)
 
-        if bpdu_better_than_bridge:
+        if bpdu_better_than_bridge and bpdu_in.cost != self.bridge_BPDU.cost:
             self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
             self.rootPort_ID = port_in.port_id
             port_in.designated = False
             self.forwarding_table = ForwardingTable()
             self._broadcast_BPDU()
+
+
 
         else:
             if self.bridge_BPDU.root < bpdu_in.root and port_in.port_id != self.rootPort_ID:
