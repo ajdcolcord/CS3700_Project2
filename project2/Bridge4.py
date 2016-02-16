@@ -198,33 +198,9 @@ class Bridge:
         """
         # if this bridge is currently the ROOT...
         if self.rootPort_ID is None:
-
             # if incoming BPDU has a better bridge than this one
             if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
-
                 self._change_root(port_in, bpdu_in)
-                '''
-                changed_root = self.bridge_BPDU.root != bpdu_in.root
-                changed_root_id = self.rootPort_ID != port_in.port_id
-
-                self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
-
-                if changed_root:
-                    self._print_new_root()
-
-                # set bridge's root port to this port
-                self.rootPort_ID = port_in.port_id
-                port_in.designated = False
-
-                if changed_root_id:
-                    self._print_root_port(self.rootPort_ID)
-
-                if changed_root or changed_root_id:
-                    self.forwarding_table = ForwardingTable()
-
-                port_in.add_BPDU(bpdu_in)
-                self._broadcast_BPDU()
-                '''
             else:
                 # This bridge is better than the bridge on the incoming BPDU, stays the root
                 port_in.add_BPDU(bpdu_in)
@@ -240,30 +216,6 @@ class Bridge:
                     # if the incoming bpdu's source is not the same as this bridge's current root port's bpdu's source
                     if self.ports[self.rootPort_ID].BPDU_list[0].source != bpdu_in.source:
                         self._change_root(port_in, bpdu_in)
-
-                        '''
-                        changed_root = self.bridge_BPDU.root != bpdu_in.root
-                        changed_root_id = self.rootPort_ID != port_in.port_id
-
-                        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost + 1)
-
-                        if changed_root:
-                            self._print_new_root()
-
-                        self.rootPort_ID = port_in.port_id
-                        port_in.designated = False
-
-                        if changed_root_id:
-                            self._print_root_port(self.rootPort_ID)
-
-                        port_in.add_BPDU(bpdu_in)
-
-                        if changed_root or changed_root_id:
-                            self.forwarding_table = ForwardingTable()
-
-                        # broadcast new information about the bridge
-                        self._broadcast_BPDU()
-                        '''
                     else:
                         if port_in.designated:
                             self.forwarding_table = ForwardingTable()
@@ -322,6 +274,13 @@ class Bridge:
         self._enable_or_disable(port_in)
 
     def _change_root(self, port_in, bpdu_in):
+        """
+        This function updates the root information for the incoming BPDU on the port_in
+        Since this is used a few times, this function was created to minimize redundancy
+        :param port_in: the port the bpdu was received on
+        :param bpdu_in: the bpdu that will update this bridge's root information
+        :return: Void
+        """
         changed_root = self.bridge_BPDU.root != bpdu_in.root
         changed_root_id = self.rootPort_ID != port_in.port_id
 
