@@ -380,7 +380,9 @@ class Bridge:
         @return: Void
         """
         for port in self.ports:
-            port.socket.send(self.bridge_BPDU.create_json_BPDU())
+            json_bridge_bpdu = self.bridge_BPDU.create_json_BPDU()
+            print "BRIDGE = " + str(self.id) + " SENDING BPDU " + json_bridge_bpdu
+            port.socket.send(json_bridge_bpdu)
 
     def _broadcast_message(self, message, port_in):
         """
