@@ -115,13 +115,14 @@ class Bridge:
         print "RECEIVED BPDU FROM " + str(bpdu.source) + " ON PORT " + str(port.port_id) + " COST = " + str(bpdu.cost) + " ROOT = " + str(bpdu.root)
         self._print_bridge_info()
 
+        '''
         original_root_port = self.rootPort_ID
         saved_bpdu = None
         if original_root_port:
             saved_bpdu = self.ports[original_root_port].BPDU_list[0]
-
+        '''
         self._port_decisions_2(bpdu, port)
-
+        '''
         if original_root_port:
             if self.rootPort_ID != original_root_port:
                 self.forwarding_table = ForwardingTable() # clear forwarding table
@@ -133,8 +134,8 @@ class Bridge:
                 else:
                     self.ports[original_root_port].designated = True
                     self._enable_or_disable(self.ports[original_root_port])
-
-        self._enable_or_disable(port)
+        '''
+        #self._enable_or_disable(port)
 
     def _received_data_logic(self, data_in, port, message):
         """
