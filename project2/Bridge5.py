@@ -121,7 +121,7 @@ class Bridge:
         self._simple_port_decisions_2(bpdu, port)
         self._enable_or_disable(port)
 
-        '''
+
         if original_root_port:
             if self.rootPort_ID != original_root_port:
                 self.forwarding_table = ForwardingTable() # clear forwarding table
@@ -133,7 +133,7 @@ class Bridge:
                 else:
                     self.ports[original_root_port].designated = True
                     self._enable_or_disable(self.ports[original_root_port])
-        '''
+
         '''
         if self.rootPort_ID != old_root_port:
             if old_root_port:
@@ -160,7 +160,8 @@ class Bridge:
             self.forwarding_table = ForwardingTable()
             self._broadcast_BPDU()
 
-        elif self.bridge_BPDU.root < bpdu_in.root:
+        #elif self.bridge_BPDU.root < bpdu_in.root:
+        elif self.id < bpdu_in.source:
             if not port_in.designated:
                 port_in.designated = True
                 self.forwarding_table = ForwardingTable()
