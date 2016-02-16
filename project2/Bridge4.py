@@ -71,6 +71,7 @@ class Bridge:
         self._broadcast_BPDU()
 
         while True:
+            self._print_bridge_info()
             # is it time to send a new BPDU?
             if int(round((time.time() - start_time) * 1000)) > 500:
                 print "BROADCASTING BPDU"
