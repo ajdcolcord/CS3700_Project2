@@ -161,10 +161,10 @@ class Bridge:
             self._broadcast_BPDU()
 
         else:
-            if self.bridge_BPDU.root < bpdu_in.root and port_in.port_id not self.:
+            if self.bridge_BPDU.root < bpdu_in.root and port_in.port_id != self.rootPort_ID:
                 port_in.designated = True
 
-            elif self.bridge_BPDU.root == bpdu_in.root and port_in.port_id not root port:
+            elif self.bridge_BPDU.root == bpdu_in.root and port_in.port_id != self.rootPort_ID:
                 if self.bridge_BPDU.cost < bpdu_in.cost:
                     port_in.designated = True
                 elif self.bridge_BPDU.cost == bpdu_in.cost:
