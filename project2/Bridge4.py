@@ -205,9 +205,9 @@ class Bridge:
             # if incoming BPDU has a better bridge than this one
             if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
                 self._change_root(port_in, bpdu_in)
-            else:
-                # This bridge is better than the bridge on the incoming BPDU, stays the root
-                port_in.add_BPDU(bpdu_in)
+            #else:
+            # This bridge is better than the bridge on the incoming BPDU, stays the root
+            #port_in.add_BPDU(bpdu_in)
 
         # if this bridge is currently NOT the root...
         else:
@@ -353,7 +353,7 @@ class Bridge:
         if changed_root or changed_root_id:
             self.forwarding_table = ForwardingTable()
 
-        port_in.add_BPDU(bpdu_in)
+        #port_in.add_BPDU(bpdu_in)
         self._broadcast_BPDU()
 
     def _enable_or_disable(self, port):
