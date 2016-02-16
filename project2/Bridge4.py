@@ -117,7 +117,7 @@ class Bridge:
         if original_root_port:
             saved_bpdu = self.ports[original_root_port].BPDU_list[0]
 
-        self._port_decisions(bpdu, port)
+        self._port_decisions_2(bpdu, port)
 
         if original_root_port:
             if self.rootPort_ID != original_root_port:
@@ -181,6 +181,53 @@ class Bridge:
                 print "NOT FORWARDING MESSAGE " + str(data_in.id) + " BECAUSE INCOMING PORT NOT ENABLED- " + str(port.port_id)
                 self._print_not_forwarding_message(data_in.id)
                 return
+
+    def _port_decisions_2(self, bpdu_in, port_in):
+        """
+        This function holds all of the decisions for a port when a BPDU comes in.
+        - If the bridge currently think's it's the root, it checks if the BPDU holds a better path than this
+          bridge to a better root, if so, this bridge takes on the new path and information.
+        - If this bridge is not the root, it checks if the incoming BPDU is better than any seen on the incoming port,
+          if so, it then checks if it is also better than the bridge. If so, it takes on the new path. If it isn't
+          better than the bridge, but still better than the port, the port's designated status gets set to false.
+        - If this bridge is not the root, and the BPDU is not better than what is on this port, then the port gets
+          undesignated
+        :param bpdu_in: the incoming BPDU
+        :param port_in: the incoming port
+        :return: Void
+        """
+        # if this bridge is currently the ROOT...
+        if self.rootPort_ID is None:
+            # if incoming BPDU has a better bridge than this one
+            if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
+                self._change_root(port_in, bpdu_in)
+            else:
+                # This bridge is better than the bridge on the incoming BPDU, stays the root
+                port_in.add_BPDU(bpdu_in)
+
+        # if this bridge is currently NOT the root...
+        else:
+            # if the incoming BPDU is better than the current port's bpdu (seeing a better bridge)
+            if port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
+
+                # if the incoming BPDU is also better than the bridge's information (better bridge seen)
+                #if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
+                root_bpdu = self.ports[self.rootPort_ID].BPDU_list[0]
+                if root_bpdu.is_incoming_BPDU_better(bpdu_in):
+
+                    # if the incoming bpdu's source is not the same as this bridge's current root port's bpdu's source
+                    #if self.ports[self.rootPort_ID].BPDU_list[0].source != bpdu_in.source:
+                    self._change_root(port_in, bpdu_in)
+
+        port_in.add_BPDU(bpdu_in)
+        self._designate_port(port_in)
+        self._enable_or_disable(port_in)
+
+    def _designate_port(self, port):
+        if port.BPDU_list[0].is_incoming_BPDU_better(self.bridge_BPDU):
+            port.designated = True
+        else:
+            port.designated = False
 
     def _port_decisions(self, bpdu_in, port_in):
         """
