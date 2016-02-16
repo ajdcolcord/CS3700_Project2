@@ -50,7 +50,7 @@ class Port:
         Checks if the given BPDU has timed out. If so, remove it
         from this BPDU list
         @param BPDU : the BPDU to check
-        @return boolean : true if removed
+        @return boolean : true if removed, false if not
         """
         # If the bpdu has timed out, simply remove it
         if int(round((time.time() - BPDU.time) * 1000)) > 750:
@@ -60,6 +60,11 @@ class Port:
             return False
 
     def remove_all_timedout_BPDUs(self):
+        """
+        This function loops through all of the BPDU's held on this port's
+        list of bpdu's, and removes them if they are timed out
+        :return: Void
+        """
         for bpdu in self.BPDU_list:
             self.remove_timedout_BPDU(bpdu)
 

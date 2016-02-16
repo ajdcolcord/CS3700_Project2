@@ -99,39 +99,23 @@ class Bridge:
                     self._received_bpdu_logic(bpdu_in, port)
 
                 elif message_json['type'] == 'data':
-                    #print "DATA MESSAGE FROM: " + str(message_json['source'])
                     data_in = create_DataMessage_from_json(message)
-                    self._received_data_logic(data_in, port, message)
+                    # self._received_data_logic(data_in, port, message)
 
     def _received_bpdu_logic(self, bpdu, port):
-        # TODO: REMOVING THIS FOR NOW
-
+        """
+        This function handles all of the logic for when a BPDU message is received. It also takes care
+        of if the root port changed, if that port should now be designated or not
+        :param bpdu: the incoming BPDU
+        :param port: the port that the BPDU came in on
+        :return: Void
+        """
         original_root_port = self.rootPort_ID
         saved_bpdu = None
         if original_root_port:
             saved_bpdu = self.ports[original_root_port].BPDU_list[0]
 
         self._port_decisions(bpdu, port)
-
-
-        # TODO: #####################
-
-
-        #self._simple_port_decisions(bpdu, port)
-
-
-        # TODO - NEWWWWWW
-        old_root_port_id = self.rootPort_ID
-        #self._simple_port_decisions_2(bpdu, port)
-        #self._enable_or_disable(port)
-        #if old_root_port_id:
-        #    if old_root_port_id != self.rootPort_ID:
-        #        self._simple_port_decisions_2(bpdu, self.ports[old_root_port_id])
-        #        #self._enable_or_disable(self.ports[old_root_port_id])
-        #        print "AT ROOT PORT : " + str(self.rootPort_ID) + "DISABLED OLD ROOT: " + str(old_root_port_id)
-        # TODO - ########
-
-        # TODO ------REMOVING THIS FOR NOW -------
 
         if original_root_port:
             if self.rootPort_ID != original_root_port:
@@ -145,11 +129,20 @@ class Bridge:
                     self.ports[original_root_port].designated = True
                     self._enable_or_disable(self.ports[original_root_port])
 
-        # TODO -------------------------------
-
         self._enable_or_disable(port)
 
     def _received_data_logic(self, data_in, port, message):
+        """
+        This function holds the functionality needed for when a data message is received. After it is
+        Received, if the port is enabled, the message is either forwarded on a different port, if
+        the address is in the forwarding table, broadcasted if the address isn't (or has expired),
+        or not broadcasted (if the forwarding table says that the address is on the incoming port,
+        or if the incoming port is disabled)
+        :param data_in: the DataMessage object to send
+        :param port: the port that the message came in on
+        :param message: the raw json message to send (so no re-encoding is needed)
+        :return: Void
+        """
         if data_in:
             self._enable_or_disable(port)
 
@@ -160,14 +153,12 @@ class Bridge:
                 sending_port_id = self.forwarding_table.get_address_port(data_in.dest)
 
                 if sending_port_id >= 0 and self.ports[sending_port_id].enabled:
-                    ###NEW###
                     if self.ports[sending_port_id].BPDU_list and self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
                         print "BPDU WAS TIMED OUT ON PORT-" + str(sending_port_id) + " SHOULD BROADCAST"
                         self.forwarding_table = ForwardingTable()
                         self._print_boradcasting_message(data_in.id)
                         self._broadcast_message(message, port.port_id)
                         return
-                        ###
                     else:
                         if sending_port_id == port.port_id:
                             print "NOT FORWARDING MESSAGE " + str(data_in.id) + "-  NOT IN FORWARDING TABLE - ENABLED = " + str(self.ports[sending_port_id].enabled)
@@ -180,7 +171,6 @@ class Bridge:
                             self._print_forwarding_message(data_in.id, port.port_id)
                             self.ports[sending_port_id].socket.send(message)
                             return
-
                 else:
                     self._print_boradcasting_message(data_in.id)
                     self._broadcast_message(message, port)
@@ -190,79 +180,20 @@ class Bridge:
                 self._print_not_forwarding_message(data_in.id)
                 return
 
-    def _incoming_bpdu_better_than_bridge(self, bpdu_in, port_in):
-        changed_root = self.bridge_BPDU.root != bpdu_in.root
-        changed_root_id = self.rootPort_ID != port_in.port_id
-
-        # set bridge's bpdu to incoming bpdu (with cost updated)
-        self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)# + 1)
-
-        if changed_root:
-            self._print_new_root()
-
-        # set bridge's root port to this port
-        self.rootPort_ID = port_in.port_id
-        port_in.designated = False
-
-        if changed_root_id:
-            self._print_root_port(self.rootPort_ID)
-
-        self.forwarding_table = ForwardingTable()
-
-        port_in.add_BPDU(bpdu_in)
-        self._broadcast_BPDU()
-
-    def _incoming_bpdu_better_than_port(self, bpdu_in, port_in):
-        port_in.designated = False
-        port_in.add_BPDU(bpdu_in)
-
-
-
-    # TODO: ############################
-
-    def _simple_port_decisions_2(self, bpdu_in, port_in):
-        if bpdu_in.is_incoming_BPDU_better(bpdu_in):
-            self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
-            self.rootPort_ID = port_in.port_id
-            self.forwarding_table = ForwardingTable()
-            self._broadcast_BPDU()
-
-        if self.id < bpdu_in.source:
-            if not port_in.designated:
-                port_in.designated = True
-                self.forwarding_table = ForwardingTable()
-                self._broadcast_BPDU()
-        else:
-            if port_in.designated:
-                port_in.designated = False
-                self.forwarding_table = ForwardingTable()
-                self._broadcast_BPDU()
-
-        port_in.add_BPDU(bpdu_in)
-
-    #def _is_incoming_BPDU_better_for_port(self, bpdu_in, port):
-    #    if self.id < bpdu_in.source:
-    #        port.designated = True
-    #    else:
-    #        port.designated = False
-
-    # TODO: ###########################
-
-
-    def _simple_port_decisions(self, bpdu_in, port_in):
-        #bpdu_in.cost += 1
-        if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
-            self._incoming_bpdu_better_than_bridge(bpdu_in, port_in)
-        else:
-            bpdu_in.cost -= 1
-            if port_in.BPDU_list and port_in.BPDU_list[0].is_incoming_BPDU_better(bpdu_in):
-                bpdu_in.cost += 1
-                self._incoming_bpdu_better_than_port(bpdu_in, port_in)
-            else:
-                bpdu_in.cost += 1
-                port_in.add_BPDU(bpdu_in)
-
     def _port_decisions(self, bpdu_in, port_in):
+        """
+        This function holds all of the decisions for a port when a BPDU comes in.
+        - If the bridge currently think's it's the root, it checks if the BPDU holds a better path than this
+          bridge to a better root, if so, this bridge takes on the new path and information.
+        - If this bridge is not the root, it checks if the incoming BPDU is better than any seen on the incoming port,
+          if so, it then checks if it is also better than the bridge. If so, it takes on the new path. If it isn't
+          better than the bridge, but still better than the port, the port's designated status gets set to false.
+        - If this bridge is not the root, and the BPDU is not better than what is on this port, then the port gets
+          undesignated
+        :param bpdu_in: the incoming BPDU
+        :param port_in: the incoming port
+        :return: Void
+        """
         # if this bridge is currently the ROOT...
         if self.rootPort_ID is None:
 
@@ -370,22 +301,27 @@ class Bridge:
         self._enable_or_disable(port_in)
 
     def _enable_or_disable(self, port):
+        """
+        This function simply checks if the port is designated or root.
+        If neither, it sets it to disabled. If either,it gets set to enabled.
+        :param port: the port to check
+        :return: Void
+        """
         previous_status = port.enabled
         if port.designated or self.rootPort_ID == port.port_id:
             port.enabled = True
             if previous_status != port.enabled:
                 self.forwarding_table = ForwardingTable()
-                # self._print_bridge_info()
         else:
             port.enabled = False
             if previous_status != port.enabled:
                 self._print_disabled_port(port.port_id)
                 self.forwarding_table = ForwardingTable()
-                # self._print_bridge_info()
 
     def _broadcast_BPDU(self):
         """
-        Broadcasts a new BPDU from this bridge to all sockets
+        Broadcasts a new BPDU from this bridge to all sockets on the bridge
+        @return: Void
         """
         for port in self.ports:
             port.socket.send(self.bridge_BPDU.create_json_BPDU())
@@ -393,8 +329,9 @@ class Bridge:
     def _broadcast_message(self, message, port_in):
         """
         Broadcasts the given message to all socket connections, except the
-        inputted port
+        given port
         @param message : string
+        @return: Void
         """
         for port in self.ports:
             if port.port_id != port_in.port_id:
@@ -408,6 +345,7 @@ class Bridge:
         using the forwarding table entry
         @param message : message to Sends
         @param address : address to send to
+        @return Void
         """
         #port_id = self.forwarding_table.get_address_port(address)
         #if self.ports[port_id].enabled:
@@ -424,34 +362,79 @@ class Bridge:
             result += '\0'
         return result
 
-
-
     def _print_received_message(self, data_in_id, port_port_id, data_in_source, data_in_dest):
+        """
+        This function prints that a message was received on the port
+        :param data_in_id: the ID of the message
+        :param port_port_id: the port that the message came in on
+        :param data_in_source: the source of the message
+        :param data_in_dest: the destination of the message
+        :return: Void
+        """
         print "Received message " + str(data_in_id) + "on port " + str(port_port_id) + \
             " from " + str(data_in_source) + " to " + str(data_in_dest)
 
     def _print_forwarding_message(self, data_in_id, port_port_id):
+        """
+        This function prints that the message was forwarded to the given port
+        :param data_in_id: the message ID
+        :param port_port_id: the port that the message was forwarded on
+        :return: Void
+        """
         print "Forwarding message " + str(data_in_id) + " to port " + str(port_port_id)
 
     def _print_boradcasting_message(self, data_in_id):
+        """
+        This function prints that a message is being broadcasted on all ports (except the incoming port)
+        :param data_in_id: the message ID
+        :return: Void
+        """
         print "Broadcasting message " + str(data_in_id) + " to all ports"
 
     def _print_not_forwarding_message(self, data_in_id):
+        """
+        This function prints that the message is not being forwarded
+        :param data_in_id: the message ID
+        :return: Void
+        """
         print "Not forwarding message " + str(data_in_id)
 
     def _print_disabled_port(self, port_id):
+        """
+        This function prints that the given port was disabled
+        :param port_id: the ID of the port being disabled
+        :return: Void
+        """
         print "Disabled port: " + str(self.id) + "/" + str(port_id)
 
     def _print_new_root(self):
+        """
+        This function prints that a new root was found for this bridge
+        :return: Void
+        """
         print "New root: " + str(self.id) + "/" + str(self.bridge_BPDU.root)
 
     def _print_root_port(self, port_id):
+        """
+        This function prints that this bridge has a new root port
+        :param port_id: the new root port id
+        :return: Void
+        """
         print "Root port: " + str(self.id) + "/" + str(port_id)
 
     def _print_designated_port(self, port_id):
+        """
+        This function prints that this port is designated
+        :param port_id: the port being designated
+        :return: Void
+        """
         print "Designated port: " + str(self.id) + "/" + str(port_id)
 
     def _print_bridge_info(self):
+        """
+        This function is used to print out all of the information on this bridge, including the status of it's ports
+        :return: Void
+        """
         port_status_list = ""
         for port in self.ports:
             port_status_list += "\tPort-" + str(port.port_id) + "-Enabled=" + str(port.enabled) + "-Designated=" + str(port.designated)
