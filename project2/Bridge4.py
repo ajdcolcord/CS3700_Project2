@@ -352,6 +352,9 @@ class Bridge:
         if changed_root or changed_root_id:
             self.forwarding_table = ForwardingTable()
 
+        for port in self.ports:
+            self._designate_port(port)
+            self._enable_or_disable(port)
         #port_in.add_BPDU(bpdu_in)
         self._broadcast_BPDU()
 
