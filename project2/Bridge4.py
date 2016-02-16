@@ -100,7 +100,7 @@ class Bridge:
 
                 elif message_json['type'] == 'data':
                     data_in = create_DataMessage_from_json(message)
-                    # self._received_data_logic(data_in, port, message)
+                    self._received_data_logic(data_in, port, message)
 
     def _received_bpdu_logic(self, bpdu, port):
         """
