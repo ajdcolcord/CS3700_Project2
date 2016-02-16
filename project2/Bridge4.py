@@ -300,7 +300,10 @@ class Bridge:
 
                     port_in.designated = False
                 else:
-                    port_in.designated = False
+                    if bpdu_in.cost == self.bridge_BPDU.cost and self.id < bpdu_in.source:
+                        port_in.designated = True
+                    else:
+                        port_in.designated = False
                     #else:
 
                     #    port_in.designated = False
