@@ -122,13 +122,11 @@ class Bridge:
             if old_root_port:
                 if self.id > bpdu.source:
                     self.ports[old_root_port].designated = False
-                    self.ports[old_root_port].enabled = False
                     self._enable_or_disable(self.ports[old_root_port])
                     self.forwarding_table = ForwardingTable()
                     self._broadcast_BPDU()
                 else:
                     self.ports[old_root_port].designated = True
-                    self.ports[old_root_port].enabled = True
                     self._enable_or_disable(self.ports[old_root_port])
 
 
@@ -149,14 +147,12 @@ class Bridge:
             self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
             self.rootPort_ID = port_in.port_id
             port_in.designated = False
-            port_in.enabled = True
             self.forwarding_table = ForwardingTable()
             self._broadcast_BPDU()
 
         elif self.id > bpdu_in.source:
             if port_in.designated:
                 port_in.designated = False
-                port_in.enabled = False
                 self.forwarding_table = ForwardingTable()
                 self._broadcast_BPDU()
 
