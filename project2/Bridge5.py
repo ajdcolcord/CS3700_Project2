@@ -150,7 +150,7 @@ class Bridge:
             self.forwarding_table = ForwardingTable()
             self._broadcast_BPDU()
 
-        elif self.id > bpdu_in.source:
+        elif self.id > bpdu_in.source and not bpdu_better_than_bridge:
             if port_in.designated:
                 port_in.designated = False
                 self.forwarding_table = ForwardingTable()
