@@ -128,12 +128,8 @@ class Bridge:
                     self.ports[old_root_port].designated = True
                     #self.ports[old_root_port].enabled = True
 
-
-
     # TODO: ############################
-
     def _simple_port_decisions_2(self, bpdu_in, port_in):
-
         if self.bridge_BPDU.is_incoming_BPDU_better(bpdu_in):
             self.bridge_BPDU = BPDU(self.id, 'ffff', 1, bpdu_in.root, bpdu_in.cost)
             self.rootPort_ID = port_in.port_id
