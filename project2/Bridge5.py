@@ -160,11 +160,27 @@ class Bridge:
             self.forwarding_table = ForwardingTable()
             self._broadcast_BPDU()
 
+        if self.bridge_BPDU.source > bpdu_in.source:
+            if port_in.designated:
+                port_in.designated = False
+                self.forwarding_table = ForwardingTable()
+                self._broadcast_BPDU()
+
+        '''
+        #elif self.id > bpdu_in.source:
+            if self.bridge_BPDU.root < bpdu_in.source:
+                if port_in.designated:
+                    port_in.designated = False
+                    self.forwarding_table = ForwardingTable()
+                    self._broadcast_BPDU()
+        '''
+        '''
         elif not bpdu_better_than_bridge:
             if not port_in.designated:
                 port_in.designated = True
                 self.forwarding_table = ForwardingTable()
                 self._broadcast_BPDU()
+        '''
 
         '''
         #elif self.bridge_BPDU.root < bpdu_in.root:
@@ -174,13 +190,7 @@ class Bridge:
                 self.forwarding_table = ForwardingTable()
                 self._broadcast_BPDU()
         '''
-        '''
-        elif self.id > bpdu_in.source:
-            if port_in.designated:
-                port_in.designated = False
-                self.forwarding_table = ForwardingTable()
-                self._broadcast_BPDU()
-        '''
+
 
         port_in.add_BPDU(bpdu_in)
 
@@ -200,7 +210,7 @@ class Bridge:
             if self.bridge_BPDU.cost > bpdu_in.cost:
                 bpdu_better_than_bridge = True
             elif self.bridge_BPDU.cost == bpdu_in.cost:
-                if self.bridge_BPDU.root > bpdu_in.source:
+                if self.bridge_BPDU.source > bpdu_in.source:
                     bpdu_better_than_bridge = True
 
         return bpdu_better_than_bridge
