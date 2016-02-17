@@ -70,6 +70,9 @@ class Bridge:
 
         while True:
 
+
+            ################
+
             for port in self.ports:
                 port.remove_all_timedout_BPDUs()
 
@@ -79,7 +82,7 @@ class Bridge:
                 best_bpdu = best_bpdu_list[0][1]
                 best_port = best_bpdu_list[0][0]
 
-                if self.id <= best_bpdu.root:
+                if self.id < best_bpdu.root:
                     self.rootPort_ID = None
                     self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, 0)
                     self._broadcast_BPDU()
@@ -95,6 +98,9 @@ class Bridge:
             for port in self.ports:
                 self._designate_port(port)
                 self._enable_or_disable(port)
+
+
+            #################
 
             # is it time to send a new BPDU?
             if int(round((time.time() - start_time) * 1000)) > 500:
