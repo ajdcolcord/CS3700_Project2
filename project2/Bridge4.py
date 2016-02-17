@@ -74,13 +74,13 @@ class Bridge:
                 port.remove_all_timedout_BPDUs()
 
             # get a sorted list of the best BPDUs of all the ports
-            best_bpdu_list = sorted([(p, p.BPDU_list[0]) for p in self.ports if len(p.BPDU_list)], key=lambda tup: tup[1])
+            best_bpdu_list = sorted([(p, p.BPDU_list[0]) for p in self.ports if len(p.BPDU_list)], key=lambda tup: tup[1], reverse=True)
             if len(best_bpdu_list):
                 best_bpdu = best_bpdu_list[0][1]
                 best_port = best_bpdu_list[0][0]
 
                 #if self.bridge_BPDU.is_incoming_BPDU_better(best_bpdu):
-                if self.rootPort_ID is None or not len(self.ports[self.rootPort_ID].BPDU_list) or best_bpdu.is_incoming_BPDU_better(self.ports[self.rootPort_ID].BPDU_list[0]):
+                if self.rootPort_ID is None or not len(self.ports[self.rootPort_ID].BPDU_list) or self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu):
                     print "ROOT NOT SET: " + str(self.rootPort_ID is None) + " NOT ROOT BPDUS: " + str(not len(self.ports[self.rootPort_ID].BPDU_list)) + " INCOMING BETTER " + str(self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu))
                     self._print_bridge_info()
                     self._change_root(best_port, best_bpdu)
