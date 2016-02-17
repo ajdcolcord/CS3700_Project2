@@ -81,7 +81,10 @@ class Bridge:
 
                 #if self.bridge_BPDU.is_incoming_BPDU_better(best_bpdu):
                 if self.rootPort_ID is None or not len(self.ports[self.rootPort_ID].BPDU_list) or self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu):
+                    print "CHANGING ROOT PORT ID "
+                    self._print_bridge_info()
                     self._change_root(best_port, best_bpdu)
+                    self._print_bridge_info()
 
             # find the best bpdu (of all ports), if it has changed (meaning root (bridge's bpdu) will now have to change), then set it
 
