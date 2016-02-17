@@ -75,7 +75,7 @@ class Bridge:
                 port.remove_all_timedout_BPDUs()
 
             # get a sorted list of the best BPDUs of all the ports
-            best_bpdu_list = sorted([(p, p.BPDU_list[0]) for p in self.ports], key=lambda tup: tup[1])
+            best_bpdu_list = sorted([(p, p.BPDU_list[0]) for p in self.ports if len(p.BPDU_list)], key=lambda tup: tup[1])
             best_bpdu = best_bpdu_list[0][1]
             best_port = best_bpdu_list[0][0]
 
