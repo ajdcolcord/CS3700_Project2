@@ -74,7 +74,7 @@ class Bridge:
             for port in self.ports:
                 port.remove_all_timedout_BPDUs()
 
-            '''
+
             # get a sorted list of the best BPDUs of all the ports
             best_bpdu_list = sorted([(p, p.BPDU_list[0]) for p in self.ports if len(p.BPDU_list)], key=lambda tup: tup[1])
             if len(best_bpdu_list):
@@ -83,7 +83,7 @@ class Bridge:
 
                 if self.bridge_BPDU.is_incoming_BPDU_better(best_bpdu):
                     self._change_root(best_port, best_bpdu)
-            '''
+
             # find the best bpdu (of all ports), if it has changed (meaning root (bridge's bpdu) will now have to change), then set it
 
             for port in self.ports:
