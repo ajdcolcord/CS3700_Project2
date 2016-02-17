@@ -62,6 +62,13 @@ class BPDU:
         return result
 
     def __cmp__(self, other):
+        """
+        This function simply compares this BPDU with another BPDU. If this is better,
+        1 is returned. If this is worse, -1 is returned. If they are the same,
+        0 is returned
+        :param other: The other BPDU
+        :return: int (1, 0, or -1)
+        """
         if self.is_incoming_BPDU_better(other):
             return 1
         elif other.is_incoming_BPDU_better(self):
