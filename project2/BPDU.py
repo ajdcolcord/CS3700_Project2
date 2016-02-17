@@ -61,6 +61,14 @@ class BPDU:
                     # port should be designated
         return result
 
+    def __cmp__(self, other):
+        if self.is_incoming_BPDU_better(other):
+            return 1
+        elif other.is_incoming_BPDU_better(self):
+            return -1
+        else:
+            return 0
+
 
 
 def create_BPDU_from_json(json_message):
