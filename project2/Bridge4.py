@@ -72,8 +72,8 @@ class Bridge:
             '''
             for port in self.ports:
                 port.remove_all_timedout_BPDUs()
-
             '''
+
             # get a sorted list of the best BPDUs of all the ports
             '''
             best_bpdu_list = sorted([(p, p.BPDU_list[0]) for p in self.ports if len(p.BPDU_list)], key=lambda tup: tup[1])
@@ -85,12 +85,11 @@ class Bridge:
                     self._change_root(best_port, best_bpdu)
             '''
             # find the best bpdu (of all ports), if it has changed (meaning root (bridge's bpdu) will now have to change), then set it
-
+            '''
             for port in self.ports:
                 self._designate_port(port)
                 self._enable_or_disable(port)
-
-            self._print_bridge_info()
+            '''
             # is it time to send a new BPDU?
             if int(round((time.time() - start_time) * 1000)) > 500:
                 self._broadcast_BPDU()
@@ -128,7 +127,6 @@ class Bridge:
         :param port: the port that the BPDU came in on
         :return: Void
         """
-        self._print_bridge_info()
         self._port_decisions(bpdu, port)
 
     def _received_data_logic(self, data_in, port, message):
@@ -160,8 +158,6 @@ class Bridge:
                         if sending_port_id == port.port_id:
                             print "NOT FORWARDING MESSAGE " + str(data_in.id) + "-  NOT IN FORWARDING TABLE - ENABLED = " + str(self.ports[sending_port_id].enabled)
                             self._print_not_forwarding_message(data_in.id)
-                            #self._print_boradcasting_message(data_in.id)
-                            #self._broadcast_message(message, port)
                         else:
                             print "FORWARDING MESSAGE " + str(data_in.id) + "- IN FORWARDING TABLE and ENABLED = " + str(self.ports[sending_port_id].enabled)
                             self._print_forwarding_message(data_in.id, port.port_id)
@@ -385,7 +381,8 @@ class Bridge:
 
     def _print_bridge_info(self):
         """
-        This function is used to print out all of the information on this bridge, including the status of it's ports
+        This function is used to print out all of the information on this bridge, including the status of it's ports.
+        Useful when debugging tree.
         :return: Void
         """
         port_status_list = ""
