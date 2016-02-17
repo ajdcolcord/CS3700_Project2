@@ -76,8 +76,6 @@ class BPDU:
         else:
             return 0
 
-
-
 def create_BPDU_from_json(json_message):
     """
     This function creates a new BPDU object from the information contained

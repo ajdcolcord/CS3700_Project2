@@ -12,8 +12,5 @@ def main():
     myBridge.create_ports_for_lans(LAN)
 
 
-
-
-
 if __name__ == "__main__":
     main()
