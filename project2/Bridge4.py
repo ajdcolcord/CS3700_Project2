@@ -45,7 +45,6 @@ class Bridge:
         unique_lan_list = []
 
         for lan in LAN_list:
-            print str(lan)
             if lan not in unique_lan_list:
                 unique_lan_list.append(lan)
 
@@ -152,10 +151,7 @@ class Bridge:
 
             if self.rootPort_ID:
                 if not len(self.ports[self.rootPort_ID].BPDU_list) or (self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu) and best_bpdu.source != self.ports[self.rootPort_ID].BPDU_list[0].source):
-                    print "ROOT NOT SET: " + str(self.rootPort_ID is None) + " NOT ROOT BPDUS: " + str(not len(self.ports[self.rootPort_ID].BPDU_list)) + " INCOMING BETTER " + str(self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu))
-                    self._print_bridge_info()
                     self._change_root(best_port, best_bpdu)
-                    self._print_bridge_info()
 
         for port in self.ports:
             self._designate_port(port)
@@ -192,23 +188,19 @@ class Bridge:
 
                 if sending_port_id >= 0 and self.ports[sending_port_id].enabled:
                     if self.ports[sending_port_id].BPDU_list and self.ports[sending_port_id].remove_timedout_BPDU(self.ports[sending_port_id].BPDU_list[0]):
-                        print "BPDU WAS TIMED OUT ON PORT-" + str(sending_port_id) + " SHOULD BROADCAST"
                         self.forwarding_table = ForwardingTable()
                         self._print_boradcasting_message(data_in.id)
                         self._broadcast_message(message, port)
                     else:
                         if sending_port_id == port.port_id:
-                            print "NOT FORWARDING MESSAGE " + str(data_in.id) + "-  NOT IN FORWARDING TABLE - ENABLED = " + str(self.ports[sending_port_id].enabled)
                             self._print_not_forwarding_message(data_in.id)
                         else:
-                            print "FORWARDING MESSAGE " + str(data_in.id) + "- IN FORWARDING TABLE and ENABLED = " + str(self.ports[sending_port_id].enabled)
                             self._print_forwarding_message(data_in.id, port.port_id)
                             self.ports[sending_port_id].socket.send(message)
                 else:
                     self._print_boradcasting_message(data_in.id)
                     self._broadcast_message(message, port)
             else:
-                print "NOT FORWARDING MESSAGE " + str(data_in.id) + " BECAUSE INCOMING PORT NOT ENABLED- " + str(port.port_id)
                 self._print_not_forwarding_message(data_in.id)
 
     def _port_decisions(self, bpdu_in, port_in):
