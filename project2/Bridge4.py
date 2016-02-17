@@ -79,8 +79,12 @@ class Bridge:
                 best_bpdu = best_bpdu_list[0][1]
                 best_port = best_bpdu_list[0][0]
 
-                #if self.bridge_BPDU.is_incoming_BPDU_better(best_bpdu):
-                if self.rootPort_ID is None or not len(self.ports[self.rootPort_ID].BPDU_list) or self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu):
+                if self.id <= best_bpdu.root:
+                    self.rootPort_ID = None
+                    self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, 0)
+                    self._broadcast_BPDU()
+
+                elif not len(self.ports[self.rootPort_ID].BPDU_list) or self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu):
                     print "ROOT NOT SET: " + str(self.rootPort_ID is None) + " NOT ROOT BPDUS: " + str(not len(self.ports[self.rootPort_ID].BPDU_list)) + " INCOMING BETTER " + str(self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu))
                     self._print_bridge_info()
                     self._change_root(best_port, best_bpdu)
