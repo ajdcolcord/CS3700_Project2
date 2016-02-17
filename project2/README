@@ -1,22 +1,26 @@
 Austin Colcord and Nick Scheuring
 
-This is the project for creating a network Bridge.
+This is the project for creating a Simple Bridge.
 
 High-Level Approach:
 First, our program creates a network Bridge, based on the input IDs
 and the given list of LANs for that bridge, using a virtual
 setup. It creates socket connections for each LAN, and connects them
-to our bridge as Ports (see Port.py). By doing this, we start by sending
-out a BPDU to all socket connections, which will let every other
-connected Bridge know it's information. It then receives messages from
-the sockets, decides if they are a BPDU or a Data message, and decides
-what to do with them from there.
+to our Bridge. The sockets are held in a Port object (see Port.py).
+By doing this, we start by sending out a BPDU (see BPDU.py) to all
+socket connections, which will let every other connected Bridge know it's
+information. It then receives messages from the sockets, decides if they
+are a BPDU or a Data Message. The BPDUs are used to create a shortest-path
+spanning tree to a 'root' bridge. The data messages are either broadcasted
+or forwarded for enabled ports, or dropped for disabled ports.
 
 Issues:
-Many issues are being encountered. We are finding that we cannot successfully
-connect multiple bridges together correctly, and this results in many lost
-packages. This may have to do with the understanding of bridge designation,
-port enable/disable activity, or BPDU forwarding.
+Many issues were encountered. We were finding that we could not successfully
+connect multiple bridges together correctly, and this resulted in many lost
+packages. This had to do with the understanding of bridge/port designation,
+port enable/disable activity, and BPDU broadcasting. Eventually, we figured
+out the correct logic, and iteratively improved on our Bridge, eventually
+getting to succcessful package delivery.
 
 Testing:
 Did unit testing for JSON parsing into BPDUs and DataMessages.
