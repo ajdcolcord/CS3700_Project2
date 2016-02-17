@@ -76,11 +76,12 @@ class Bridge:
 
             # get a sorted list of the best BPDUs of all the ports
             best_bpdu_list = sorted([(p, p.BPDU_list[0]) for p in self.ports if len(p.BPDU_list)], key=lambda tup: tup[1])
-            best_bpdu = best_bpdu_list[0][1]
-            best_port = best_bpdu_list[0][0]
+            if len(best_bpdu_list):
+                best_bpdu = best_bpdu_list[0][1]
+                best_port = best_bpdu_list[0][0]
 
-            if self.bridge_BPDU.is_incoming_BPDU_better(best_bpdu):
-                self._change_root(best_port, best_bpdu)
+                if self.bridge_BPDU.is_incoming_BPDU_better(best_bpdu):
+                    self._change_root(best_port, best_bpdu)
 
             # find the best bpdu (of all ports), if it has changed (meaning root (bridge's bpdu) will now have to change), then set it
 
