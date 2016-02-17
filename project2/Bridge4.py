@@ -70,8 +70,9 @@ class Bridge:
 
         while True:
 
+            self._initial_port_checks()
 
-            ################
+            '''
 
             for port in self.ports:
                 port.remove_all_timedout_BPDUs()
@@ -89,19 +90,16 @@ class Bridge:
 
                 if self.rootPort_ID:
                     if not len(self.ports[self.rootPort_ID].BPDU_list) or (self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu) and best_bpdu.source != self.ports[self.rootPort_ID].BPDU_list[0].source):
-                        #print "ROOT NOT SET: " + str(self.rootPort_ID is None) + " NOT ROOT BPDUS: " + str(not len(self.ports[self.rootPort_ID].BPDU_list)) + " INCOMING BETTER " + str(self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu))
+                        print "ROOT NOT SET: " + str(self.rootPort_ID is None) + " NOT ROOT BPDUS: " + str(not len(self.ports[self.rootPort_ID].BPDU_list)) + " INCOMING BETTER " + str(self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu))
                         self._print_bridge_info()
                         self._change_root(best_port, best_bpdu)
                         self._print_bridge_info()
-
-            # find the best bpdu (of all ports), if it has changed (meaning root (bridge's bpdu) will now have to change), then set it
 
             for port in self.ports:
                 self._designate_port(port)
                 self._enable_or_disable(port)
 
-
-            #################
+            '''
 
             # is it time to send a new BPDU?
             if int(round((time.time() - start_time) * 1000)) > 500:
@@ -131,6 +129,37 @@ class Bridge:
                 elif message_json['type'] == 'data':
                     data_in = create_DataMessage_from_json(message)
                     self._received_data_logic(data_in, port, message)
+
+    def _initial_port_checks(self):
+        """
+        This function runs the initial checks for all the ports, including removing all timedout BPDUs,
+        checking to see if the root has changed (if so, set it), and then designating and enabling/disabling ports.
+        :return: Void
+        """
+        for port in self.ports:
+            port.remove_all_timedout_BPDUs()
+
+        # get a sorted list of the best BPDUs of all the ports
+        best_bpdu_list = sorted([(p, p.BPDU_list[0]) for p in self.ports if len(p.BPDU_list)], key=lambda tup: tup[1])
+        if len(best_bpdu_list):
+            best_bpdu = best_bpdu_list[0][1]
+            best_port = best_bpdu_list[0][0]
+
+            if self.id < best_bpdu.root:
+                self.rootPort_ID = None
+                self.bridge_BPDU = BPDU(self.id, 'ffff', 1, self.id, 0)
+                self._broadcast_BPDU()
+
+            if self.rootPort_ID:
+                if not len(self.ports[self.rootPort_ID].BPDU_list) or (self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu) and best_bpdu.source != self.ports[self.rootPort_ID].BPDU_list[0].source):
+                    print "ROOT NOT SET: " + str(self.rootPort_ID is None) + " NOT ROOT BPDUS: " + str(not len(self.ports[self.rootPort_ID].BPDU_list)) + " INCOMING BETTER " + str(self.ports[self.rootPort_ID].BPDU_list[0].is_incoming_BPDU_better(best_bpdu))
+                    self._print_bridge_info()
+                    self._change_root(best_port, best_bpdu)
+                    self._print_bridge_info()
+
+        for port in self.ports:
+            self._designate_port(port)
+            self._enable_or_disable(port)
 
     def _received_bpdu_logic(self, bpdu, port):
         """
